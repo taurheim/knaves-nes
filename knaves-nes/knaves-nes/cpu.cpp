@@ -4,9 +4,6 @@ using namespace std;
 int main()
 {
 	cout << "Test";
+	getchar();
 	return 0;
-}
-int test()
-{
-	return 5;
 }
