@@ -12,5 +12,24 @@ void memory::write(unsigned short address, unsigned char value) {
  Read value from RAM
 */
 unsigned char memory::read(unsigned short address) {
-	return memory::RAM[address];
+
+	if (address >= ROM_LOWER_ADDRESS && address <= ROM_UPPER_ADDRESS) {
+		//Read from ROM
+	}
+
+	//Check for special cases (registers)
+	switch (address) {
+	case PPU_STATUS:
+		break;
+	case PPU_OAM_DATA:
+		break;
+	case PPU_VRAM_DATA:
+		break;
+	case CONTROLLER_1:
+		break;
+	case CONTROLLER_2:
+		break;
+	default:
+		return memory::RAM[address];
+	}
 }

@@ -16,6 +16,12 @@ void cpu::start() {
 	executeInterrupt(Interrupt::RESET);
 }
 
+void cpu::reset() {
+	executeInterrupt(Interrupt::RESET);
+	reg_sp -= 3;
+	interrupts.clear();
+}
+
 /*
  Read the next op code from the program counter
  @return The # of cycles the opcode took to run
@@ -120,16 +126,6 @@ bool cpu::checkInterrupts() {
 		
 		return true;
 	}
-}
-
-/*
- Read an address from memory
- @param address	The address to read from
-*/
-unsigned char cpu::readAddress(unsigned short address) {
-	unsigned char value = 0;
-
-	//Not sure what to do here...
 }
 
 /*

@@ -44,6 +44,7 @@ public:
 	cpu();
 
 	void start();
+	void reset();
 	unsigned short executeInstruction();
 private:
 	bool is_running;
@@ -77,6 +78,6 @@ private:
 	unsigned char readAddress(unsigned short address);
 	void pushStack(unsigned char byte);
 	void pushStack(unsigned short bytebyte);
-}
+};
 
 #endif
