@@ -12,6 +12,8 @@ void cpu::start() {
 	reg_index_x = 0;
 	reg_index_y = 0;
 
+	//Execute RESET Interrupt on startup
+	executeInterrupt(Interrupt::RESET);
 }
 
 /*
@@ -66,9 +68,34 @@ unsigned short cpu::executeInstruction() {
 
 /*
  Execute an interrupt
+ @param enum interrupt	The interrupt to execute
+ @return short			New program counter (this is the location of the instructions executed upon interrupt)
 */
-unsigned short executeInterrupt(const enum Interrupt &interrupt) {
+void cpu::executeInterrupt(const enum Interrupt &interrupt) {
+	//Push program counter & status register to stack
+	pushStack(reg_pc);
+	pushStack(reg_status);
 
+	//Add the interrupt status flag (this prevents further interrupts)
+	reg_status |= STATUS_INTERRUPT;
+
+	//Move the Program Counter to the area of memory with instructions for each interrupt
+	switch (interrupt) {
+		case Interrupt::NMI:
+			reg_pc = NMI_VECTOR;
+			break;
+		case Interrupt::IRQ:
+			reg_pc = IRQ_BRK_VECTOR;
+			break;
+		case Interrupt::BRK:
+			reg_pc = IRQ_BRK_VECTOR;
+			break;
+		case Interrupt::RESET:
+			reg_pc = RESET_VECTOR;
+			break;
+		default:
+			break;
+	}
 }
 
 
@@ -86,7 +113,7 @@ bool cpu::checkInterrupts() {
 		}
 
 		//Execute the interrupt
-		reg_pc = executeInterrupt(interrupts.front());
+		executeInterrupt(interrupts.front());
 		
 		//Remove the interrupt from the queue
 		interrupts.pop_front();
@@ -110,4 +137,25 @@ unsigned char cpu::readAddress(unsigned short address) {
 */
 bool cpu::hasStatusFlag(unsigned char flag) {
 	return (reg_status & flag);
+}
+
+/*
+ Push a byte to the stack
+*/
+void cpu::pushStack(unsigned char byte) {
+	//Decrement stack pointer because stack is stored top-down
+	memory::write(STACK_START + reg_sp--, byte);
+}
+
+/*
+ Push 16 bits to the stack (2 bytes)
+*/
+void cpu::pushStack(unsigned short bytebyte) {
+	unsigned char first = (bytebyte >> 8) & 0b11111111;
+	unsigned char second = bytebyte & 0b11111111;
+
+	pushStack(first);
+	pushStack(second);
+
+	return;
 }
