@@ -74,6 +74,9 @@ private:
 	void executeInterrupt(const enum Interrupt &interrupt);
 	bool checkInterrupts();
 
+	//Instructions
+	void setMode(Mode mode);
+
 	//Helpers
 	bool hasStatusFlag(unsigned char flag);
 	
@@ -81,6 +84,14 @@ private:
 	unsigned char readAddress(unsigned short address);
 	void pushStack(unsigned char byte);
 	void pushStack(unsigned short bytebyte);
+
+	//Functions (instructions call these)
+	inline void funcLoadAccumulator();
+	inline void funcStoreAccumulator();
+	inline void funcAddWithCarry();
+	inline void funcTransferAccumulatorToX();
+	inline void funcCompareMemory();
+	inline void funcBranchNotEqual();
 };
 
 #endif

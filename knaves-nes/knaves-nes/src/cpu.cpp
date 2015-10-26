@@ -1,9 +1,11 @@
 #include <iostream>
 
 #include "cpu.h"
+#include "instructions.h"
 
 cpu::cpu() {
 	//Set up opcodes
+	instructions = {};
 }
 
 void cpu::init(Memory * memory) {
@@ -50,18 +52,24 @@ unsigned short cpu::executeInstruction() {
 	reg_status = STATUS_EMPTY;
 
 	//Get the instruction associated with the opcode
-	std::map<char, instruction>::const_iterator current_instruction = instructions.find(opcode);
+	std::map<char, instruction>::const_iterator instruction_row = instructions.find(opcode);
 
 	//Invalid opcode
-	if (current_instruction == instructions.end()) {
+	if (instruction_row == instructions.end()) {
 		std::cout << "Invalid Instruction";
 		//throw InvalidOpcodeException(current_opcode);
 	}
 
 	//Actually execute the opcode instruction
-	instruction entry = current_instruction->second;
+	instruction current_instruction = instruction_row->second;
 
-	unsigned short cycles_used = entry.cycles;
+	//Set the mode
+	setMode(current_instruction.mode);
+
+	//Run the correct function
+	(this->*current_instruction.functionPtr)();
+
+	unsigned short cycles_used = current_instruction.cycles;
 
 	if (branch_taken) {
 		cycles_used++;
@@ -71,12 +79,12 @@ unsigned short cpu::executeInstruction() {
 		cycles_used++;
 	}
 
-	if (entry.cycles_extra && page_boundary_crossed) {
+	if (current_instruction.cycles_extra && page_boundary_crossed) {
 		cycles_used++;
 	}
 
-	if (entry.skip_bytes) {
-		reg_pc += entry.bytes;
+	if (current_instruction.skip_bytes) {
+		reg_pc += current_instruction.bytes;
 	}
 	return cycles_used;
 }
@@ -110,6 +118,17 @@ void cpu::executeInterrupt(const enum Interrupt &interrupt) {
 			break;
 		default:
 			break;
+	}
+}
+
+/*
+ Instructions need operands to work on. The different methods of
+ getting these operands are called addressing modes.
+ @param Mode	Mode to use
+*/
+void cpu::setMode(Mode mode) {
+	switch (mode) {
+
 	}
 }
 
@@ -169,3 +188,7 @@ void cpu::pushStack(unsigned short bytebyte) {
 
 	return;
 }
+
+/************
+ OPERATIONS
+*************/
