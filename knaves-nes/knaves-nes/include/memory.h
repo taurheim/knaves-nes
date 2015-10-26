@@ -15,18 +15,18 @@
 
 
 
-class memory {
+class Memory {
 public: 
 
-	memory();
+	Memory();
 
-	static void write(unsigned short address, unsigned char value);
-	static unsigned char read(unsigned short address);
-	static void logMemory();
-	static unsigned char * RAM;
+	void write(unsigned short address, unsigned char value);
+	unsigned char read(unsigned short address);
+	void logMemory();
 
 private:
 	static std::string hexFromLong(long i);
+	unsigned char * RAM;
 };
 
 #endif

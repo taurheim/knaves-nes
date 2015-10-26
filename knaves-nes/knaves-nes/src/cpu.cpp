@@ -2,6 +2,14 @@
 
 #include "cpu.h"
 
+cpu::cpu() {
+	//Set up opcodes
+}
+
+void cpu::init(Memory * memory) {
+	_memory = memory;
+}
+
 void cpu::start() {
 	is_running = true;
 
@@ -27,6 +35,7 @@ void cpu::reset() {
  @return The # of cycles the opcode took to run
  */
 unsigned short cpu::executeInstruction() {
+	std::cout << "Executing instruction";
 	if(cpu::checkInterrupts()){
 		//If an interrupt ran, it took 7 cycles
 		return INTERRUPT_CYCLES;
@@ -45,6 +54,7 @@ unsigned short cpu::executeInstruction() {
 
 	//Invalid opcode
 	if (current_instruction == instructions.end()) {
+		std::cout << "Invalid Instruction";
 		//throw InvalidOpcodeException(current_opcode);
 	}
 
@@ -68,7 +78,6 @@ unsigned short cpu::executeInstruction() {
 	if (entry.skip_bytes) {
 		reg_pc += entry.bytes;
 	}
-
 	return cycles_used;
 }
 
@@ -145,7 +154,7 @@ unsigned char cpu::readAddress(unsigned short address)
 */
 void cpu::pushStack(unsigned char byte) {
 	//Decrement stack pointer because stack is stored top-down
-	memory::write(STACK_START + reg_sp--, byte);
+	_memory->write(STACK_START + reg_sp--, byte);
 }
 
 /*

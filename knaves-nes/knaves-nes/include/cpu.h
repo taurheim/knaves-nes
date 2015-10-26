@@ -8,6 +8,7 @@
 #include "memory.h"
 
 class cpu;
+class Memory;
 
 //CPU Initialization: http://wiki.nesdev.com/w/index.php/CPU_power_up_state
 #define STARTUP_PC			0b1100000000000000
@@ -43,13 +44,15 @@ class cpu {
 public:
 	cpu();
 
+	void init(Memory * memory);
 	void start();
+	void stop();
 	void reset();
 	unsigned short executeInstruction();
 private:
 	bool is_running;
 
-	unsigned char *memory;
+	Memory *_memory;
 
 	//Runtime
 	bool branch_taken;
