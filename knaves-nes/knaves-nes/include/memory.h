@@ -17,10 +17,16 @@
 
 class memory {
 public: 
+
+	memory();
+
 	static void write(unsigned short address, unsigned char value);
 	static unsigned char read(unsigned short address);
-private:
+	static void logMemory();
 	static unsigned char * RAM;
+
+private:
+	static std::string hexFromLong(long i);
 };
 
 #endif

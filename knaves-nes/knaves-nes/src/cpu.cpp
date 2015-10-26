@@ -135,6 +135,11 @@ bool cpu::hasStatusFlag(unsigned char flag) {
 	return (reg_status & flag);
 }
 
+unsigned char cpu::readAddress(unsigned short address)
+{
+	return 0;
+}
+
 /*
  Push a byte to the stack
 */
