@@ -84,6 +84,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>./include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,6 +119,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\cpu.h" />
+    <ClInclude Include="include\instructions.h" />
+    <ClInclude Include="include\instruction.h" />
+    <ClInclude Include="include\knaves.h" />
+    <ClInclude Include="include\memory.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\cpu.cpp" />
+    <ClCompile Include="src\knaves.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\memory.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
