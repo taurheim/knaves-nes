@@ -30,6 +30,12 @@
     <ClInclude Include="include\knaves.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ppu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ppu.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cpu.cpp">
@@ -42,6 +48,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\knaves.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ppu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ppu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
