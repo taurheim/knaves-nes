@@ -70,13 +70,14 @@ unsigned short cpu::executeInstruction() {
 	if (instruction_row == instructions.end()) {
 		std::cout << "Invalid Instruction";
 		//throw InvalidOpcodeException(current_opcode);
+		return 0;
 	}
 
 	//Actually execute the opcode instruction
 	instruction current_instruction = instruction_row->second;
 
 	//Get the source 
-	unsigned short src = getSource(current_instruction.mode);
+	src = getSource(current_instruction.mode);
 
 	//Run the correct function
 
