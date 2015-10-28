@@ -1,6 +1,18 @@
 #include <iostream>
 
 #include "cpu.h"
+#include "instructions.h"
+
+cpu::cpu() {
+	//Set up opcodes
+	instructions = {
+		{LDA_IMM, instruction { "LDA_IMM",&cpu::funcLoadAccumulator,Mode::IMMEDIATE,2,2,false,true } }
+	};
+}
+
+void cpu::init(Memory * memory) {
+	_memory = memory;
+}
 
 void cpu::start() {
 	is_running = true;
@@ -27,6 +39,7 @@ void cpu::reset() {
  @return The # of cycles the opcode took to run
  */
 unsigned short cpu::executeInstruction() {
+	std::cout << "Executing instruction";
 	if(cpu::checkInterrupts()){
 		//If an interrupt ran, it took 7 cycles
 		return INTERRUPT_CYCLES;
@@ -41,17 +54,24 @@ unsigned short cpu::executeInstruction() {
 	reg_status = STATUS_EMPTY;
 
 	//Get the instruction associated with the opcode
-	std::map<char, instruction>::const_iterator current_instruction = instructions.find(opcode);
+	std::map<char, instruction>::const_iterator instruction_row = instructions.find(opcode);
 
 	//Invalid opcode
-	if (current_instruction == instructions.end()) {
+	if (instruction_row == instructions.end()) {
+		std::cout << "Invalid Instruction";
 		//throw InvalidOpcodeException(current_opcode);
 	}
 
 	//Actually execute the opcode instruction
-	instruction entry = current_instruction->second;
+	instruction current_instruction = instruction_row->second;
 
-	unsigned short cycles_used = entry.cycles;
+	//Get the source 
+	unsigned short src = getSource(current_instruction.mode);
+
+	//Run the correct function
+	(this->*current_instruction.functionPtr)();
+
+	unsigned short cycles_used = current_instruction.cycles;
 
 	if (branch_taken) {
 		cycles_used++;
@@ -61,14 +81,13 @@ unsigned short cpu::executeInstruction() {
 		cycles_used++;
 	}
 
-	if (entry.cycles_extra && page_boundary_crossed) {
+	if (current_instruction.cycles_extra && page_boundary_crossed) {
 		cycles_used++;
 	}
 
-	if (entry.skip_bytes) {
-		reg_pc += entry.bytes;
+	if (current_instruction.skip_bytes) {
+		reg_pc += current_instruction.bytes;
 	}
-
 	return cycles_used;
 }
 
@@ -83,7 +102,7 @@ void cpu::executeInterrupt(const enum Interrupt &interrupt) {
 	pushStack(reg_status);
 
 	//Add the interrupt status flag (this prevents further interrupts)
-	reg_status |= STATUS_INTERRUPT;
+	setStatusFlag(STATUS_INTERRUPT);
 
 	//Move the Program Counter to the area of memory with instructions for each interrupt
 	switch (interrupt) {
@@ -101,6 +120,29 @@ void cpu::executeInterrupt(const enum Interrupt &interrupt) {
 			break;
 		default:
 			break;
+	}
+}
+
+/*
+ Instructions need operands to work on. The different methods of
+ getting these operands are called addressing modes.
+ @param Mode				Mode to use
+ @return unsigned short		Operand for the instruction about to be executed.
+*/
+unsigned short cpu::getSource(Mode mode) {
+	switch (mode) {
+		case Mode::ABSOLUTE: {
+			//Load from a 16bit memory address
+			unsigned char first = _memory->read(reg_pc + 1);
+			unsigned char second = _memory->read(reg_pc + 2);
+			return (first << 8 | second);
+			break;
+		}
+			
+		case Mode::IMMEDIATE: {
+			return (reg_pc + 1);
+			break;
+		}
 	}
 }
 
@@ -128,13 +170,6 @@ bool cpu::checkInterrupts() {
 	}
 }
 
-/*
- Check if the cpu status register includes a given status
-*/
-bool cpu::hasStatusFlag(unsigned char flag) {
-	return (reg_status & flag);
-}
-
 unsigned char cpu::readAddress(unsigned short address)
 {
 	return 0;
@@ -145,7 +180,7 @@ unsigned char cpu::readAddress(unsigned short address)
 */
 void cpu::pushStack(unsigned char byte) {
 	//Decrement stack pointer because stack is stored top-down
-	memory::write(STACK_START + reg_sp--, byte);
+	_memory->write(STACK_START + reg_sp--, byte);
 }
 
 /*
@@ -159,4 +194,135 @@ void cpu::pushStack(unsigned short bytebyte) {
 	pushStack(second);
 
 	return;
+}
+
+/************
+ STATUS FLAGS
+*************/
+
+/*
+ Check if the cpu status register includes a given status
+*/
+bool cpu::hasStatusFlag(unsigned char flag) {
+	return (reg_status & flag);
+}
+
+/*
+ Add a status flag to the cpu status register
+*/
+void cpu::setStatusFlag(unsigned char flag) {
+	reg_status |= flag;
+}
+
+/*
+ Remove a status flag from the cpu status register
+*/
+void cpu::clearStatusFlag(unsigned char flag) {
+	reg_status &= !flag;
+}
+
+/*
+ If necessary, set the Sign status register
+ @param val		8 bit value
+*/
+void cpu::updateStatusSign(unsigned short val) {
+	// & 128 to figure out if it's positive or negative
+	if (val & 0x0080) {
+		setStatusFlag(STATUS_SIGN);
+	} else {
+		clearStatusFlag(STATUS_SIGN);
+	}
+}
+
+/*
+ If necessary, set the Zero status register
+ (if val is 0 then set it to 0, otherwise clear the flag)
+*/
+void cpu::updateStatusZero(unsigned short val) {
+	// & 11111111 to figure out if it's zero or not
+	if (val & 0x00FF) {
+		clearStatusFlag(STATUS_ZERO);
+	}
+	else {
+		setStatusFlag(STATUS_ZERO);
+	}
+}
+
+/*
+ If necessary, set the overflow status register
+*/
+void cpu::updateStatusOverflow(unsigned short value, unsigned short result) {
+	//If (+) + (+) = (-) OR (-) - (-) = (+)
+	if (~(reg_acc ^ value) & (reg_acc ^ result) & 0x80) {
+		setStatusFlag(STATUS_OVERFLOW);
+	}
+	else {
+		clearStatusFlag(STATUS_OVERFLOW);
+	}
+}
+
+/*
+ If necessary, set the overflow bit to 1
+*/
+void cpu::updateStatusCarry(unsigned short result) {
+	if (result & 0x100) {
+		setStatusFlag(STATUS_CARRY);
+	}
+	else {
+		clearStatusFlag(STATUS_CARRY);
+	}
+}
+
+/************
+  OPERATIONS
+*************/
+
+//Load a value from an address to the accumulator
+void cpu::funcLoadAccumulator() {
+	value = _memory->read(src);
+	reg_acc = value;
+	updateStatusZero(reg_acc);
+	updateStatusZero(reg_acc);
+}
+
+//Add whatever is in the accumulator to the value at src
+void cpu::funcAddWithCarry() {
+	value = _memory->read(src);
+	int carry_val = hasStatusFlag(STATUS_CARRY) ? 1 : 0;
+	result = reg_acc + value + carry_val;
+	updateStatusOverflow(value, result);
+	updateStatusCarry(result);
+	reg_acc = result & 0xFF;
+	updateStatusSign(reg_acc);
+	updateStatusZero(reg_acc);
+}
+
+//If the result of the previous arithmetic operation is not zero, then branch
+void cpu::funcBranchNotEqualZero() {
+	if (!hasStatusFlag(STATUS_ZERO)) {
+		branch_taken = true;
+		//Branch
+	}
+}
+
+//Check the current reg_acc value against src
+void cpu::funcCompareMemory() {
+	value = _memory->read(src);
+	result = reg_acc - value;
+
+	updateStatusCarry(result);
+	updateStatusSign(result);
+	updateStatusZero(result);
+}
+
+//Store the value currently in the accumulator
+void cpu::funcStoreAccumulator() {
+	_memory->write(src, reg_acc);
+}
+
+
+void cpu::funcTransferAccumulatorToX() {
+	reg_index_x = reg_acc;
+	updateStatusZero(reg_index_x);
+	updateStatusSign(reg_index_x);
 }

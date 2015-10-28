@@ -8,6 +8,7 @@
 #include "memory.h"
 
 class cpu;
+class Memory;
 
 //CPU Initialization: http://wiki.nesdev.com/w/index.php/CPU_power_up_state
 #define STARTUP_PC			0b1100000000000000
@@ -43,13 +44,15 @@ class cpu {
 public:
 	cpu();
 
+	void init(Memory * memory);
 	void start();
+	void stop();
 	void reset();
 	unsigned short executeInstruction();
 private:
 	bool is_running;
 
-	unsigned char *memory;
+	Memory *_memory;
 
 	//Runtime
 	bool branch_taken;
@@ -71,13 +74,31 @@ private:
 	void executeInterrupt(const enum Interrupt &interrupt);
 	bool checkInterrupts();
 
-	//Helpers
+	//Instructions
+	unsigned short src, value, result, address;
+	unsigned short getSource(Mode mode);
+
+	//Status
 	bool hasStatusFlag(unsigned char flag);
+	void setStatusFlag(unsigned char flag);
+	void clearStatusFlag(unsigned char flag);
+	void updateStatusZero(unsigned short val);
+	void updateStatusSign(unsigned short val);
+	void updateStatusOverflow(unsigned short val, unsigned short mem);
+	void updateStatusCarry(unsigned short result);
 	
 	//Memory Management
 	unsigned char readAddress(unsigned short address);
 	void pushStack(unsigned char byte);
 	void pushStack(unsigned short bytebyte);
+
+	//Functions (instructions call these)
+	inline void funcLoadAccumulator();
+	inline void funcStoreAccumulator();
+	inline void funcAddWithCarry();
+	inline void funcTransferAccumulatorToX();
+	inline void funcCompareMemory();
+	inline void funcBranchNotEqualZero();
 };
 
 #endif
