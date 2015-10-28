@@ -30,6 +30,12 @@
     <ClInclude Include="include\knaves.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\cartridge.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cpu.cpp">
@@ -44,5 +50,16 @@
     <ClCompile Include="src\knaves.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\cartridge.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mario.nes">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="untitled.nes">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
