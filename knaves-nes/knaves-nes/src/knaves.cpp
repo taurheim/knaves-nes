@@ -33,7 +33,7 @@ void Knaves::run() {
 	_cpu->start();
 
 	while (isRunning) {
-		//unsigned short cycles = _cpu->executeInstruction();
+		unsigned short cycles = _cpu->executeInstruction();
 	}
 }
 

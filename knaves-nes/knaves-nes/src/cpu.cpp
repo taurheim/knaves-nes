@@ -18,14 +18,17 @@ void cpu::start() {
 	is_running = true;
 
 	//Set Registers on startup
-	reg_pc = STARTUP_PC;
+
+	//OVERRIDING, FIX THIS LATER
+	reg_pc = 0x8010;
 	reg_status = STARTUP_STATUS;
 	reg_acc = 0;
 	reg_index_x = 0;
 	reg_index_y = 0;
 
 	//Execute RESET Interrupt on startup
-	executeInterrupt(Interrupt::RESET);
+	//OVERRIDING, FIX THIS LATER
+	//executeInterrupt(Interrupt::RESET);
 }
 
 void cpu::reset() {
@@ -39,7 +42,7 @@ void cpu::reset() {
  @return The # of cycles the opcode took to run
  */
 unsigned short cpu::executeInstruction() {
-	std::cout << "Executing instruction";
+	std::cout << "Executing instruction \n";
 	if(cpu::checkInterrupts()){
 		//If an interrupt ran, it took 7 cycles
 		return INTERRUPT_CYCLES;
@@ -52,6 +55,8 @@ unsigned short cpu::executeInstruction() {
 	//Fetch the opcode
 	unsigned char opcode = readAddress(reg_pc);
 	reg_status = STATUS_EMPTY;
+
+	std::cout << std::hex << opcode;
 
 	//Get the instruction associated with the opcode
 	std::map<char, instruction>::const_iterator instruction_row = instructions.find(opcode);
@@ -69,8 +74,8 @@ unsigned short cpu::executeInstruction() {
 	unsigned short src = getSource(current_instruction.mode);
 
 	//Run the correct function
-	(this->*current_instruction.functionPtr)();
 
+	(this->*current_instruction.functionPtr)();
 	unsigned short cycles_used = current_instruction.cycles;
 
 	if (branch_taken) {
@@ -88,6 +93,8 @@ unsigned short cpu::executeInstruction() {
 	if (current_instruction.skip_bytes) {
 		reg_pc += current_instruction.bytes;
 	}
+
+
 	return cycles_used;
 }
 
@@ -172,7 +179,7 @@ bool cpu::checkInterrupts() {
 
 unsigned char cpu::readAddress(unsigned short address)
 {
-	return 0;
+	return _memory->read(address);
 }
 
 /*

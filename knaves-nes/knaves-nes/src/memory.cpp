@@ -13,8 +13,9 @@ using namespace std;
 Default constructor for memory
 */
 Memory::Memory(){
-	RAM = new unsigned char[2000];
-	memset(RAM, 0, 2000);
+	RAM = new unsigned char[0xFFFF];
+	memset(RAM, 0, 0xFFFF);
+
 }
 
 /*
@@ -26,42 +27,60 @@ void Memory::write(unsigned short address, unsigned char value) {
 }
 
 void Memory::readFromRom() {
-	cout << "Reading from ROM";
-	std::ifstream file("untitled.nes", ios::in | ios::binary); //load the file 
 
-	std::string str;
-	std::string file_contents;
-	while (std::getline(file, str))
-	{
-		file_contents += str;
-		file_contents.push_back('\n');
+	std::ifstream input("appendix2.nes", std::ios::in | std::ios::binary);
+
+	unsigned short currentByteAddress = 0;
+	while (input.good()) {
+		unsigned char x;
+		input.read(reinterpret_cast<char *>(&x), sizeof(unsigned char));
+		//std::cout << std::hex << std::setw(2) << std::setfill('0')
+		//	<< (int)x;
+		//cout << "\n";
+		Memory::write(currentByteAddress + ROM_LOWER_ADDRESS, x);
+		currentByteAddress++;
+
 	}
+	cout << "All done reading ROM. \n";
 
-	static const char* const lut = "0123456789ABCDEF"; //convert back to hex
-	size_t len = file_contents.length();
 
-	std::string output;
-	output.reserve(2 * len);
-	for (size_t i = 0; i < len; ++i)
-	{
-		const unsigned char c = file_contents[i];
-		output.push_back(lut[c >> 4]);
-		output.push_back(lut[c & 15]);
 
-		const unsigned char c1 = lut[c >> 4];
-		const unsigned char c2 = lut[c & 15];
-		cout << c1;
-		cout << c2;
 
-		Memory::write(i, c1);
-		Memory::write(i + 1, c2);
-	}
+	//while (std::getline(file, str))
+	//{
+	//	file_contents += str;
+	//	file_contents.push_back('\n');
+	//}
 
-	output.erase(0, 32);
-	//cout << output;
-	for (int i = 0; i < 100; i++) {
-		//cout << file_contents[i];
-	}
+	//static const char* const lut = "0123456789ABCDEF"; //convert back to hex
+	//size_t len = file_contents.length();
+
+	//std::string output;
+	//output.reserve(2 * len);
+
+	//cout << len;
+	//for (size_t i = 0; i < len; i = i + 2)
+	//{
+	//	const unsigned char c = file_contents[i];
+	//	cout << std::hex << c;
+	//	output.push_back(lut[c >> 4]);
+	//	output.push_back(lut[c & 15]);
+
+	//	const unsigned char c1 = lut[c >> 4];
+	//	const unsigned char c2 = lut[c & 15];
+	//	//cout << c1;
+	//	//cout << c2;
+
+
+	//	Memory::write((unsigned short) i, c1);
+	//	Memory::write((unsigned short) i + 1, c2);
+	//}
+
+	//output.erase(0, 32);
+	////cout << output;
+	//for (int i = 0; i < 100; i++) {
+	//	//cout << file_contents[i];
+	//}
 
 //	if (address >= ROM_LOWER_ADDRESS && address <= ROM_UPPER_ADDRESS) {
 //		cout << output.substr(0, 4);
@@ -98,7 +117,7 @@ void Memory::logMemory() {
 	std::string timeString = std::to_string(time) + ".log";
 	logFile.open("Memory - " + timeString);
 
-	long memorySize = 2000;
+	long memorySize = 0xFFFF;
 	std::string tab = std::string("\t");
 	std::string newLine = std::string("\n");
 	std::string equalsChar = std::string("=");
@@ -129,15 +148,15 @@ void Memory::logMemory() {
 		}
 
 		std::string memValue = Memory::hexFromLong(Memory::RAM[i]);
+
 		logFile << tab + memValue;
 		if (column == 16) {
 			logFile << newLine;
 			column = 0;
 		}
-
-		logFile.close();
-
 	}
+	logFile.close();
+
 }
 
 
