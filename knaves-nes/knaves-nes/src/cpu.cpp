@@ -6,7 +6,7 @@
 cpu::cpu() {
 	//Set up opcodes
 	instructions = {
-		{LDA_IMM, {"LDA_IMM",&cpu::funcLoadAccumulator,Mode::IMMEDIATE, 2, 2, false, true}}
+		{LDA_IMM, instruction { "LDA_IMM",&cpu::funcLoadAccumulator,Mode::IMMEDIATE,2,2,false,true } }
 	};
 }
 
@@ -131,15 +131,18 @@ void cpu::executeInterrupt(const enum Interrupt &interrupt) {
 */
 unsigned short cpu::getSource(Mode mode) {
 	switch (mode) {
-	case Mode::ABSOLUTE:
-		//Load from a 16bit memory address
-		unsigned char first = _memory->read(reg_pc + 1);
-		unsigned char second = _memory->read(reg_pc + 2);
-		return (first << 8 | second);
-		break;
-	case Mode::IMMEDIATE:
-		return (reg_pc + 1);
-		break;
+		case Mode::ABSOLUTE: {
+			//Load from a 16bit memory address
+			unsigned char first = _memory->read(reg_pc + 1);
+			unsigned char second = _memory->read(reg_pc + 2);
+			return (first << 8 | second);
+			break;
+		}
+			
+		case Mode::IMMEDIATE: {
+			return (reg_pc + 1);
+			break;
+		}
 	}
 }
 
