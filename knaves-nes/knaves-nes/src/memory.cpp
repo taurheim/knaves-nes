@@ -52,15 +52,47 @@ void Memory::logMemory() {
 	unsigned long int time = std::time(0);
 	std::string timeString = std::to_string(time) + ".log";
 	logFile.open("Memory - " + timeString);
-	
-	long memorySize = (sizeof(RAM) / sizeof(*RAM));
+
+	long memorySize = 2000;
+	std::string tab = std::string("\t");
+	std::string newLine = std::string("\n");
+	std::string equalsChar = std::string("=");
+
+
+	//Memory will be mapped in a 16x2000 grid
+	//Each row will contain the 16 memory values for each multiple of 16
+	int column = 0;
+	logFile << tab;
+	for (long i = 0; i < 0x10; i++) {
+		std::string columnNumber = Memory::hexFromLong(i);
+		logFile << tab + columnNumber;
+	}
+	logFile << newLine + tab + tab;
+	for (long i = 0; i < 0x10 * 5 + 0x10 * 10; i++) {
+		logFile << equalsChar;
+	}
+
+	logFile << newLine;
+
 	for (long i = 0; i < memorySize; i++) {
 		std::string memAddress = Memory::hexFromLong(i);
-		std::string memValue = Memory::hexFromLong(RAM[i]);
-		logFile << memAddress + std::string("\t") + memValue + std::string("\t");
-	}
-	logFile.close();
+		//Left hand side will have the row's address
+		column++;
 
+		if (column == 1) {
+			logFile << memAddress;
+		}
+
+		std::string memValue = Memory::hexFromLong(Memory::RAM[i]);
+		logFile << tab + memValue;
+		if (column == 16) {
+			logFile << newLine;
+			column = 0;
+		}
+
+		logFile.close();
+
+	}
 }
 
 
