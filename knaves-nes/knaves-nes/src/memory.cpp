@@ -25,10 +25,8 @@ void Memory::write(unsigned short address, unsigned char value) {
 	return;
 }
 
-/*
- Read value from RAM
-*/
-unsigned char Memory::read(unsigned short address) {
+void Memory::readFromRom() {
+	cout << "Reading from ROM";
 	std::ifstream file("untitled.nes", ios::in | ios::binary); //load the file 
 
 	std::string str;
@@ -49,16 +47,33 @@ unsigned char Memory::read(unsigned short address) {
 		const unsigned char c = file_contents[i];
 		output.push_back(lut[c >> 4]);
 		output.push_back(lut[c & 15]);
+
+		const unsigned char c1 = lut[c >> 4];
+		const unsigned char c2 = lut[c & 15];
+		cout << c1;
+		cout << c2;
+
+		Memory::write(i, c1);
+		Memory::write(i + 1, c2);
 	}
 
 	output.erase(0, 32);
-	cout << output;
-
-	if (address >= ROM_LOWER_ADDRESS && address <= ROM_UPPER_ADDRESS) {
-		cout<<output.substr(0, 4);
-		output.erase(0, 4);
-		//Read from ROM
+	//cout << output;
+	for (int i = 0; i < 100; i++) {
+		//cout << file_contents[i];
 	}
+
+//	if (address >= ROM_LOWER_ADDRESS && address <= ROM_UPPER_ADDRESS) {
+//		cout << output.substr(0, 4);
+//		output.erase(0, 4);
+		//Read from ROM
+}
+
+
+/*
+ Read value from RAM
+*/
+unsigned char Memory::read(unsigned short address) {
 
 	//Check for special cases (registers)
 	switch (address) {
