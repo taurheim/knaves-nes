@@ -75,10 +75,17 @@ private:
 	bool checkInterrupts();
 
 	//Instructions
-	void setMode(Mode mode);
+	unsigned short src, value, result, address;
+	unsigned short getSource(Mode mode);
 
-	//Helpers
+	//Status
 	bool hasStatusFlag(unsigned char flag);
+	void setStatusFlag(unsigned char flag);
+	void clearStatusFlag(unsigned char flag);
+	void updateStatusZero(unsigned short val);
+	void updateStatusSign(unsigned short val);
+	void updateStatusOverflow(unsigned short val, unsigned short mem);
+	void updateStatusCarry(unsigned short result);
 	
 	//Memory Management
 	unsigned char readAddress(unsigned short address);
@@ -91,7 +98,7 @@ private:
 	inline void funcAddWithCarry();
 	inline void funcTransferAccumulatorToX();
 	inline void funcCompareMemory();
-	inline void funcBranchNotEqual();
+	inline void funcBranchNotEqualZero();
 };
 
 #endif

@@ -29,7 +29,8 @@ typedef struct {
 	char cycles;
 	bool cycles_extra;
 	bool skip_bytes;
-	unsigned char dummy;
+	//Not sure if we need this
+	//unsigned char dummy;
 } instruction;
 
 
