@@ -3,7 +3,7 @@
 
 #define LDA_IMM		0xA9
 
-#define STA_ABS		0x85
+#define STA_ABS		0x8D
 
 #define ADC_ABS		0x6D
 

@@ -34,6 +34,10 @@ void Knaves::run() {
 
 	while (isRunning) {
 		unsigned short cycles = _cpu->executeInstruction();
+		
+		if (cycles == 0) {
+			isRunning = false;
+		}
 	}
 }
 

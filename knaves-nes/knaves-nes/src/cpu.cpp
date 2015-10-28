@@ -47,7 +47,6 @@ void cpu::reset() {
  @return The # of cycles the opcode took to run
  */
 unsigned short cpu::executeInstruction() {
-	std::cout << "Executing instruction \n";
 	if(cpu::checkInterrupts()){
 		//If an interrupt ran, it took 7 cycles
 		return INTERRUPT_CYCLES;
@@ -69,12 +68,16 @@ unsigned short cpu::executeInstruction() {
 	//Invalid opcode
 	if (instruction_row == instructions.end()) {
 		std::cout << "Invalid Instruction";
+		_memory->logMemory();
 		//throw InvalidOpcodeException(current_opcode);
 		return 0;
 	}
 
+
+
 	//Actually execute the opcode instruction
 	instruction current_instruction = instruction_row->second;
+	std::cout << "\n Executing instruction " + current_instruction.name;
 
 	//Get the source 
 	src = getSource(current_instruction.mode);
@@ -146,8 +149,8 @@ unsigned short cpu::getSource(Mode mode) {
 	switch (mode) {
 		case Mode::ABSOLUTE: {
 			//Load from a 16bit memory address
-			unsigned char first = _memory->read(reg_pc + 1);
-			unsigned char second = _memory->read(reg_pc + 2);
+			unsigned char first = _memory->read(reg_pc + 2);
+			unsigned char second = _memory->read(reg_pc + 1);
 			return (first << 8 | second);
 			break;
 		}
