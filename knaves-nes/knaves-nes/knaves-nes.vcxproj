@@ -124,8 +124,8 @@
     <ClInclude Include="include\instructions.h" />
     <ClInclude Include="include\instruction.h" />
     <ClInclude Include="include\knaves.h" />
+    <ClInclude Include="include\main.h" />
     <ClInclude Include="include\memory.h" />
-    <ClInclude Include="src\main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cartridge.cpp" />

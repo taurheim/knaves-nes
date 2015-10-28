@@ -6,7 +6,7 @@
 int main(int argc, char **argv) {
 	Knaves _knaves;
 
-	_knaves.init("rom.nes");
+	_knaves.init("untitled.nes");
 
 	_knaves.run();
 

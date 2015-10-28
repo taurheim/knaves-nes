@@ -1,9 +1,13 @@
 #include "memory.h"
 #include <iostream>
+#include <stdlib.h>
+#include <string>
 #include <sstream>
 #include <iomanip>
 #include <fstream>
 #include <ctime>
+
+using namespace std;
 
 /*
 Default constructor for memory
@@ -25,8 +29,34 @@ void Memory::write(unsigned short address, unsigned char value) {
  Read value from RAM
 */
 unsigned char Memory::read(unsigned short address) {
+	std::ifstream file("untitled.nes", ios::in | ios::binary); //load the file 
+
+	std::string str;
+	std::string file_contents;
+	while (std::getline(file, str))
+	{
+		file_contents += str;
+		file_contents.push_back('\n');
+	}
+
+	static const char* const lut = "0123456789ABCDEF"; //convert back to hex
+	size_t len = file_contents.length();
+
+	std::string output;
+	output.reserve(2 * len);
+	for (size_t i = 0; i < len; ++i)
+	{
+		const unsigned char c = file_contents[i];
+		output.push_back(lut[c >> 4]);
+		output.push_back(lut[c & 15]);
+	}
+
+	output.erase(0, 32);
+	cout << output;
 
 	if (address >= ROM_LOWER_ADDRESS && address <= ROM_UPPER_ADDRESS) {
+		cout<<output.substr(0, 4);
+		output.erase(0, 4);
 		//Read from ROM
 	}
 
