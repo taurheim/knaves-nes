@@ -75,8 +75,8 @@ private:
 	bool checkInterrupts();
 
 	//Instructions
-	unsigned short src, value, result, address;
 	unsigned short getSource(Mode mode);
+	void branch(signed short offset);
 
 	//Status
 	bool hasStatusFlag(unsigned char flag);
@@ -93,12 +93,12 @@ private:
 	void pushStack(unsigned short bytebyte);
 
 	//Functions (instructions call these)
-	inline void funcLoadAccumulator();
-	inline void funcStoreAccumulator();
-	inline void funcAddWithCarry();
-	inline void funcTransferAccumulatorToX();
-	inline void funcCompareMemory();
-	inline void funcBranchNotEqualZero();
+	inline void funcLoadAccumulator(unsigned short src);
+	inline void funcStoreAccumulator(unsigned short src);
+	inline void funcAddWithCarry(unsigned short src);
+	inline void funcTransferAccumulatorToX(unsigned short src);
+	inline void funcCompareMemory(unsigned short src);
+	inline void funcBranchNotEqualZero(unsigned short src);
 };
 
 #endif

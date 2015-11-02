@@ -23,7 +23,7 @@ enum Mode {
 
 typedef struct {
 	std::string name;
-	void (cpu::*functionPtr)(); //Run this
+	void (cpu::*functionPtr)(unsigned short src); //Run this
 	Mode mode;
 	char bytes;
 	char cycles;

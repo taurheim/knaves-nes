@@ -74,7 +74,7 @@ unsigned short cpu::executeInstruction() {
 	unsigned short src = getSource(current_instruction.mode);
 
 	//Run the correct function
-	(this->*current_instruction.functionPtr)();
+	(this->*current_instruction.functionPtr)(src);
 
 	unsigned short cycles_used = current_instruction.cycles;
 
@@ -148,8 +148,26 @@ unsigned short cpu::getSource(Mode mode) {
 			return (reg_pc + 1);
 			break;
 		}
+
+		//Used for branching instructions. Essentially the byte
+		//after the instruction tells the CPU how many bytes to skip if
+		//the branch happens
+		case Mode::RELATIVE: {
+			return _memory->read(reg_pc + 1);
+			break;
+		}
 	}
 }
+
+/*
+ Branch to a different memory location.
+*/
+void cpu::branch(signed short offset) {
+	unsigned short before = reg_pc;
+	unsigned short after = reg_pc + offset;
+	//Check for page boundary crossing
+}
+
 
 
 /*
@@ -283,18 +301,18 @@ void cpu::updateStatusCarry(unsigned short result) {
 *************/
 
 //Load a value from an address to the accumulator
-void cpu::funcLoadAccumulator() {
-	value = _memory->read(src);
+void cpu::funcLoadAccumulator(unsigned short src) {
+	unsigned short value = _memory->read(src);
 	reg_acc = value;
 	updateStatusZero(reg_acc);
 	updateStatusZero(reg_acc);
 }
 
 //Add whatever is in the accumulator to the value at src
-void cpu::funcAddWithCarry() {
-	value = _memory->read(src);
+void cpu::funcAddWithCarry(unsigned short src) {
+	unsigned short value = _memory->read(src);
 	int carry_val = hasStatusFlag(STATUS_CARRY) ? 1 : 0;
-	result = reg_acc + value + carry_val;
+	unsigned short result = reg_acc + value + carry_val;
 	updateStatusOverflow(value, result);
 	updateStatusCarry(result);
 	reg_acc = result & 0xFF;
@@ -303,17 +321,18 @@ void cpu::funcAddWithCarry() {
 }
 
 //If the result of the previous arithmetic operation is not zero, then branch
-void cpu::funcBranchNotEqualZero() {
+void cpu::funcBranchNotEqualZero(unsigned short src) {
 	if (!hasStatusFlag(STATUS_ZERO)) {
 		branch_taken = true;
-		//Branch
+		signed short branch_to = (signed char)src;
+		branch(branch_to);
 	}
 }
 
 //Check the current reg_acc value against src
-void cpu::funcCompareMemory() {
-	value = _memory->read(src);
-	result = reg_acc - value;
+void cpu::funcCompareMemory(unsigned short src) {
+	unsigned short value = _memory->read(src);
+	unsigned short result = reg_acc - value;
 
 	updateStatusCarry(result);
 	updateStatusSign(result);
@@ -321,12 +340,12 @@ void cpu::funcCompareMemory() {
 }
 
 //Store the value currently in the accumulator
-void cpu::funcStoreAccumulator() {
+void cpu::funcStoreAccumulator(unsigned short src) {
 	_memory->write(src, reg_acc);
 }
 
 
-void cpu::funcTransferAccumulatorToX() {
+void cpu::funcTransferAccumulatorToX(unsigned short src) {
 	reg_index_x = reg_acc;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
