@@ -39,20 +39,83 @@ void cpu::reset() {
 	interrupts.clear();
 }
 
+/************
+INTERRUPTS
+*************/
+
 /*
- Read the next op code from the program counter
- @return The # of cycles the opcode took to run
- */
+Check to see if we should execute an interrupt
+@return True if an interrupt was run, false otherwise
+*/
+bool cpu::checkInterrupts() {
+	if (interrupts.size() > 0) {
+
+		//Ignore the interrupt if cpu has STATUS_INTERRUPT
+		//If it's an NMI interrupt, always run it.
+		if (hasStatusFlag(STATUS_INTERRUPT) && interrupts.front() != Interrupt::NMI) {
+			return false;
+		}
+
+		//Execute the interrupt
+		executeInterrupt(interrupts.front());
+
+		//Remove the interrupt from the queue
+		interrupts.pop_front();
+
+		return true;
+	}
+}
+
+/*
+ Execute an interrupt
+ @param enum interrupt	The interrupt to execute
+ @return short			New program counter (this is the location of the instructions executed upon interrupt)
+*/
+void cpu::executeInterrupt(const enum Interrupt &interrupt) {
+	//Push program counter & status register to stack
+	pushStack(reg_pc);
+	pushStack(reg_status);
+
+	//Add the interrupt status flag (this prevents further interrupts)
+	setStatusFlag(STATUS_INTERRUPT);
+
+	//Move the Program Counter to the area of memory with instructions for each interrupt
+	switch (interrupt) {
+		case Interrupt::NMI:
+			reg_pc = NMI_VECTOR;
+			break;
+		case Interrupt::IRQ:
+			reg_pc = IRQ_BRK_VECTOR;
+			break;
+		case Interrupt::BRK:
+			reg_pc = IRQ_BRK_VECTOR;
+			break;
+		case Interrupt::RESET:
+			reg_pc = RESET_VECTOR;
+			break;
+		default:
+			break;
+	}
+}
+
+/************
+INSTRUCTIONS
+*************/
+
+/*
+Read the next op code from the program counter
+@return The # of cycles the opcode took to run
+*/
 unsigned short cpu::executeInstruction() {
 	std::cout << "Executing instruction";
-	if(cpu::checkInterrupts()){
+	if (cpu::checkInterrupts()) {
 		//If an interrupt ran, it took 7 cycles
 		return INTERRUPT_CYCLES;
 	}
 
 	branch_taken = false;
 	page_boundary_crossed = false;
-	
+
 
 	//Fetch the opcode
 	unsigned char opcode = readAddress(reg_pc);
@@ -97,38 +160,6 @@ unsigned short cpu::executeInstruction() {
 }
 
 /*
- Execute an interrupt
- @param enum interrupt	The interrupt to execute
- @return short			New program counter (this is the location of the instructions executed upon interrupt)
-*/
-void cpu::executeInterrupt(const enum Interrupt &interrupt) {
-	//Push program counter & status register to stack
-	pushStack(reg_pc);
-	pushStack(reg_status);
-
-	//Add the interrupt status flag (this prevents further interrupts)
-	setStatusFlag(STATUS_INTERRUPT);
-
-	//Move the Program Counter to the area of memory with instructions for each interrupt
-	switch (interrupt) {
-		case Interrupt::NMI:
-			reg_pc = NMI_VECTOR;
-			break;
-		case Interrupt::IRQ:
-			reg_pc = IRQ_BRK_VECTOR;
-			break;
-		case Interrupt::BRK:
-			reg_pc = IRQ_BRK_VECTOR;
-			break;
-		case Interrupt::RESET:
-			reg_pc = RESET_VECTOR;
-			break;
-		default:
-			break;
-	}
-}
-
-/*
  Instructions need operands to work on. The different methods of
  getting these operands are called addressing modes.
  @param Mode				Mode to use
@@ -169,29 +200,9 @@ void cpu::branch(signed short offset) {
 }
 
 
-
-/*
- Check to see if we should execute an interrupt
- @return True if an interrupt was run, false otherwise
-*/
-bool cpu::checkInterrupts() {
-	if (interrupts.size() > 0) {
-		
-		//Ignore the interrupt if cpu has STATUS_INTERRUPT
-		//If it's an NMI interrupt, always run it.
-		if (hasStatusFlag(STATUS_INTERRUPT) && interrupts.front() != Interrupt::NMI) {
-			return false;
-		}
-
-		//Execute the interrupt
-		executeInterrupt(interrupts.front());
-		
-		//Remove the interrupt from the queue
-		interrupts.pop_front();
-		
-		return true;
-	}
-}
+/************
+MEMORY FUNCTIONS
+*************/
 
 unsigned char cpu::readAddress(unsigned short address)
 {
