@@ -99,6 +99,7 @@ private:
 	inline void funcTransferAccumulatorToX(unsigned short src);
 	inline void funcCompareMemory(unsigned short src);
 	inline void funcBranchNotEqualZero(unsigned short src);
+	inline void funcAnd(unsigned short src);
 };
 
 #endif

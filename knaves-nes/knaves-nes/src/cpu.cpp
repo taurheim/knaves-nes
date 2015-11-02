@@ -7,11 +7,25 @@ cpu::cpu() {
 	//Set up opcodes
 	instructions = {
 		{LDA_IMM, instruction { "LDA_IMM",&cpu::funcLoadAccumulator,Mode::IMMEDIATE,2,2,false,true } },
+
 		{STA_ABS, instruction { "STA_ABS",&cpu::funcStoreAccumulator,Mode::ABSOLUTE,3,4,false,true} },
+
 		{ADC_ABS, instruction { "ADC_ABS",&cpu::funcAddWithCarry,Mode::ABSOLUTE,3,4,false,true}},
+
 		{TAX, instruction {"TAX",&cpu::funcTransferAccumulatorToX,Mode::IMPLIED,1,2,false,true}},
+
 		{CMP_IMM, instruction {"CMP_IMM",&cpu::funcCompareMemory,Mode::IMMEDIATE,2,2,false,true}},
-		{BNE, instruction {"BNE",&cpu::funcBranchNotEqualZero,Mode::RELATIVE,2,2,true,true}}
+
+		{BNE, instruction {"BNE",&cpu::funcBranchNotEqualZero,Mode::RELATIVE,2,2,true,true}},
+
+		{AND_IMM, instruction { "AND_IMM", &cpu::funcAnd, Mode::IMMEDIATE, 2, 2, false, true} },
+		{AND_ZERO,{ "AND_ZERO", &cpu::funcAnd, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true } },
+		{AND_ZERO_X,{ "AND_ZERO_X", &cpu::funcAnd, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true } },
+		{AND_ABS,{ "AND_ABS", &cpu::funcAnd, Mode::ABSOLUTE, 3, 4, false, true } },
+		{AND_ABS_X,{ "AND_ABS_X", &cpu::funcAnd,Mode:: ABSOLUTE_X, 3, 4, true, true } },
+		{AND_ABS_Y,{ "AND_ABS_Y", &cpu::funcAnd,Mode::ABSOLUTE_Y, 3, 4, true, true } },
+		{AND_IND_X,{ "AND_IND_X", &cpu::funcAnd, Mode::PRE_INDIRECT_X, 2, 6, false, true } },
+		{AND_IND_Y,{ "AND_IND_Y", &cpu::funcAnd, Mode::PRE_INDIRECT_Y, 2, 5, true, true } },
 	};
 }
 
@@ -360,4 +374,11 @@ void cpu::funcTransferAccumulatorToX(unsigned short src) {
 	reg_index_x = reg_acc;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
+}
+
+void cpu::funcAnd(unsigned short src) {
+	unsigned short result = src & reg_acc;
+	updateStatusZero(result);
+	updateStatusSign(result);
+	reg_acc = result & 0xFF;
 }
