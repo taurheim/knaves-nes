@@ -54,10 +54,6 @@ private:
 
 	Memory *_memory;
 
-	//Runtime
-	bool branch_taken;
-	bool page_boundary_crossed;
-
 	//Registers
 	//http://codebase64.org/doku.php?id=base:6502_registers
 	unsigned short reg_pc; //Program Counter, 16 bits
@@ -76,7 +72,7 @@ private:
 
 	//Instructions
 	unsigned short getSource(Mode mode);
-	void branch(signed short offset);
+	int branch(signed short offset);
 
 	//Status
 	bool hasStatusFlag(unsigned char flag);
@@ -93,13 +89,23 @@ private:
 	void pushStack(unsigned short bytebyte);
 
 	//Functions (instructions call these)
-	inline void funcLoadAccumulator(unsigned short src);
-	inline void funcStoreAccumulator(unsigned short src);
-	inline void funcAddWithCarry(unsigned short src);
-	inline void funcTransferAccumulatorToX(unsigned short src);
-	inline void funcCompareMemory(unsigned short src);
-	inline void funcBranchNotEqualZero(unsigned short src);
-	inline void funcAnd(unsigned short src);
+	//Naming convention: http://www.thealmightyguru.com/Games/Hacking/Wiki/index.php?title=6502_Opcodes
+	inline int funcLoadAccumulator(unsigned short src);
+	inline int funcStoreAccumulator(unsigned short src);
+	inline int funcAddWithCarry(unsigned short src);
+	inline int funcTransferAccumulatorToX(unsigned short src);
+	inline int funcCompareMemory(unsigned short src);
+
+	inline int funcBranchOnResultPlus(unsigned short src);
+	inline int funcBranchOnResultMinus(unsigned short src);
+	inline int funcBranchOnOverflowClear(unsigned short src);
+	inline int funcBranchOnOverflowSet(unsigned short src);
+	inline int funcBranchOnCarryClear(unsigned short src);
+	inline int funcBranchOnCarrySet(unsigned short src);
+	inline int funcBranchOnResultNotZero(unsigned short src);
+	inline int funcBranchOnResultZero(unsigned short src);
+	
+	inline int funcAnd(unsigned short src);
 };
 
 #endif

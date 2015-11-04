@@ -11,7 +11,15 @@
 
 #define CMP_IMM		0xC9
 
+//Branching
+#define BPL			0x10
+#define BMI			0x30
+#define BVC			0x50
+#define BVS			0x70
+#define BCC			0x90
+#define BCS			0xB0
 #define BNE			0xD0
+#define BEQ			0xF0
 
 #define AND_IMM		0x29
 #define AND_ZERO	0x25

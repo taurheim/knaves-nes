@@ -25,7 +25,7 @@ enum Mode {
 
 typedef struct {
 	std::string name;
-	void (cpu::*functionPtr)(unsigned short src); //Run this
+	int (cpu::*functionPtr)(unsigned short src); //Run this (returns number of cycles)
 	Mode mode;
 	char bytes;
 	char cycles;

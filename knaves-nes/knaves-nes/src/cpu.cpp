@@ -16,7 +16,15 @@ cpu::cpu() {
 
 		{CMP_IMM, instruction {"CMP_IMM",&cpu::funcCompareMemory,Mode::IMMEDIATE,2,2,false,true}},
 
-		{BNE, instruction {"BNE",&cpu::funcBranchNotEqualZero,Mode::RELATIVE,2,2,true,true}},
+		//Branching
+		{BPL, instruction {"BPL"} },
+		{BMI, instruction {"BMI"} },
+		{BVC, instruction {"BVC"} },
+		{BVS, instruction {"BVS"} },
+		{BCC, instruction {"BCC"} },
+		{BCS, instruction {"BCS"} },
+		{BNE, instruction {"BNE",&cpu::funcBranchOnResultNotZero,Mode::RELATIVE,2,2,true,true}},
+		{BEQ, instruction {"BEQ"} },
 
 		{AND_IMM, instruction { "AND_IMM", &cpu::funcAnd, Mode::IMMEDIATE, 2, 2, false, true} },
 		{AND_ZERO,{ "AND_ZERO", &cpu::funcAnd, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true } },
@@ -127,10 +135,6 @@ unsigned short cpu::executeInstruction() {
 		return INTERRUPT_CYCLES;
 	}
 
-	branch_taken = false;
-	page_boundary_crossed = false;
-
-
 	//Fetch the opcode
 	unsigned char opcode = readAddress(reg_pc);
 	reg_status = STATUS_EMPTY;
@@ -150,20 +154,14 @@ unsigned short cpu::executeInstruction() {
 	//Get the source 
 	unsigned short src = getSource(current_instruction.mode);
 
-	//Run the correct function
-	(this->*current_instruction.functionPtr)(src);
-
+	//Run the function and determine how many cycles were needed
 	unsigned short cycles_used = current_instruction.cycles;
+	unsigned short extra_cycles = (this->*current_instruction.functionPtr)(src);
 
-	if (branch_taken) {
-		cycles_used++;
-	}
+	cycles_used += extra_cycles;
 
-	if (branch_taken && page_boundary_crossed) { //Might not need the second check here...
-		cycles_used++;
-	}
-
-	if (current_instruction.cycles_extra && page_boundary_crossed) {
+	//If it takes extra cycles, add those
+	if (current_instruction.cycles_extra) {
 		cycles_used++;
 	}
 
@@ -207,10 +205,21 @@ unsigned short cpu::getSource(Mode mode) {
 /*
  Branch to a different memory location.
 */
-void cpu::branch(signed short offset) {
+int cpu::branch(signed short offset) {
+	int cycles_used = 1;
+
 	unsigned short before = reg_pc;
 	unsigned short after = reg_pc + offset;
-	//Check for page boundary crossing
+
+	//Check for page boundary crossing (If we're not in the zero page, then it's going to take an extra cycle)
+	if ((before ^ after) & 0xFF00) {
+		cycles_used++;
+	}
+
+	//Do the branch!
+	reg_pc = after;
+
+	return cycles_used;
 }
 
 
@@ -326,59 +335,122 @@ void cpu::updateStatusCarry(unsigned short result) {
 *************/
 
 //Load a value from an address to the accumulator
-void cpu::funcLoadAccumulator(unsigned short src) {
+int cpu::funcLoadAccumulator(unsigned short src) {
 	unsigned short value = _memory->read(src);
 	reg_acc = value;
 	updateStatusZero(reg_acc);
 	updateStatusZero(reg_acc);
+	return 0;
 }
 
 //Add whatever is in the accumulator to the value at src
-void cpu::funcAddWithCarry(unsigned short src) {
-	unsigned short value = _memory->read(src);
+int cpu::funcAddWithCarry(unsigned short src) {
 	int carry_val = hasStatusFlag(STATUS_CARRY) ? 1 : 0;
-	unsigned short result = reg_acc + value + carry_val;
-	updateStatusOverflow(value, result);
+	unsigned short result = reg_acc + src + carry_val;
+
+	updateStatusOverflow(src, result);
 	updateStatusCarry(result);
+	updateStatusSign(result);
+	updateStatusZero(result);
+
 	reg_acc = result & 0xFF;
-	updateStatusSign(reg_acc);
-	updateStatusZero(reg_acc);
+	return 0;
+}
+
+int cpu::funcBranchOnResultPlus(unsigned short src) {
+	if (!hasStatusFlag(STATUS_SIGN)) {
+		signed short branch_to = (signed char)src;
+		return branch(branch_to);
+	}
+	return 0;
+}
+
+int cpu::funcBranchOnResultMinus(unsigned short src) {
+	if (hasStatusFlag(STATUS_SIGN)) {
+		signed short branch_to = (signed char)src;
+		return branch(branch_to);
+	}
+	return 0;
+}
+
+int cpu::funcBranchOnCarrySet(unsigned short src) {
+	if (hasStatusFlag(STATUS_CARRY)) {
+		signed short branch_to = (signed char)src;
+		return branch(branch_to);
+	}
+	return 0;
+}
+
+int cpu::funcBranchOnCarryClear(unsigned short src) {
+	if (!hasStatusFlag(STATUS_CARRY)) {
+		signed short branch_to = (signed char)src;
+		return branch(branch_to);
+	}
+	return 0;
+}
+
+int cpu::funcBranchOnOverflowSet(unsigned short src) {
+	if (hasStatusFlag(STATUS_OVERFLOW)) {
+		signed short branch_to = (signed char)src;
+		return branch(branch_to);
+	}
+	return 0;
+}
+
+int cpu::funcBranchOnOverflowClear(unsigned short src) {
+	if (!hasStatusFlag(STATUS_OVERFLOW)) {
+		signed short branch_to = (signed char)src;
+		return branch(branch_to);
+	}
+	return 0;
 }
 
 //If the result of the previous arithmetic operation is not zero, then branch
-void cpu::funcBranchNotEqualZero(unsigned short src) {
+int cpu::funcBranchOnResultNotZero(unsigned short src) {
 	if (!hasStatusFlag(STATUS_ZERO)) {
-		branch_taken = true;
 		signed short branch_to = (signed char)src;
-		branch(branch_to);
+		return branch(branch_to);
 	}
+	return 0;
+}
+
+int cpu::funcBranchOnResultZero(unsigned short src) {
+	if (hasStatusFlag(STATUS_ZERO)) {
+		signed short branch_to = (signed char)src;
+		return branch(branch_to);
+	}
+	return 0;
 }
 
 //Check the current reg_acc value against src
-void cpu::funcCompareMemory(unsigned short src) {
+int cpu::funcCompareMemory(unsigned short src) {
 	unsigned short value = _memory->read(src);
 	unsigned short result = reg_acc - value;
 
 	updateStatusCarry(result);
 	updateStatusSign(result);
 	updateStatusZero(result);
+	return 0;
 }
 
 //Store the value currently in the accumulator
-void cpu::funcStoreAccumulator(unsigned short src) {
+int cpu::funcStoreAccumulator(unsigned short src) {
 	_memory->write(src, reg_acc);
+	return 0;
 }
 
 
-void cpu::funcTransferAccumulatorToX(unsigned short src) {
+int cpu::funcTransferAccumulatorToX(unsigned short src) {
 	reg_index_x = reg_acc;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
+	return 0;
 }
 
-void cpu::funcAnd(unsigned short src) {
+int cpu::funcAnd(unsigned short src) {
 	unsigned short result = src & reg_acc;
 	updateStatusZero(result);
 	updateStatusSign(result);
 	reg_acc = result & 0xFF;
+	return 0;
 }
