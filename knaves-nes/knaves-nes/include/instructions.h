@@ -1,7 +1,15 @@
 #ifndef _INSTRUCTIONS_H_
 #define _INSTRUCTIONS_H_
 
+//Load into Accumulator
 #define LDA_IMM		0xA9
+#define LDA_ZERO	0xA5
+#define LDA_ZERO_X	0xB5
+#define LDA_ABS		0xAD
+#define LDA_ABS_X	0xBD
+#define LDA_ABS_Y	0xB9
+#define LDA_IND_X	0xA1
+#define LDA_IND_Y	0xB1
 
 #define STA_ABS		0x8D
 

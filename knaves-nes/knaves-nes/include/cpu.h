@@ -90,7 +90,9 @@ private:
 
 	//Functions (instructions call these)
 	//Naming convention: http://www.thealmightyguru.com/Games/Hacking/Wiki/index.php?title=6502_Opcodes
+	
 	inline int funcLoadAccumulator(unsigned short src);
+
 	inline int funcStoreAccumulator(unsigned short src);
 	inline int funcAddWithCarry(unsigned short src);
 	inline int funcTransferAccumulatorToX(unsigned short src);
