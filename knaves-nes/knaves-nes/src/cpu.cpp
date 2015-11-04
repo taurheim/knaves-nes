@@ -240,7 +240,7 @@ unsigned char cpu::readAddress(unsigned short address)
 	return 0;
 }
 
-/*
+/*n
  Push a byte to the stack
 */
 void cpu::pushStack(unsigned char byte) {
@@ -259,6 +259,13 @@ void cpu::pushStack(unsigned short bytebyte) {
 	pushStack(second);
 
 	return;
+}
+
+/*
+ Pop off the stack
+*/
+unsigned char cpu::popStack() {
+	return _memory->read(STACK_START + reg_sp++);
 }
 
 /************

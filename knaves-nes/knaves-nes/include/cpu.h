@@ -87,6 +87,7 @@ private:
 	unsigned char readAddress(unsigned short address);
 	void pushStack(unsigned char byte);
 	void pushStack(unsigned short bytebyte);
+	unsigned char popStack();
 
 	//Functions (instructions call these)
 	//Naming convention: http://www.thealmightyguru.com/Games/Hacking/Wiki/index.php?title=6502_Opcodes
