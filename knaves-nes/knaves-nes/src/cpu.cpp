@@ -17,20 +17,20 @@ cpu::cpu() {
 		{CMP_IMM, instruction {"CMP_IMM",&cpu::funcCompareMemory,Mode::IMMEDIATE,2,2,false,true}},
 
 		//Branching
-		{BPL, instruction {"BPL"} },
-		{BMI, instruction {"BMI"} },
-		{BVC, instruction {"BVC"} },
-		{BVS, instruction {"BVS"} },
-		{BCC, instruction {"BCC"} },
-		{BCS, instruction {"BCS"} },
-		{BNE, instruction {"BNE",&cpu::funcBranchOnResultNotZero,Mode::RELATIVE,2,2,true,true}},
-		{BEQ, instruction {"BEQ"} },
+		{BPL, instruction {"BPL", &cpu::funcBranchOnResultPlus, Mode::RELATIVE, 2, 2, true, true}},
+		{BMI, instruction {"BMI", &cpu::funcBranchOnResultMinus, Mode::RELATIVE, 2, 2, true, true}},
+		{BVC, instruction {"BVC", &cpu::funcBranchOnOverflowClear, Mode::RELATIVE, 2, 2, true, true}},
+		{BVS, instruction {"BVS", &cpu::funcBranchOnOverflowSet, Mode::RELATIVE, 2, 2, true, true}},
+		{BCC, instruction {"BCC", &cpu::funcBranchOnCarryClear, Mode::RELATIVE, 2, 2, true, true}},
+		{BCS, instruction {"BCS", &cpu::funcBranchOnCarrySet, Mode::RELATIVE, 2, 2, true, true}},
+		{BNE, instruction {"BNE", &cpu::funcBranchOnResultNotZero, Mode::RELATIVE, 2, 2, true, true}},
+		{BEQ, instruction {"BEQ", &cpu::funcBranchOnResultZero, Mode::RELATIVE, 2, 2, true, true}},
 
 		{AND_IMM, instruction { "AND_IMM", &cpu::funcAnd, Mode::IMMEDIATE, 2, 2, false, true} },
 		{AND_ZERO,{ "AND_ZERO", &cpu::funcAnd, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true } },
 		{AND_ZERO_X,{ "AND_ZERO_X", &cpu::funcAnd, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true } },
 		{AND_ABS,{ "AND_ABS", &cpu::funcAnd, Mode::ABSOLUTE, 3, 4, false, true } },
-		{AND_ABS_X,{ "AND_ABS_X", &cpu::funcAnd,Mode:: ABSOLUTE_X, 3, 4, true, true } },
+		{AND_ABS_X,{ "AND_ABS_X", &cpu::funcAnd,Mode::ABSOLUTE_X, 3, 4, true, true } },
 		{AND_ABS_Y,{ "AND_ABS_Y", &cpu::funcAnd,Mode::ABSOLUTE_Y, 3, 4, true, true } },
 		{AND_IND_X,{ "AND_IND_X", &cpu::funcAnd, Mode::PRE_INDIRECT_X, 2, 6, false, true } },
 		{AND_IND_Y,{ "AND_IND_Y", &cpu::funcAnd, Mode::PRE_INDIRECT_Y, 2, 5, true, true } },
@@ -103,20 +103,20 @@ void cpu::executeInterrupt(const enum Interrupt &interrupt) {
 
 	//Move the Program Counter to the area of memory with instructions for each interrupt
 	switch (interrupt) {
-		case Interrupt::NMI:
-			reg_pc = NMI_VECTOR;
-			break;
-		case Interrupt::IRQ:
-			reg_pc = IRQ_BRK_VECTOR;
-			break;
-		case Interrupt::BRK:
-			reg_pc = IRQ_BRK_VECTOR;
-			break;
-		case Interrupt::RESET:
-			reg_pc = RESET_VECTOR;
-			break;
-		default:
-			break;
+	case Interrupt::NMI:
+		reg_pc = NMI_VECTOR;
+		break;
+	case Interrupt::IRQ:
+		reg_pc = IRQ_BRK_VECTOR;
+		break;
+	case Interrupt::BRK:
+		reg_pc = IRQ_BRK_VECTOR;
+		break;
+	case Interrupt::RESET:
+		reg_pc = RESET_VECTOR;
+		break;
+	default:
+		break;
 	}
 }
 
@@ -179,26 +179,26 @@ unsigned short cpu::executeInstruction() {
 */
 unsigned short cpu::getSource(Mode mode) {
 	switch (mode) {
-		case Mode::ABSOLUTE: {
-			//Load from a 16bit memory address
-			unsigned char first = _memory->read(reg_pc + 1);
-			unsigned char second = _memory->read(reg_pc + 2);
-			return (first << 8 | second);
-			break;
-		}
-			
-		case Mode::IMMEDIATE: {
-			return (reg_pc + 1);
-			break;
-		}
+	case Mode::ABSOLUTE: {
+		//Load from a 16bit memory address
+		unsigned char first = _memory->read(reg_pc + 1);
+		unsigned char second = _memory->read(reg_pc + 2);
+		return (first << 8 | second);
+		break;
+	}
 
-		//Used for branching instructions. Essentially the byte
-		//after the instruction tells the CPU how many bytes to skip if
-		//the branch happens
-		case Mode::RELATIVE: {
-			return _memory->read(reg_pc + 1);
-			break;
-		}
+	case Mode::IMMEDIATE: {
+		return (reg_pc + 1);
+		break;
+	}
+
+						  //Used for branching instructions. Essentially the byte
+						  //after the instruction tells the CPU how many bytes to skip if
+						  //the branch happens
+	case Mode::RELATIVE: {
+		return _memory->read(reg_pc + 1);
+		break;
+	}
 	}
 }
 
@@ -286,7 +286,8 @@ void cpu::updateStatusSign(unsigned short val) {
 	// & 128 to figure out if it's positive or negative
 	if (val & 0x0080) {
 		setStatusFlag(STATUS_SIGN);
-	} else {
+	}
+	else {
 		clearStatusFlag(STATUS_SIGN);
 	}
 }
