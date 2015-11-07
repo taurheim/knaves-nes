@@ -200,11 +200,19 @@ unsigned short cpu::getSource(Mode mode) {
 		break;
 	}
 
-						  //Used for branching instructions. Essentially the byte
-						  //after the instruction tells the CPU how many bytes to skip if
-						  //the branch happens
+
 	case Mode::RELATIVE: {
+		//Used for branching instructions. Essentially the byte
+		//after the instruction tells the CPU how many bytes to skip if
+		//the branch happens
 		return _memory->read(reg_pc + 1);
+		break;
+	}
+
+
+	case Mode::ABSOLUTE_X: {
+		unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+		return absolute_address + reg_index_x;
 		break;
 	}
 	}
