@@ -111,6 +111,14 @@ private:
 	inline int funcAnd(unsigned short src);
 	inline int funcOr(unsigned short src);
 	inline int funcXor(unsigned short src);
+
+	inline int funcShiftRightToAccumulator(unsigned short src);
+	inline int funcShiftRightToMemory(unsigned short src);
+
+	inline int funcShiftLeftToAccumulator(unsigned short src);
+	inline int funcShiftLeftToMemory(unsigned short src);
+
+
 };
 
 #endif

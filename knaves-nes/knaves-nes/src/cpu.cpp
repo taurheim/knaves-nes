@@ -36,32 +36,44 @@ cpu::cpu() {
 
 
 		{AND_IMM, instruction { "AND_IMM", &cpu::funcAnd, Mode::IMMEDIATE, 2, 2, false, true} },
-		{AND_ZERO, instruction{ "AND_ZERO", &cpu::funcAnd, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true } },
-		{AND_ZERO_X, instruction{ "AND_ZERO_X", &cpu::funcAnd, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true } },
-		{AND_ABS, instruction{ "AND_ABS", &cpu::funcAnd, Mode::ABSOLUTE, 3, 4, false, true } },
-		{AND_ABS_X,  instruction{ "AND_ABS_X", &cpu::funcAnd,Mode::ABSOLUTE_X, 3, 4, true, true } },
+		{AND_ZERO, instruction { "AND_ZERO", &cpu::funcAnd, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true } },
+		{AND_ZERO_X, instruction { "AND_ZERO_X", &cpu::funcAnd, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true } },
+		{AND_ABS, instruction { "AND_ABS", &cpu::funcAnd, Mode::ABSOLUTE, 3, 4, false, true } },
+		{AND_ABS_X,  instruction { "AND_ABS_X", &cpu::funcAnd,Mode::ABSOLUTE_X, 3, 4, true, true } },
 		{AND_ABS_Y, instruction { "AND_ABS_Y", &cpu::funcAnd,Mode::ABSOLUTE_Y, 3, 4, true, true } },
-		{AND_IND_X, instruction{ "AND_IND_X", &cpu::funcAnd, Mode::PRE_INDIRECT_X, 2, 6, false, true } },
-		{AND_IND_Y, instruction{ "AND_IND_Y", &cpu::funcAnd, Mode::PRE_INDIRECT_Y, 2, 5, true, true } },
+		{AND_IND_X, instruction { "AND_IND_X", &cpu::funcAnd, Mode::PRE_INDIRECT_X, 2, 6, false, true } },
+		{AND_IND_Y, instruction { "AND_IND_Y", &cpu::funcAnd, Mode::PRE_INDIRECT_Y, 2, 5, true, true } },
 
 
-		{OR_IMM, instruction{"OR_IMM", &cpu::funcOr, Mode::IMMEDIATE, 2, 2, false, true}},
-		{OR_ZERO, instruction{"OR_ZERO", &cpu::funcOr, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
-		{OR_ZERO_X, instruction{"OR_ZERO_X", &cpu::funcOr, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
-		{OR_ABS,  instruction{"OR_ABS", &cpu::funcOr, Mode::ABSOLUTE, 3, 4, false, true}},
-		{OR_ABS_X,  instruction{"OR_ABS_X", &cpu::funcOr, Mode::ABSOLUTE_X, 3, 4, true, true}},
-		{OR_ABS_Y,  instruction{"OR_ABS_Y", &cpu::funcOr, Mode::ABSOLUTE_Y, 3, 4, true, true}},
-		{OR_IND_X,  instruction{"OR_IND_X", &cpu::funcOr, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
-		{OR_IND_Y,  instruction{"OR_IND_Y", &cpu::funcOr, Mode::PRE_INDIRECT_Y, 2, 5, true, true}},
+		{OR_IMM, instruction {"OR_IMM", &cpu::funcOr, Mode::IMMEDIATE, 2, 2, false, true}},
+		{OR_ZERO, instruction {"OR_ZERO", &cpu::funcOr, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{OR_ZERO_X, instruction {"OR_ZERO_X", &cpu::funcOr, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{OR_ABS,  instruction {"OR_ABS", &cpu::funcOr, Mode::ABSOLUTE, 3, 4, false, true}},
+		{OR_ABS_X,  instruction {"OR_ABS_X", &cpu::funcOr, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{OR_ABS_Y,  instruction {"OR_ABS_Y", &cpu::funcOr, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+		{OR_IND_X,  instruction {"OR_IND_X", &cpu::funcOr, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{OR_IND_Y,  instruction {"OR_IND_Y", &cpu::funcOr, Mode::PRE_INDIRECT_Y, 2, 5, true, true}},
 
-		{XOR_IMM,	 instruction{"XOR_IMM", &cpu::funcXor, Mode::IMMEDIATE, 2, 2, false, true}},
-		{XOR_ZERO,	 instruction{"XOR_ZERO", &cpu::funcXor, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
-		{XOR_ZERO_X, instruction{"XOR_ZERO_X", &cpu::funcXor, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
-		{XOR_ABS, 	 instruction{"XOR_ABS", &cpu::funcXor, Mode::ABSOLUTE, 3, 4, false, true}},
-		{XOR_ABS_X,  instruction{"XOR_ABS_X", &cpu::funcXor, Mode::ABSOLUTE_X, 3, 4, true, true}},
-		{XOR_ABS_Y,  instruction{"XOR_ABS_Y", &cpu::funcXor, Mode::ABSOLUTE_Y, 3, 4, true, true}},
-		{XOR_IND_X,  instruction{"XOR_IND_X", &cpu::funcXor, Mode::POST_INDIRECT_X, 2, 6, false, true}},
-		{XOR_IND_Y,  instruction{"XOR_IND_Y", &cpu::funcXor, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+		{XOR_IMM,	 instruction {"XOR_IMM", &cpu::funcXor, Mode::IMMEDIATE, 2, 2, false, true}},
+		{XOR_ZERO,	 instruction {"XOR_ZERO", &cpu::funcXor, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{XOR_ZERO_X, instruction {"XOR_ZERO_X", &cpu::funcXor, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{XOR_ABS, 	 instruction {"XOR_ABS", &cpu::funcXor, Mode::ABSOLUTE, 3, 4, false, true}},
+		{XOR_ABS_X,  instruction {"XOR_ABS_X", &cpu::funcXor, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{XOR_ABS_Y,  instruction {"XOR_ABS_Y", &cpu::funcXor, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+		{XOR_IND_X,  instruction {"XOR_IND_X", &cpu::funcXor, Mode::POST_INDIRECT_X, 2, 6, false, true}},
+		{XOR_IND_Y,  instruction {"XOR_IND_Y", &cpu::funcXor, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+
+		{LSR_ACC, instruction {"LSR_ACC", &cpu::funcShiftRightToAccumulator, Mode::IMMEDIATE, 1, 2, false, true}},
+		{LSR_ZERO, instruction {"LSR_ZERO", &cpu::funcShiftRightToMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{LSR_ZERO_X, instruction {"LSR_ZERO_X", &cpu::funcShiftRightToMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{LSR_ABS, 	instruction {"LSR_ABS", &cpu::funcShiftRightToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
+		{LSR_ABS_X, instruction {"LSR_ABS_X", &cpu::funcShiftRightToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{ASL_ACC, instruction {"ASL_ACC", &cpu::funcShiftLeftToAccumulator, Mode::IMMEDIATE, 1, 2, false, true}},
+		{ASL_ZERO, instruction	{"ASL_ZERO", &cpu::funcShiftLeftToMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{ASL_ZERO_X, instruction	{"ASL_ZERO_X", &cpu::funcShiftLeftToMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{ASL_ABS, instruction	{"ASL_ABS", &cpu::funcShiftLeftToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
+		{ASL_ABS_X, instruction	{"ASL_ABS_X", &cpu::funcShiftLeftToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
 	};
 }
 
@@ -366,6 +378,7 @@ void cpu::updateStatusCarry(unsigned short result) {
 	}
 }
 
+
 /************
   OPERATIONS
 *************/
@@ -491,7 +504,7 @@ int cpu::funcAnd(unsigned short src) {
 	return 0;
 }
 
-void cpu::funcOr(unsigned short src) {
+int cpu::funcOr(unsigned short src) {
 	unsigned short result = src | reg_acc;
 	updateStatusZero(result);
 	updateStatusSign(result);
@@ -499,11 +512,49 @@ void cpu::funcOr(unsigned short src) {
 	return 0;
 }
 
-void cpu::funcXor(unsigned short src)
-{
+int cpu::funcXor(unsigned short src) {
 	unsigned short result = reg_acc ^ src;
 	updateStatusZero(result);
 	updateStatusSign(result);
 	reg_acc = result;
+	return 0;
+}
+
+int cpu::funcShiftRightToAccumulator(unsigned short src) {
+	value = reg_acc;
+	unsigned short result = value >> 1;
+	updateStatusCarry(value);
+	updateStatusZero(result);
+	updateStatusSign(result);
+	reg_acc = result;
+	return 0;
+}
+
+int cpu::funcShiftRightToMemory(unsigned short src) {
+	unsigned short result = src >> 1;
+	updateStatusCarry(src);
+	updateStatusZero(result);
+	updateStatusSign(result);
+	write(src, result);
+	return 0;
+}
+
+int cpu::funcShiftLeftToAccumulator(unsigned short src) {
+	value = reg_acc;
+	value <<= 1;
+	updateStatusCarry(value);
+	updateStatusZero(value);
+	updateStatusSign(value);
+	reg_acc = value;
+	return 0;
+}
+
+int cpu::funcShiftLeftToMemory(unsigned short src) {
+	value = src;
+	value <<= 1;
+	updateStatusCarry(value);
+	updateStatusZero(value);
+	updateStatusSign(value);
+	write(src, value);
 	return 0;
 }

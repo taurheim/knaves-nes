@@ -62,4 +62,10 @@
 #define LSR_ABS		0x4E
 #define LSR_ABS_X	0x5E
 
+#define ASL_ACC		0x0A
+#define ASL_ZERO	0x06
+#define ASL_ZERO_X	0x16
+#define ASL_ABS		0x0E
+#define ASL_ABS_X	0x1E
+
 #endif
