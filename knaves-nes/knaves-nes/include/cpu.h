@@ -109,6 +109,7 @@ private:
 	inline int funcBranchOnResultZero(unsigned short src);
 	
 	inline int funcAnd(unsigned short src);
+	inline int funcOr(unsigned short src);
 };
 
 #endif

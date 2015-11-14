@@ -34,6 +34,7 @@ cpu::cpu() {
 		{BNE, instruction {"BNE", &cpu::funcBranchOnResultNotZero, Mode::RELATIVE, 2, 2, true, true}},
 		{BEQ, instruction {"BEQ", &cpu::funcBranchOnResultZero, Mode::RELATIVE, 2, 2, true, true}},
 
+
 		{AND_IMM, instruction { "AND_IMM", &cpu::funcAnd, Mode::IMMEDIATE, 2, 2, false, true} },
 		{AND_ZERO,{ "AND_ZERO", &cpu::funcAnd, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true } },
 		{AND_ZERO_X,{ "AND_ZERO_X", &cpu::funcAnd, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true } },
@@ -42,6 +43,16 @@ cpu::cpu() {
 		{AND_ABS_Y,{ "AND_ABS_Y", &cpu::funcAnd,Mode::ABSOLUTE_Y, 3, 4, true, true } },
 		{AND_IND_X,{ "AND_IND_X", &cpu::funcAnd, Mode::PRE_INDIRECT_X, 2, 6, false, true } },
 		{AND_IND_Y,{ "AND_IND_Y", &cpu::funcAnd, Mode::PRE_INDIRECT_Y, 2, 5, true, true } },
+
+
+		{OR_IMM,	{"OR_IMM", &cpu::funcOr, Mode::IMMEDIATE, 2, 2, false, true}},
+		{OR_ZERO,	{"OR_ZERO", &cpu::funcOr, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{OR_ZERO_X,	{"OR_ZERO_X", &cpu::funcOr, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{OR_ABS, 	{"OR_ABS", &cpu::funcOr, Mode::ABSOLUTE,, 3, 4, false, true}},
+		{OR_ABS_X, 	{"OR_ABS_X", &cpu::funcOr, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{OR_ABS_Y, 	{"OR_ABS_Y", &cpu::funcOr, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+		{OR_IND_X, 	{"OR_IND_X", &cpu::funcOr, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{OR_IND_Y, 	{"OR_IND_Y", &cpu::funcOr, Mode::PRE_INDIRECT_Y, 2, 5, true, true}},
 	};
 }
 
@@ -468,5 +479,13 @@ int cpu::funcAnd(unsigned short src) {
 	updateStatusZero(result);
 	updateStatusSign(result);
 	reg_acc = result & 0xFF;
+	return 0;
+}
+
+void cpu::funcOr(unsigned short src) {
+	unsigned short result = src | reg_acc;
+	updateStatusZero(result);
+	updateStatusSign(result);
+	reg_acc = result;
 	return 0;
 }
