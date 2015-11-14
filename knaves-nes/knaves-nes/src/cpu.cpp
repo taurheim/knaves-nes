@@ -521,7 +521,7 @@ int cpu::funcXor(unsigned short src) {
 }
 
 int cpu::funcShiftRightToAccumulator(unsigned short src) {
-	value = reg_acc;
+	unsigned short value = reg_acc;
 	unsigned short result = value >> 1;
 	updateStatusCarry(value);
 	updateStatusZero(result);
@@ -535,12 +535,12 @@ int cpu::funcShiftRightToMemory(unsigned short src) {
 	updateStatusCarry(src);
 	updateStatusZero(result);
 	updateStatusSign(result);
-	write(src, result);
+	_memory -> write(src, result);
 	return 0;
 }
 
 int cpu::funcShiftLeftToAccumulator(unsigned short src) {
-	value = reg_acc;
+	unsigned short value = reg_acc;
 	value <<= 1;
 	updateStatusCarry(value);
 	updateStatusZero(value);
@@ -550,11 +550,11 @@ int cpu::funcShiftLeftToAccumulator(unsigned short src) {
 }
 
 int cpu::funcShiftLeftToMemory(unsigned short src) {
-	value = src;
+	unsigned short value = src;
 	value <<= 1;
 	updateStatusCarry(value);
 	updateStatusZero(value);
 	updateStatusSign(value);
-	write(src, value);
+	_memory -> write(src, value);
 	return 0;
 }
