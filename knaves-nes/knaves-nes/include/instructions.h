@@ -56,6 +56,10 @@
 #define XOR_IND_X	0x41
 #define XOR_IND_Y	0x51
 
-
+#define LSR_ACC		0x4A
+#define LSR_ZERO	0x46
+#define LSR_ZERO_X	0x56
+#define LSR_ABS		0x4E
+#define LSR_ABS_X	0x5E
 
 #endif
