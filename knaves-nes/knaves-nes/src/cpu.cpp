@@ -48,11 +48,20 @@ cpu::cpu() {
 		{OR_IMM,	{"OR_IMM", &cpu::funcOr, Mode::IMMEDIATE, 2, 2, false, true}},
 		{OR_ZERO,	{"OR_ZERO", &cpu::funcOr, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{OR_ZERO_X,	{"OR_ZERO_X", &cpu::funcOr, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
-		{OR_ABS, 	{"OR_ABS", &cpu::funcOr, Mode::ABSOLUTE,, 3, 4, false, true}},
+		{OR_ABS, 	{"OR_ABS", &cpu::funcOr, Mode::ABSOLUTE, 3, 4, false, true}},
 		{OR_ABS_X, 	{"OR_ABS_X", &cpu::funcOr, Mode::ABSOLUTE_X, 3, 4, true, true}},
 		{OR_ABS_Y, 	{"OR_ABS_Y", &cpu::funcOr, Mode::ABSOLUTE_Y, 3, 4, true, true}},
 		{OR_IND_X, 	{"OR_IND_X", &cpu::funcOr, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
 		{OR_IND_Y, 	{"OR_IND_Y", &cpu::funcOr, Mode::PRE_INDIRECT_Y, 2, 5, true, true}},
+
+		{XOR_IMM,	{"XOR_IMM", &cpu::funcXor, Mode::IMMEDIATE, 2, 2, false, true}},
+		{XOR_ZERO,	{"XOR_ZERO", &cpu::funcXor, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{XOR_ZERO_X,	{"XOR_ZERO_X", &cpu::funcXor, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{XOR_ABS, 	{"XOR_ABS", &cpu::funcXor, Mode::ABSOLUTE, 3, 4, false, true}},
+		{XOR_ABS_X, 	{"XOR_ABS_X", &cpu::funcXor, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{XOR_ABS_Y, 	{"XOR_ABS_Y", &cpu::funcXor, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+		{XOR_IND_X, 	{"XOR_IND_X", &cpu::funcXor, Mode::POST_INDIRECT_X, 2, 6, false, true}},
+		{XOR_IND_Y, 	{"XOR_IND_Y", &cpu::funcXor, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
 	};
 }
 
@@ -486,6 +495,15 @@ void cpu::funcOr(unsigned short src) {
 	unsigned short result = src | reg_acc;
 	updateStatusZero(result);
 	updateStatusSign(result);
+	reg_acc = result;
+	return 0;
+}
+
+void cpu::funcXor(unsigned short src)
+{
+	unsigned short result = reg_acc ^ src;
+	setZeroFlag(result);
+	setSignFlag(result);
 	reg_acc = result;
 	return 0;
 }

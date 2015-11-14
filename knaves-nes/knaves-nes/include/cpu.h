@@ -110,6 +110,7 @@ private:
 	
 	inline int funcAnd(unsigned short src);
 	inline int funcOr(unsigned short src);
+	inline int funcXor(unsigned short src);
 };
 
 #endif

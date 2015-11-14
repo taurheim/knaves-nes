@@ -38,4 +38,24 @@
 #define AND_IND_X	0x21
 #define AND_IND_Y	0x31
 
+#define OR_IMM		0x09
+#define OR_ZERO		0x05
+#define OR_ZERO_X	0x15
+#define OR_ABS		0x0D
+#define OR_ABS_X	0x1D
+#define OR_ABS_Y	0x19
+#define OR_IND_X	0x01
+#define OR_IND_Y	0x11
+
+#define XOR_IMM		0x49
+#define XOR_ZERO	0x45
+#define XOR_ZERO_X	0x55
+#define XOR_ABS		0x4D
+#define XOR_ABS_X	0x5D
+#define XOR_ABS_Y	0x59
+#define XOR_IND_X	0x41
+#define XOR_IND_Y	0x51
+
+
+
 #endif
