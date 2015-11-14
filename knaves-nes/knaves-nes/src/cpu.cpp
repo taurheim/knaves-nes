@@ -502,8 +502,8 @@ void cpu::funcOr(unsigned short src) {
 void cpu::funcXor(unsigned short src)
 {
 	unsigned short result = reg_acc ^ src;
-	setZeroFlag(result);
-	setSignFlag(result);
+	updateStatusZero(result);
+	updateStatusSign(result);
 	reg_acc = result;
 	return 0;
 }
