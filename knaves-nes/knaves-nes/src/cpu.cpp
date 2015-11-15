@@ -1000,11 +1000,11 @@ int cpu::funcSHX(unsigned short src) {
 	unsigned short value = (src - reg_index_y) & 0xFF;
 
 	if ((reg_index_y + value) <= 0xFF) {
-		write(src, result);
+		_memory->write(src, result);
 	}
 	else
 	{
-		write(src, src);
+		_memory->write(src, src);
 	}
 
 	return 0;
@@ -1106,7 +1106,8 @@ int cpu::funcReturnFromInterrupt(unsigned short src) {
 	return 0;
 }
 
-void cpu::funcBreak()
+int cpu::funcBreak(unsigned short src)
 {
-    enqueueInterrupt(Interrupt::Brk); //function todo
+    executeInterrupt(Interrupt::BRK); 
+	return 0;
 }
