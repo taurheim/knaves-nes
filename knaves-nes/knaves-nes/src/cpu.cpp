@@ -224,6 +224,35 @@ cpu::cpu() {
 		{RTI, 		instruction {"RTI", &cpu::funcReturnFromInterrupt, Mode::IMPLIED, 1, 6, false, false}},
 		{BRK, 		instruction {"BRK", &cpu::funcBreak, Mode::IMPLIED, 1, 7, false, false}},
 
+		{NOP, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 1, 2, false, true}},
+		{NOP2, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 3, false, true}},
+		{NOP3, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 3, false, true}},
+		{NOP4, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 3, false, true}},
+		{NOP5, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 1, 2, false, true}},
+		{NOP6, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 1, 2, false, true}},
+		{NOP7, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 1, 2, false, true}},
+		{NOP8, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 1, 2, false, true}},
+		{NOP9, 	instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 1, 2, false, true}},
+		{NOP10, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 1, 2, false, true}},
+		{NOP11, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 3, 4, false, true}},
+		{NOP12, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 4, false, true}},
+		{NOP13, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 4, false, true}},
+		{NOP14, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 4, false, true}},
+		{NOP15, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 4, false, true}},
+		{NOP16, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 4, false, true}},
+		{NOP17, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 4, false, true}},
+		{NOP18, instruciton {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 2, false, true}},
+		{NOP19, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{NOP20, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{NOP21, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{NOP22, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{NOP23, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{NOP24, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{NOP25, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 2, 2, false, true}},
+		{NOP26, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 2, 2, false, true}},
+		{NOP27, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 2, 2, false, true}},
+		{NOP28, instruciton {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 2, 2, false, true}},
+
 	};
 }
 
@@ -1109,5 +1138,10 @@ int cpu::funcReturnFromInterrupt(unsigned short src) {
 int cpu::funcBreak(unsigned short src)
 {
     executeInterrupt(Interrupt::BRK); 
+	return 0;
+}
+
+int cpu::funcNop(unsigned short src)
+{
 	return 0;
 }

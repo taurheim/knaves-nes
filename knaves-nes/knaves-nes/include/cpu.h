@@ -186,6 +186,8 @@ private:
 	inline int funcReturnFromInterrupt(unsigned short src);
 	inline int funcBreak(unsigned short src);
 
+	inline int funcNop(unsigned short src);
+
 
 };
 

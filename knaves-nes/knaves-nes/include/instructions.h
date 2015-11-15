@@ -213,6 +213,33 @@
 
 #define BRK		0x00
 
-
+#define NOP		0xEA	
+#define NOP2		0x04
+#define NOP3		0x44
+#define NOP4		0x64
+#define NOP5		0x1A
+#define NOP6		0x3A
+#define NOP7		0x5A
+#define NOP8		0x7A
+#define NOP9		0xDA
+#define NOP10		0xFA
+#define NOP11		0x0C
+#define NOP12		0x14
+#define NOP13		0x34
+#define NOP14		0x54
+#define NOP15		0x74
+#define NOP16		0xD4
+#define NOP17		0xF4
+#define NOP18		0x80
+#define NOP19		0x1C
+#define NOP20		0x3C
+#define NOP21		0x5C
+#define NOP22		0x7C
+#define NOP23		0xDC
+#define NOP24		0xFC
+#define NOP25		0x89
+#define NOP26		0x82
+#define NOP27		0xC2
+#define NOP28		0xE2
 
 #endif
