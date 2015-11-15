@@ -571,7 +571,7 @@ int cpu::funcXor(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcShiftRightToAccumulator() {
+int cpu::funcShiftRightToAccumulator(unsigned short src) {
 	unsigned short value = reg_acc;
 	unsigned short result = value >> 1;
 	updateStatusCarry(value);
@@ -590,7 +590,7 @@ int cpu::funcShiftRightToMemory(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcShiftLeftToAccumulator() {
+int cpu::funcShiftLeftToAccumulator(unsigned short src) {
 	unsigned short value = (reg_acc <<= 1);
 	updateStatusCarry(value);
 	updateStatusZero(value);
@@ -608,7 +608,7 @@ int cpu::funcShiftLeftToMemory(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcRotateRightToAccumulator() {
+int cpu::funcRotateRightToAccumulator(unsigned short src) {
 	unsigned short value = reg_acc;
 	unsigned short result = (value >> 1) | ((reg_status & STATUS_CARRY) << 7);
 
@@ -630,7 +630,7 @@ int cpu::funcRotateRightToMemory(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcRotateLeftToAccumulator() {
+int cpu::funcRotateLeftToAccumulator(unsigned short src) {
     unsigned short value = reg_acc;
 	unsigned short result = (value << 1) | (reg_status & STATUS_CARRY);
 
@@ -674,30 +674,30 @@ int cpu::funcSBC(unsigned short src) {
 	return 0; 
 }
 
-int cpu::funcPushStatusToStack() {
+int cpu::funcPushStatusToStack(unsigned short src) {
 	pushStack(reg_status | STATUS_BRK | STATUS_EMPTY);
 	return 0;
 }
 
-int cpu::funcPopStatusFromStack() {
+int cpu::funcPopStatusFromStack(unsigned short src) {
 	reg_status = popStack();
 	clearStatusFlag(STATUS_BRK);
 	return 0;
 }
 
-int cpu::funcPushAccumulatorToStack() {
+int cpu::funcPushAccumulatorToStack(unsigned short src) {
 	pushStack(reg_acc);
 	return 0;
 }
 
-int cpu::funcPopAccumulatorFromStack() {
+int cpu::funcPopAccumulatorFromStack(unsigned short src) {
 	reg_acc = popStack();
 	updateStatusZero(reg_acc);
 	updateStatusSign(reg_acc);
 	return 0;
 }
 
-int cpu::funcJumpSaveReturnAddress() {
+int cpu::funcJumpSaveReturnAddress(unsigned short src) {
 	unsigned short ret = reg_pc + 2;
 	pushStack((ret >> 8) & 0xFF);
 	pushStack(ret & 0xFF);
@@ -718,18 +718,20 @@ int cpu::funcBit(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcSetCarryFlag() {
+int cpu::funcSetCarryFlag(unsigned short src) {
 	setStatusFlag(STATUS_CARRY);
 	return 0;
 }
 
-int cpu::funcSetDecimalMode() {
+int cpu::funcSetDecimalMode(unsigned short src) {
 	setStatusFlag(STATUS_DECIMAL);
 	return 0;
 }
 
-int cpu::funcSetInterruptDisable() {
+int cpu::funcSetInterruptDisable(unsigned short src) {
 	setStatusFlag(STATUS_INTERRUPT);
 	return 0;
 }
+
+
 
