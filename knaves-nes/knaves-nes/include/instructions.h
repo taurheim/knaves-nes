@@ -199,4 +199,20 @@
 #define SHY_ABS_X	0x9C
 #define SHX_ABS_Y	0x9E
 
+#define BPL		0x10
+#define BNE		0xD0
+#define BEQ		0xF0
+#define BCC		0x90
+#define BCS		0xB0
+#define BMI		0x30
+#define BVC		0x50
+#define BVS		0x70
+
+#define RTS		0x60
+#define RTI		0x40
+
+#define BRK		0x00
+
+
+
 #endif
