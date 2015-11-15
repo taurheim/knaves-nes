@@ -141,6 +141,17 @@ private:
 	inline int funcSetDecimalMode(unsigned short src);
 	inline int funcSetInterruptDisable(unsigned short src);
 
+	inline int funcClearCarryFlag(unsigned short src);
+	inline int funcClearDecimalMode(unsigned short src);
+	inline int funcClearInterruptDisable(unsigned short src);
+	inline int funcClearOverflowFlag(unsigned short src);
+
+	inline int funcTransferIndexXToStackPointer(unsigned short src);
+	inline int funcTransferIndexXToAccumulator(unsigned short src);
+	inline int funcTransferStackPointerToIndexX(unsigned short src);
+	inline int funcTransferAccumulatorToIndexY(unsigned short src);
+	inline int funcTransferAccumulatorToIndexX(unsigned short src);
+	inline int funcTransferIndexYToAccumulator(unsigned short src);
 
 
 

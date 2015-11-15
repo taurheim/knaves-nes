@@ -125,6 +125,18 @@ cpu::cpu() {
 		{SED, 	instruction {"SED", &cpu::funcSetDecimalMode, Mode::IMPLIED, 1, 2, false, true}},
 		{SEI, 	instruction {"SEI", &cpu::funcSetInterruptDisable, Mode::IMPLIED, 1, 2, false, true}},
 
+		{CLC, 	instruction {"CLC", &cpu::funcClearCarryFlag, Mode::IMPLIED, 1, 2, false, true}},
+		{CLD, 	instruction {"CLD", &cpu::funcClearDecimalMode, Mode::IMPLIED, 1, 2, false, true}},
+		{CLI, 	instruction {"CLI", &cpu::funcClearInterruptDisable, Mode::IMPLIED, 1, 2, false, true}},
+		{CLV, 	instruction {"CLV", &cpu::funcClearOverflowFlag, Mode::IMPLIED, 1, 2, false, true}},
+
+
+		{TXS, 	instruction {"TXS", &cpu::funcTransferIndexXToStackPointer, Mode::IMPLIED, 1, 2, false, true}},
+		{TXA, 	instruction {"TXA", &cpu::funcTransferIndexXToAccumulator, Mode::IMPLIED, 1, 2, false, true}},
+		{TSX, 	instruction {"TSX", &cpu::funcTransferStackPointerToIndexX, Mode::IMPLIED, 1, 2, false, true}},
+		{TAY, 	instruction {"TAY", &cpu::funcTransferAccumulatorToIndexY, Mode::IMPLIED, 1, 2, false, true}},
+		{TAX, 	instruction {"TAX", &cpu::funcTransferAccumulatorToIndexX, Mode::IMPLIED, 1, 2, false, true}},
+		{TYA, 	instruction {"TYA", &cpu::funcTransferIndexYToAccumulator, Mode::IMPLIED, 1, 2, false, true}},
 	};
 }
 
@@ -732,6 +744,78 @@ int cpu::funcSetInterruptDisable(unsigned short src) {
 	setStatusFlag(STATUS_INTERRUPT);
 	return 0;
 }
+
+int cpu::funcClearCarryFlag(unsigned short src)
+{
+	clearStatusFlag(STATUS_CARRY);
+	return 0;
+}
+
+int cpu::funcClearDecimalMode(unsigned short src)
+{
+	clearStatusFlag(STATUS_DECIMAL);
+	return 0;
+}
+
+int cpu::funcClearInterruptDisable(unsigned short src)
+{
+	clearStatusFlag(STATUS_INTERRUPT);
+	return 0;
+}
+
+int cpu::funcClearOverflowFlag(unsigned short src)
+{
+	clearStatusFlag(STATUS_OVERFLOW);
+	return 0;
+}
+
+int cpu::funcTransferIndexXToStackPointer(unsigned short src)
+{
+	reg_sp = reg_index_x;
+	return 0; 
+}
+
+int cpu::funcTransferIndexXToAccumulator(unsigned short src)
+{
+	reg_acc = reg_index_x;
+	updateStatusZero(reg_index_x);
+	updateStatusSign(reg_index_x);
+	return 0; 
+}
+
+int cpu::funcTransferStackPointerToIndexX(unsigned short src)
+{
+	reg_index_x = reg_sp;
+	updateStatusZero(reg_index_x);
+	updateStatusSign(reg_index_x);
+	return 0; 
+}
+
+int cpu::funcTransferAccumulatorToIndexY(unsigned short src)
+{
+	reg_index_y = reg_acc;
+	updateStatusZero(reg_index_y);
+	updateStatusSign(reg_index_y);
+	return 0; 
+}
+
+int cpu::funcTransferAccumulatorToIndexX(unsigned short src)
+{
+	reg_index_x = reg_acc;
+	updateStatusZero(reg_index_x);
+	updateStatusSign(reg_index_x);
+	return 0; 
+}
+
+int cpu::funcTransferIndexYToAccumulator(unsigned short src)
+{
+	reg_acc = reg_index_y;
+	updateStatusZero(reg_index_y);
+	updateStatusSign(reg_index_y);
+	return 0; 
+}
+
+
 
 
 

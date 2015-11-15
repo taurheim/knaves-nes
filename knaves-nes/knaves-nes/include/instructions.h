@@ -115,6 +115,16 @@
 #define SED		0xF8
 #define SEC		0x38
 
+#define CLC		0x18
+#define CLD		0xD8
+#define CLV		0xB8
+#define CLI		0x58
 
+#define TAX		0xAA
+#define TAY		0xA8
+#define TSX		0xBA
+#define TXA		0x8A
+#define TXS		0x9A
+#define TYA		0x98
 
 #endif
