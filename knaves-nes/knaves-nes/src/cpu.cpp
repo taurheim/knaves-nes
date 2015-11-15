@@ -81,6 +81,12 @@ cpu::cpu() {
 		{ROR_ABS, instruction	{"ROR_ABS", &cpu::funcRotateRightToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
 		{ROR_ABS_X, instruction {"ROR_ABS_X", &cpu::funcRotateRightToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
+		{ROL_ACC, 	{"ROL_ACC", &cpu::funcRotateLeftToAccumulator, Mode::IMMEDIATE, 1, 2, false, true}},
+		{ROL_ZERO, 	{"ROL_ZERO", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{ROL_ZERO_X, 	{"ROL_ZERO_X", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{ROL_ABS, 	{"ROL_ABS", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
+		{ROL_ABS_X, 	{"ROL_ABS_X", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
 	};
 }
 
@@ -588,3 +594,26 @@ int cpu::funcRotateRightToMemory(unsigned short src)
 	return 0;
 }
 
+int cpu::funcRotateLeftToAccumulator(unsigned short src)
+{
+    unsigned short value = reg_acc;
+	unsigned short result = (value << 1) | (reg_status & STATUS_CARRY);
+
+	updateStatusCarry(result);
+	updateStatusZero(result);
+	updateStatusSign(result);
+	reg_acc = result;
+	return 0;
+}
+
+int cpu::funcRotateLeftToMemory(unsigned short src)
+{
+	unsigned short value = src;
+	unsigned short result = (value << 1) | (reg_status & STATUS_CARRY);
+
+	updateStatusCarry(result);
+	updateStatusZero(result);
+	updateStatusSign(result);
+	_memory -> write(src, result);
+	return 0;
+}

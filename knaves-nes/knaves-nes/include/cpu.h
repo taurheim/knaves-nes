@@ -118,6 +118,8 @@ private:
 	inline int funcShiftLeftToAccumulator(unsigned short src);
 	inline int funcShiftLeftToMemory(unsigned short src);
 
+	inline int funcRotateRightToAccumulator(unsigned short src);
+	inline int funcRotateRightToMemory(unsigned short src);
 
 };
 
