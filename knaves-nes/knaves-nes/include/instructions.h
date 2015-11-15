@@ -99,4 +99,22 @@
 #define SBC_IND_X	0xE1
 #define SBC_IND_Y	0xF1
 
+#define PHP		0x08
+#define PLP		0x28
+#define PHA		0x48
+#define PLA		0x68
+
+#define JSR		0x20	
+#define JMP_ABS		0x4C
+#define JMP_IND		0x6C
+
+#define BIT_ZERO	0x24
+#define BIT_ABS		0x2C
+
+#define SEI		0x78
+#define SED		0xF8
+#define SEC		0x38
+
+
+
 #endif

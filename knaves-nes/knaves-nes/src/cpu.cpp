@@ -106,6 +106,25 @@ cpu::cpu() {
 		{SBC_IND_X, instruction	{"SBC_IND_X", &cpu::funcSBC, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
 		{SBC_IND_Y, instruction	{"SBC_IND_Y", &cpu::funcSBC, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
 
+		{PHP, 	instruction {"PHP", &cpu::funcPushStatusToStack, Mode::IMPLIED, 1, 3, false, true}},
+		{PLP, 	instruction {"PLP", &cpu::funcPopStatusFromStack, Mode::IMPLIED, 1, 4, false, true}},
+		{PHA, 	instruction {"PHA", &cpu::funcPushAccumulatorToStack, Mode::IMPLIED, 1, 3, false, true}},
+		{PLA, 	instruction {"PLA", &cpu::funcPopAccumulatorFromStack, Mode::IMPLIED, 1, 4, false, true}},
+
+
+		{JSR, 	instruction {"JSR", &cpu::funcJumpSaveReturnAddress, Mode::ABSOLUTE, 3, 6, false, false}},
+		{JMP_ABS,instruction {"JMP_ABS", &cpu::funcJump, Mode::ABSOLUTE, 3, 3, false, false}},
+		{JMP_IND,instruction {"JMP_IND", &cpu::funcJump, Mode::INDIRECT, 3, 5, false, false}},
+
+
+		{BIT_ZERO,instruction {"BIT_ZERO", &cpu::funcBit, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{BIT_ABS, instruction {"BIT_ABS", &cpu::funcBit, Mode::ABSOLUTE, 3, 4, false, true}},
+
+
+		{SEC, 	instruction {"SEC", &cpu::funcSetCarryFlag, Mode::IMPLIED, 1, 2, false, true}},
+		{SED, 	instruction {"SED", &cpu::funcSetDecimalMode, Mode::IMPLIED, 1, 2, false, true}},
+		{SEI, 	instruction {"SEI", &cpu::funcSetInterruptDisable, Mode::IMPLIED, 1, 2, false, true}},
+
 	};
 }
 
@@ -659,4 +678,40 @@ int cpu::funcSBC(unsigned short src)
 	updateStatusZero(reg_acc);
 	updateStatusSign(reg_acc >> 7);
 	return 0; 
+}
+
+int cpu::funcPushStatusToStack()
+{
+	pushStack(reg_status | STATUS_BRK | STATUS_EMPTY);
+	return 0;
+}
+
+int cpu::funcPopStatusFromStack()
+{
+	reg_status = popStack();
+	clearStatusFlag(STATUS_BRK);
+	return 0;
+}
+
+int cpu::funcPushAccumulatorToStack()
+{
+	pushStack(reg_acc);
+	return 0;
+}
+
+int cpu::funcPopAccumulatorFromStack()
+{
+	reg_acc = popStack();
+	updateStatusZero(reg_acc);
+	updateStatusSign(reg_acc);
+	return 0;
+}
+
+int cpu::funcJumpSaveReturnAddress()
+{
+	unsigned short ret = reg_pc + 2;
+	pushStack((ret >> 8) & 0xFF);
+	pushStack(ret & 0xFF);
+	reg_pc = src;
+	return 0;
 }
