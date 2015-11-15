@@ -667,7 +667,7 @@ int cpu::funcSBC(unsigned short src) {
 	unsigned short value = src;
 	unsigned short result = reg_acc + ~value + (hasStatusFlag(STATUS_CARRY) ? 1 : 0);
 	updateStatusOverflow((reg_acc ^ value) & (reg_acc ^ result));
-	testAndSet(!(result & 0x100), STATUS_CARRY); //TO BE DONE
+	updateStatusCarry(!result);//to be checked by niko
 	reg_acc = result & 0xFF;
 	updateStatusZero(reg_acc);
 	updateStatusSign(reg_acc >> 7);
