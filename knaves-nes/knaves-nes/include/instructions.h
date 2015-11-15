@@ -74,4 +74,29 @@
 #define ROR_ABS		0x6E
 #define ROR_ABS_X	0x7E
 
+#define ROL_ACC		0x2A
+#define ROL_ZERO	0x26
+#define ROL_ZERO_X	0x36
+#define ROL_ABS		0x2E
+#define ROL_ABS_X	0x3E
+
+#define ADC_IMM		0x69
+#define ADC_ZERO	0x65
+#define ADC_ZERO_X	0x75
+#define ADC_ABS		0x6D
+#define ADC_ABS_X	0x7D
+#define ADC_ABS_Y	0x79
+#define ADC_IND_X	0x61
+#define ADC_IND_Y	0x71
+
+#define SBC_IMM		0xE9
+#define SBC_IMM2	0xEB
+#define SBC_ZERO	0xE5
+#define SBC_ZERO_X	0xF5
+#define SBC_ABS		0xED
+#define SBC_ABS_X	0xFD
+#define SBC_ABS_Y	0xF9
+#define SBC_IND_X	0xE1
+#define SBC_IND_Y	0xF1
+
 #endif

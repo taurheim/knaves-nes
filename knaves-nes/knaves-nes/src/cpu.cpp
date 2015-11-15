@@ -81,11 +81,30 @@ cpu::cpu() {
 		{ROR_ABS, instruction	{"ROR_ABS", &cpu::funcRotateRightToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
 		{ROR_ABS_X, instruction {"ROR_ABS_X", &cpu::funcRotateRightToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
-		{ROL_ACC, 	{"ROL_ACC", &cpu::funcRotateLeftToAccumulator, Mode::IMMEDIATE, 1, 2, false, true}},
-		{ROL_ZERO, 	{"ROL_ZERO", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
-		{ROL_ZERO_X, 	{"ROL_ZERO_X", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
-		{ROL_ABS, 	{"ROL_ABS", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
-		{ROL_ABS_X, 	{"ROL_ABS_X", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
+		{ROL_ACC, instruction {"ROL_ACC", &cpu::funcRotateLeftToAccumulator, Mode::IMMEDIATE, 1, 2, false, true}},
+		{ROL_ZERO, instruction	{"ROL_ZERO", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{ROL_ZERO_X, instruction	{"ROL_ZERO_X", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{ROL_ABS, instruction	{"ROL_ABS", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
+		{ROL_ABS_X, instruction	{"ROL_ABS_X", &cpu::funcRotateLeftToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{ADC_IMM, 	instruction {"ADC_IMM", &cpu::funcADC, Mode::IMMEDIATE, 2, 2, false, true}},
+		{ADC_ZERO,	instruction	{"ADC_ZERO", &cpu::funcADC, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{ADC_ZERO_X, instruction{"ADC_ZERO_X", &cpu::funcADC, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{ADC_ABS,  	instruction{"ADC_ABS", &cpu::funcADC, Mode::ABSOLUTE, 3, 4, false, true}},
+		{ADC_ABS_X, instruction	{"ADC_ABS_X", &cpu::funcADC, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{ADC_ABS_Y, instruction	{"ADC_ABS_Y", &cpu::funcADC, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+		{ADC_IND_X, instruction	{"ADC_IND_X", &cpu::funcADC, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{ADC_IND_Y, instruction	{"ADC_IND_Y", &cpu::funcADC, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+
+		{SBC_IMM, 	instruction {"SBC_IMM", &cpu::funcSBC, Mode::IMMEDIATE, 2, 2, false, true}},
+		{SBC_IMM2,	instruction {"SBC_IMM2", &cpu::funcSBC, Mode::IMMEDIATE, 2, 2, false, true}},
+		{SBC_ZERO, 	instruction	{"SBC_ZERO", &cpu::funcSBC, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{SBC_ZERO_X, instruction{"SBC_ZERO_X", &cpu::funcSBC, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{SBC_ABS, 	instruction {"SBC_ABS", &cpu::funcSBC, Mode::ABSOLUTE, 3, 4, false, true}},
+		{SBC_ABS_X, instruction	{"SBC_ABS_X", &cpu::funcSBC, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{SBC_ABS_Y, instruction	{"SBC_ABS_Y", &cpu::funcSBC, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+		{SBC_IND_X, instruction	{"SBC_IND_X", &cpu::funcSBC, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{SBC_IND_Y, instruction	{"SBC_IND_Y", &cpu::funcSBC, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
 
 	};
 }
@@ -616,4 +635,28 @@ int cpu::funcRotateLeftToMemory(unsigned short src)
 	updateStatusSign(result);
 	_memory -> write(src, result);
 	return 0;
+}
+
+int cpu::funcADC(unsigned short src)
+{
+	unsigned short value = rsrc;
+	unsigned short result = reg_acc + value + (hasStatusFlag(STATUS_CARRY) ? 1 : 0);
+	updateStatusOverflow(~(reg_acc ^ value) & (reg_acc ^ result));
+	updateStatusCarry(result);
+	reg_acc = result & 0xFF;
+	updateStatusZero(reg_acc);
+	updateStatusSign(reg_acc >> 7);
+	return 0;
+}
+
+int cpu::funcSBC(unsigned short src)
+{
+	unsigned short value = src;
+	unsigned short result = reg_acc + ~value + (hasStatusFlag(STATUS_CARRY) ? 1 : 0);
+	updateStatusOverflow((reg_acc ^ value) & (reg_acc ^ result));
+	testAndSet(!(result & 0x100), STATUS_CARRY); //TO BE DONE
+	reg_acc = result & 0xFF;
+	updateStatusZero(reg_acc);
+	updateStatusSign(reg_acc >> 7);
+	return 0; 
 }
