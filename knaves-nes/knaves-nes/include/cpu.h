@@ -157,6 +157,10 @@ private:
 	inline int funcSAX(unsigned short src);
 	inline int funcDCP(unsigned short src);
 
+	inline int funcISC(unsigned short src);
+	inline int funcSLO(unsigned short src);
+	inline int funcRLA(unsigned short src);
+	inline int funcSRE(unsigned short src);
 
 
 };

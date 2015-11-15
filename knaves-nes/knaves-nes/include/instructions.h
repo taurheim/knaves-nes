@@ -148,4 +148,36 @@
 #define DCP_ABS_Y	0xDB
 #define DCP_ABS_X	0xDF
 
+#define ISC_IND_X	0xE3
+#define ISC_ZERO	0xE7
+#define ISC_ABS		0xEF
+#define ISC_IND_Y	0xF3
+#define ISC_ZERO_X	0xF7
+#define ISC_ABS_Y	0xFB
+#define ISC_ABS_X	0xFF
+
+#define SLO_IND_X	0x03
+#define SLO_ZERO	0x07
+#define SLO_ABS		0x0F
+#define SLO_IND_Y	0x13
+#define SLO_ZERO_X	0x17
+#define SLO_ABS_Y	0x1B
+#define SLO_ABS_X	0x1F
+
+#define RLA_IND_X	0x23
+#define RLA_ZERO	0x27
+#define RLA_ABS		0x2F
+#define RLA_IND_Y	0x33
+#define RLA_ZERO_X	0x37
+#define RLA_ABS_Y	0x3B
+#define RLA_ABS_X	0x3F
+
+#define SRE_IND_X	0x43
+#define SRE_ZERO	0x47
+#define SRE_ABS		0x4F
+#define SRE_IND_Y	0x53
+#define SRE_ZERO_X	0x57
+#define SRE_ABS_Y	0x5B
+#define SRE_ABS_X	0x5F
+
 #endif

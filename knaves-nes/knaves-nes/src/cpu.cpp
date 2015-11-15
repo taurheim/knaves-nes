@@ -159,6 +159,38 @@ cpu::cpu() {
 		{DCP_ABS_Y,	instruction {"DCP_ABS_Y", &cpu::funcDCP, Mode::ABSOLUTE_Y, 3, 7, false, true}},
 		{DCP_ABS_X,	instruction {"DCP_ABS_X", &cpu::funcDCP, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
+		{ISC_IND_X,	instruction {"ISC_IND_X", &cpu::funcISC, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{ISC_ZERO,	instruction {"ISC_ZERO", &cpu::funcISC, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{ISC_ABS,	instruction {"ISC_ABS", &cpu::funcISC, Mode::ABSOLUTE, 3, 6, false, true}},
+		{ISC_IND_Y,	instruction {"ISC_IND_Y", &cpu::funcISC, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{ISC_ZERO_X,instruction {"ISC_ZERO_X", &cpu::funcISC, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{ISC_ABS_Y,	instruction {"ISC_ABS_Y", &cpu::funcISC, Mode::ABSOLUTE_Y, 3, 7, false, true}},
+		{ISC_ABS_X,	instruction {"ISC_ABS_X", &cpu::funcISC, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{SLO_IND_X,	instruction {"SLO_IND_X", &cpu::funcSLO, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{SLO_ZERO,	instruction {"SLO_ZERO", &cpu::funcSLO, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{SLO_ABS,	instruction {"SLO_ABS", &cpu::funcSLO, Mode::ABSOLUTE, 3, 6, false, true}},
+		{SLO_IND_Y,	instruction {"SLO_IND_Y", &cpu::funcSLO, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{SLO_ZERO_X,instruction {"SLO_ZERO_X", &cpu::funcSLO, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{SLO_ABS_Y,	instruction {"SLO_ABS_Y", &cpu::funcSLO, Mode::ABSOLUTE_Y, 3, 7, false, true}},
+		{SLO_ABS_X,	instruction {"SLO_ABS_X", &cpu::funcSLO, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{RLA_IND_X,	instruction {"RLA_IND_X", &cpu::funcRLA, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{RLA_ZERO,	instruction {"RLA_ZERO", &cpu::funcRLA, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{RLA_ABS,	instruction {"RLA_ABS", &cpu::funcRLA, Mode::ABSOLUTE, 3, 6, false, true}},
+		{RLA_IND_Y,	instruction {"RLA_IND_Y", &cpu::funcRLA, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{RLA_ZERO_X,instruction {"RLA_ZERO_X", &cpu::funcRLA, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{RLA_ABS_Y,	instruction {"RLA_ABS_Y", &cpu::funcRLA, Mode::ABSOLUTE_Y, 3, 7, false, true}},
+		{RLA_ABS_X,	instruction {"RLA_ABS_X", &cpu::funcRLA, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{SRE_IND_X,	instruction {"SRE_IND_X", &cpu::funcSRE, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{SRE_ZERO,	instruction {"SRE_ZERO", &cpu::funcSRE, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{SRE_ABS,	instruction {"SRE_ABS", &cpu::funcSRE, Mode::ABSOLUTE, 3, 6, false, true}},
+		{SRE_IND_Y,	instruction {"SRE_IND_Y", &cpu::funcSRE, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{SRE_ZERO_X,instruction {"SRE_ZERO_X", &cpu::funcSRE, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{SRE_ABS_Y,	instruction {"SRE_ABS_Y", &cpu::funcSRE, Mode::ABSOLUTE_Y, 3, 7, false, true}},
+		{SRE_ABS_X,	instruction {"SRE_ABS_X", &cpu::funcSRE, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
 	};
 }
 
@@ -839,12 +871,36 @@ int cpu::funcSAX(unsigned short src) {
 }
 
 int cpu::funcDCP(unsigned short src) {
-	funcDecreaseMemory(); //functions todo
+	funcDecreaseMemory(); //function todo
 	funcCompareMemory(src);
 	return 0;
 }
 
+int cpu::funcISC(unsigned short src) {
+	funcIncreaseMemory(); //function todo
+	funcSBC();
+	return 0;
+}
 
+int cpu::funcSLO(unsigned short src) {
+	funcShiftLeftToMemory(src);
+	funcOr(src);
+	return 0;
+}
+
+int cpu::funcRLA(unsigned short src)
+{
+	funcRotateLeftToMemory(src);
+	funcAnd(src);
+	return 0;
+}
+
+int cpu::funcSRE(unsigned short src)
+{
+	funcShiftRightToMemory(src);
+	funcXor(src);
+	return 0;
+}
 
 
 
