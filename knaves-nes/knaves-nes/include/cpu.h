@@ -89,6 +89,9 @@ private:
 	void pushStack(unsigned short bytebyte);
 	unsigned char popStack();
 
+	//Modes
+	unsigned short modeRelative();
+
 	//Functions (instructions call these)
 	//Naming convention: http://www.thealmightyguru.com/Games/Hacking/Wiki/index.php?title=6502_Opcodes
 	
@@ -170,6 +173,18 @@ private:
 	inline int funcSHY(unsigned short src);
 	inline int funcSHX(unsigned short src);
 
+	inline int funcBranchResultNotZero (unsigned short src);
+	inline int funcBranchResultZero(unsigned short src);
+	inline int funcBranchCarrySet(unsigned short src);
+	inline int funcBranchCarryClear(unsigned short src);
+	inline int funcBranchResultMinus(unsigned short src);
+	inline int funcBranchResultPlus(unsigned short src);
+	inline int funcBranchOverflowClear (unsigned short src);
+	inline int funcBranchOverflowSet(unsigned short src);
+
+	inline int funcReturnFromSubroutine(unsigned short src);
+	inline int funcReturnFromInterrupt(unsigned short src);
+	inline int funcBreak(unsigned short src);
 
 
 };

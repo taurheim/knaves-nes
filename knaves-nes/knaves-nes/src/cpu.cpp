@@ -1010,4 +1010,103 @@ int cpu::funcSHX(unsigned short src) {
 	return 0;
 }
 
+unsigned short cpu::modeRelative(){
+	signed short offset = (signed char)read(reg_pc + 1);
+	address = reg_pc;
+	result = address + offset;
+	setPageBoundaryCrossed(address, result);
+	return result;
+}
 
+
+int cpu::funcBranchResultNotZero(unsigned short src) {
+	if (!hasStatusFlag(STATUS_ZERO))
+	{
+		branchTaken = true;
+		reg_pc = modeRelative();
+	}
+	return 0;
+}
+
+int cpu::funcBranchResultZero(unsigned short src) {
+	if (hasStatusFlag(STATUS_ZERO))
+	{
+		branchTaken = true;
+		reg_pc = modeRelative();
+	}
+	return 0;
+}
+
+int cpu::funcBranchCarrySet(unsigned short src) {
+	if (hasStatusFlag(STATUS_CARRY))
+	{
+		branchTaken = true;
+		reg_pc = modeRelative();
+	}
+	return 0;
+}
+
+int cpu::funcBranchCarryClear(unsigned short src) {
+	if (!hasStatusFlag(STATUS_CARRY))
+	{
+		branchTaken = true;
+		reg_pc = modeRelative();
+	}
+	return 0;
+}
+
+int cpu::funcBranchResultMinus(unsigned short src) {
+	if (hasStatusFlag(STATUS_SIGN))
+	{
+		branchTaken = true;
+		reg_pc = modeRelative();
+	}
+	return 0;
+}
+
+int cpu::funcBranchResultPlus(unsigned short src) {
+	if (!hasStatusFlag(STATUS_SIGN))
+	{
+		branchTaken = true;
+		reg_pc = modeRelative();
+	}
+	return 0;
+}
+
+int cpu::funcBranchOverflowClear(unsigned short src) {
+	if (!hasStatusFlag(STATUS_OVERFLOW))
+	{
+		branchTaken = true;
+		reg_pc = modeRelative();
+	}
+	return 0;
+}
+
+int cpu::funcBranchOverflowSet(unsigned short src) {
+	if (hasStatusFlag(STATUS_OVERFLOW))
+	{
+		branchTaken = true;
+		reg_pc = modeRelative();
+	}
+	return 0;
+}
+
+int cpu::funcReturnFromSubroutine(unsigned short src) {
+	unsigned char low = popStack();
+	unsigned char high = popStack();
+	reg_pc = ((high << 8) | low) + 1;
+	return 0;
+}
+
+int cpu::funcReturnFromInterrupt(unsigned short src) {
+	reg_status = popStack();
+	unsigned char low = popStack() & 0xFF;
+	unsigned char high = popStack() & 0xFF;
+	reg_pc = (high << 8) | low;
+	return 0;
+}
+
+void cpu::funcBreak()
+{
+    enqueueInterrupt(Interrupt::Brk); //function todo
+}
