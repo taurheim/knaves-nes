@@ -191,6 +191,39 @@ cpu::cpu() {
 		{SRE_ABS_Y,	instruction {"SRE_ABS_Y", &cpu::funcSRE, Mode::ABSOLUTE_Y, 3, 7, false, true}},
 		{SRE_ABS_X,	instruction {"SRE_ABS_X", &cpu::funcSRE, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
+		{RRA_IND_X,	instruction {"RRA_IND_X", &cpu::funcRRA, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{RRA_ZERO,	instruction {"RRA_ZERO", &cpu::funcRRA, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{RRA_ABS,	instruction {"RRA_ABS", &cpu::funcRRA, Mode::ABSOLUTE, 3, 6, false, true}},
+		{RRA_IND_Y,	instruction {"RRA_IND_Y", &cpu::funcRRA, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{RRA_ZERO_X,instruction {"RRA_ZERO_X", &cpu::funcRRA, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{RRA_ABS_Y,	instruction {"RRA_ABS_Y", &cpu::funcRRA, Mode::ABSOLUTE_Y, 3, 7, false, true}},
+		{RRA_ABS_X,	instruction {"RRA_ABS_X", &cpu::funcRRA, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{ANC_IMM,	instruction {"ANC_IMM", &cpu::funcANC, Mode::IMMEDIATE, 2, 2, false, true}},
+		{ANC_IMM2,	instruction {"ANC_IMM", &cpu::funcANC, Mode::IMMEDIATE, 2, 2, false, true}},
+
+		{ALR_IMM,	instruction {"ALR_IMM", &cpu::funcALR, Mode::IMMEDIATE, 2, 2, false, true}},
+ 
+		{ARR_IMM,	instruction {"ARR_IMM", &cpu::funcARR, Mode::IMMEDIATE, 2, 2, false, true}},
+
+		{AXS_IMM,	instruction {"AXS_IMM", &cpu::funcAXS, Mode::IMMEDIATE, 2, 2, false, true}},
+
+		{SHY_ABS_X,	instruction {"SHY_ABS_X", &cpu::funcSHY, Mode::ABSOLUTE_X, 3, 5, false, true}},
+		{SHX_ABS_Y,	instruction {"SHX_ABS_Y", &cpu::funcSHX, Mode::ABSOLUTE_Y, 3, 5, false, true}},
+
+		{BNE, 		instruction {"BNE", &cpu::funcBranchResultNotZero, Mode::RELATIVE, 2, 2, true, true}},
+		{BEQ, 		instruction {"BEQ", &cpu::funcBranchResultZero, Mode::RELATIVE, 2, 2, true, true}},
+		{BCS, 		instruction {"BCS", &cpu::funcBranchCarrySet, Mode::RELATIVE, 2, 2, true, true}},
+		{BCC, 		instruction {"BCC", &cpu::funcBranchCarryClear, Mode::RELATIVE, 2, 2, true, true}},
+		{BMI, 		instruction {"BMI", &cpu::funcBranchResultMinus, Mode::RELATIVE, 2, 2, true, true}},
+		{BPL, 		instruction {"BPL", &cpu::funcBranchResultPlus, Mode::RELATIVE, 2, 2, true, true}},
+		{BVC, 		instruction {"BVC", &cpu::funcBranchOverflowClear, Mode::RELATIVE, 2, 2, true, true}},
+		{BVS, 		instruction {"BVS", &cpu::funcBranchOverflowSet, Mode::RELATIVE, 2, 2, true, true}},
+
+		{RTS, 		instruction {"RTS", &cpu::funcReturnFromSubroutine, Mode::IMPLIED, 1, 6, false, false}},
+		{RTI, 		instruction {"RTI", &cpu::funcReturnFromInterrupt, Mode::IMPLIED, 1, 6, false, false}},
+		{BRK, 		instruction {"BRK", &cpu::funcBreak, Mode::IMPLIED, 1, 7, false, false}},
+
 	};
 }
 
@@ -900,5 +933,81 @@ int cpu::funcSRE(unsigned short src) {
 	return 0;
 }
 
+int cpu::funcRRA(unsigned short src){
+	funcRotateRightToMemory(src);
+	funcADC(src);
+	return 0;
+}
+
+
+int cpu::funcANC(unsigned short src) {
+	funcAnd(src);
+	reg_status &= ~STATUS_CARRY;
+
+	if (result & STATUS_SIGN)
+	{
+		reg_status |= STATUS_CARRY;
+	}
+	return 0;
+}
+
+int cpu::funcALR(unsigned short src) {
+	reg_acc &= src;
+	updateStatusCarry(reg_acc);
+	reg_acc >>= 1;
+	updateStatusZero(reg_acc);
+	clearStatusFlag(STATUS_SIGN);
+	return 0;
+}
+
+int cpu::funcARR(unsigned short src) {
+	reg_acc = ((reg_acc & src) >> 1) | (hasStatusFlag(STATUS_CARRY) << 7);
+	updateStatusZero(reg_acc);
+	updateStatusSign(reg_acc >> 7);
+	updateStatusCarry(reg_acc >> 6);
+	testAndSet(hasStatusFlag(STATUS_CARRY) ^ ((reg_acc >> 5) & 1), STATUS_OVERFLOW);//not sure about this one
+	return 0;
+}
+
+int cpu::funcAXS(unsigned short src) {
+	int result = (reg_acc & reg_index_x) - src;
+	updateStatusCarry(result);
+	updateStatusZero(result);
+	reg_index_x = result & 0xFF;
+	updateStatusSign(result >> 7);
+
+	return 0;
+}
+
+int cpu::funcSHY(unsigned short src) {
+	unsigned short result = (reg_index_y & ((src >> 8) + 1)) & 0xFF;
+	unsigned short value = (src - reg_index_x) & 0xFF;
+
+	if ((reg_index_x + value) <= 0xFF) {
+		_memory->write(src, result);
+	}
+	else
+	{
+		_memory->write(src, src);
+	}
+
+	return 0;
+}
+
+
+int cpu::funcSHX(unsigned short src) {
+	unsigned short result = (reg_index_x & ((src >> 8) + 1)) & 0xFF;
+	unsigned short value = (src - reg_index_y) & 0xFF;
+
+	if ((reg_index_y + value) <= 0xFF) {
+		write(src, result);
+	}
+	else
+	{
+		write(src, src);
+	}
+
+	return 0;
+}
 
 

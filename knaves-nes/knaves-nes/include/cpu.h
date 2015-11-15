@@ -162,6 +162,15 @@ private:
 	inline int funcRLA(unsigned short src);
 	inline int funcSRE(unsigned short src);
 
+	inline int funcRRA(unsigned short src);
+	inline int funcANC(unsigned short src);
+	inline int funcALR(unsigned short src);
+	inline int funcARR(unsigned short src);
+	inline int funcAXS(unsigned short src);
+	inline int funcSHY(unsigned short src);
+	inline int funcSHX(unsigned short src);
+
+
 
 };
 

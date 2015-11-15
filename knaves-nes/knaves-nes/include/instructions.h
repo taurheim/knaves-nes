@@ -180,4 +180,23 @@
 #define SRE_ABS_Y	0x5B
 #define SRE_ABS_X	0x5F
 
+#define RRA_IND_X	0x63
+#define RRA_ZERO	0x67
+#define RRA_ABS		0x6F
+#define RRA_IND_Y	0x73
+#define RRA_ZERO_X	0x77
+#define RRA_ABS_Y	0x7B
+#define RRA_ABS_X	0x7F
+
+#define ANC_IMM		0x0B
+#define ANC_IMM2	0x2B
+
+#define ALR_IMM		0x4B
+#define ARR_IMM		0x6B
+
+#define AXS_IMM		0xCB
+
+#define SHY_ABS_X	0x9C
+#define SHX_ABS_Y	0x9E
+
 #endif
