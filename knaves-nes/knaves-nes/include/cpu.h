@@ -121,7 +121,7 @@ private:
 	inline int funcRotateRightToAccumulator(unsigned short src);
 	inline int funcRotateRightToMemory(unsigned short src);
 
-	inline int funcRotateLeftToAccumulator();
+	inline int funcRotateLeftToAccumulator(unsigned short src);
 	inline int funcRotateLeftToMemory(unsigned short src);
 
 	inline int funcADC(unsigned short src);
