@@ -127,4 +127,25 @@
 #define TXS		0x9A
 #define TYA		0x98
 
+#define LAX_IND_X	0xA3
+#define LAX_ZERO	0xA7
+#define LAX_IMM		0xAB
+#define LAX_ABS		0xAF
+#define LAX_IND_Y	0xB3
+#define LAX_ZERO_Y	0xB7
+#define LAX_ABS_Y	0xBF
+
+#define SAX_IND_X	0x83
+#define SAX_ZERO	0x87
+#define SAX_ABS		0x8F
+#define SAX_ZERO_Y	0x97
+
+#define DCP_IND_X	0xC3
+#define DCP_ZERO	0xC7
+#define DCP_ABS		0xCF
+#define DCP_IND_Y	0xD3
+#define DCP_ZERO_X	0xD7
+#define DCP_ABS_Y	0xDB
+#define DCP_ABS_X	0xDF
+
 #endif

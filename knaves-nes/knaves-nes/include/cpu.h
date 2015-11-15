@@ -153,6 +153,10 @@ private:
 	inline int funcTransferAccumulatorToIndexX(unsigned short src);
 	inline int funcTransferIndexYToAccumulator(unsigned short src);
 
+	inline int funcLAX(unsigned short src);
+	inline int funcSAX(unsigned short src);
+	inline int funcDCP(unsigned short src);
+
 
 
 };

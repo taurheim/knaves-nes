@@ -137,6 +137,28 @@ cpu::cpu() {
 		{TAY, 	instruction {"TAY", &cpu::funcTransferAccumulatorToIndexY, Mode::IMPLIED, 1, 2, false, true}},
 		{TAX, 	instruction {"TAX", &cpu::funcTransferAccumulatorToIndexX, Mode::IMPLIED, 1, 2, false, true}},
 		{TYA, 	instruction {"TYA", &cpu::funcTransferIndexYToAccumulator, Mode::IMPLIED, 1, 2, false, true}},
+
+		{LAX_IND_X,	instruction {"LAX_IND_X", &cpu::funcLAX, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{LAX_ZERO,	instruction {"LAX_ZERO", &cpu::funcLAX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{LAX_IMM,	instruction {"LAX_IMM", &cpu::funcLAX, Mode::IMMEDIATE, 2, 2, false, true}},
+		{LAX_ABS,	instruction {"LAX_ABS", &cpu::funcLAX, Mode::ABSOLUTE, 3, 4, false, true}},
+		{LAX_IND_Y,	instruction {"LAX_IND_Y", &cpu::funcLAX, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+		{LAX_ZERO_Y,instruction {"LAX_ZERO_Y", &cpu::funcLAX, Mode::ABSOLUTEY_ZERO_PAGE, 2, 4, false, true}},
+		{LAX_ABS_Y,	instruction {"LAX_ABS_Y", &cpu::funcLAX, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+
+		{SAX_IND_X,	instruction {"SAX_IND_X", &cpu::funcSAX, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{SAX_ZERO,	instruction {"SAX_ZERO", &cpu::funcSAX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{SAX_ABS,	instruction {"SAX_ABS", &cpu::funcSAX, Mode::ABSOLUTE, 3, 4, false, true}},
+		{SAX_ZERO_Y,instruction {"SAX_ZERO_Y", &cpu::funcSAX, Mode::ABSOLUTEY_ZERO_PAGE, 2, 4, false, true}},
+
+		{DCP_IND_X,	instruction {"DCP_IND_X", &cpu::funcDCP, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{DCP_ZERO,	instruction {"DCP_ZERO", &cpu::funcDCP, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{DCP_ABS,	instruction {"DCP_ABS", &cpu::funcDCP, Mode::ABSOLUTE, 3, 6, false, true}},
+		{DCP_IND_Y,	instruction {"DCP_IND_Y", &cpu::funcDCP, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{DCP_ZERO_X,instruction {"DCP_ZERO_X", &cpu::funcDCP, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{DCP_ABS_Y,	instruction {"DCP_ABS_Y", &cpu::funcDCP, Mode::ABSOLUTE_Y, 3, 7, false, true}},
+		{DCP_ABS_X,	instruction {"DCP_ABS_X", &cpu::funcDCP, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
 	};
 }
 
@@ -745,74 +767,81 @@ int cpu::funcSetInterruptDisable(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcClearCarryFlag(unsigned short src)
-{
+int cpu::funcClearCarryFlag(unsigned short src) {
 	clearStatusFlag(STATUS_CARRY);
 	return 0;
 }
 
-int cpu::funcClearDecimalMode(unsigned short src)
-{
+int cpu::funcClearDecimalMode(unsigned short src) {
 	clearStatusFlag(STATUS_DECIMAL);
 	return 0;
 }
 
-int cpu::funcClearInterruptDisable(unsigned short src)
-{
+int cpu::funcClearInterruptDisable(unsigned short src) {
 	clearStatusFlag(STATUS_INTERRUPT);
 	return 0;
 }
 
-int cpu::funcClearOverflowFlag(unsigned short src)
-{
+int cpu::funcClearOverflowFlag(unsigned short src) {
 	clearStatusFlag(STATUS_OVERFLOW);
 	return 0;
 }
 
-int cpu::funcTransferIndexXToStackPointer(unsigned short src)
-{
+int cpu::funcTransferIndexXToStackPointer(unsigned short src) {
 	reg_sp = reg_index_x;
 	return 0; 
 }
 
-int cpu::funcTransferIndexXToAccumulator(unsigned short src)
-{
+int cpu::funcTransferIndexXToAccumulator(unsigned short src) {
 	reg_acc = reg_index_x;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
 	return 0; 
 }
 
-int cpu::funcTransferStackPointerToIndexX(unsigned short src)
-{
+int cpu::funcTransferStackPointerToIndexX(unsigned short src) {
 	reg_index_x = reg_sp;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
 	return 0; 
 }
 
-int cpu::funcTransferAccumulatorToIndexY(unsigned short src)
-{
+int cpu::funcTransferAccumulatorToIndexY(unsigned short src) {
 	reg_index_y = reg_acc;
 	updateStatusZero(reg_index_y);
 	updateStatusSign(reg_index_y);
 	return 0; 
 }
 
-int cpu::funcTransferAccumulatorToIndexX(unsigned short src)
-{
+int cpu::funcTransferAccumulatorToIndexX(unsigned short src) {
 	reg_index_x = reg_acc;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
 	return 0; 
 }
 
-int cpu::funcTransferIndexYToAccumulator(unsigned short src)
-{
+int cpu::funcTransferIndexYToAccumulator(unsigned short src) {
 	reg_acc = reg_index_y;
 	updateStatusZero(reg_index_y);
 	updateStatusSign(reg_index_y);
 	return 0; 
+}
+
+int cpu::funcLAX(unsigned short src) {
+	funcLoadAccumulator();
+	funcLoadRegisterX(); //function todo
+	return 0;
+}
+
+int cpu::funcSAX(unsigned short src) {
+	_memory -> write(src, reg_acc & reg_index_x);
+	return 0;
+}
+
+int cpu::funcDCP(unsigned short src) {
+	funcDecreaseMemory(); //functions todo
+	funcCompareMemory();
+	return 0;
 }
 
 
