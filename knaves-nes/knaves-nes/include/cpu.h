@@ -112,13 +112,13 @@ private:
 	inline int funcOr(unsigned short src);
 	inline int funcXor(unsigned short src);
 
-	inline int funcShiftRightToAccumulator();
+	inline int funcShiftRightToAccumulator(unsigned short src);
 	inline int funcShiftRightToMemory(unsigned short src);
 
-	inline int funcShiftLeftToAccumulator();
+	inline int funcShiftLeftToAccumulator(unsigned short src);
 	inline int funcShiftLeftToMemory(unsigned short src);
 
-	inline int funcRotateRightToAccumulator();
+	inline int funcRotateRightToAccumulator(unsigned short src);
 	inline int funcRotateRightToMemory(unsigned short src);
 
 	inline int funcRotateLeftToAccumulator();
@@ -127,21 +127,21 @@ private:
 	inline int funcADC(unsigned short src);
 	inline int funcSBC(unsigned short src);
 
-	inline int funcPushStatusToStack();
-	inline int funcPopStatusFromStack();
-	inline int funcPushAccumulatorToStack();
-	inline int funcPopAccumulatorFromStack();
+	inline int funcPushStatusToStack(unsigned short src);
+	inline int funcPopStatusFromStack(unsigned short src);
+	inline int funcPushAccumulatorToStack(unsigned short src);
+	inline int funcPopAccumulatorFromStack(unsigned short src);
  
-	inline int funcJumpSaveReturnAddress();
+	inline int funcJumpSaveReturnAddress(unsigned short src);
 	inline int funcJump(unsigned short src);
 
 	inline int funcBit(unsigned short src);
 
-	inline int funcSetCarryFlag();
-	inline int funcSetDecimalMode();
-	inline int funcSetInterruptDisable();
+	inline int funcSetCarryFlag(unsigned short src);
+	inline int funcSetDecimalMode(unsigned short src);
+	inline int funcSetInterruptDisable(unsigned short src);
 
-	
+
 
 
 };
