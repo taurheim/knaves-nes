@@ -98,6 +98,24 @@ private:
 	inline int funcLoadAccumulator(unsigned short src);
 
 	inline int funcStoreAccumulator(unsigned short src);
+
+	inline int funcLoadRegisterX(unsigned short src);
+	inline int funcStoreRegisterX(unsigned short src);
+	inline int funcLoadRegisterY(unsigned short src);
+	inline int funcStoreRegisterY(unsigned short src);
+
+	inline int funcIncreaseRegisterX(unsigned short src);
+	inline int funcIncreaseRegisterY(unsigned short src);
+	inline int funcDecreaseRegisterX(unsigned short src);
+	inline int funcDecreaseRegisterY(unsigned short src);
+
+	inline int funcIncreaseMemory(unsigned short src);
+	inline int funcDecreaseMemory(unsigned short src);
+
+	inline int funcCompareRegisterX(unsigned short src);
+	inline int funcCompareRegisterY(unsigned short src);
+
+
 	inline int funcAddWithCarry(unsigned short src);
 	inline int funcTransferAccumulatorToX(unsigned short src);
 	inline int funcCompareMemory(unsigned short src);

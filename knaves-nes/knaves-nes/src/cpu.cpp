@@ -16,13 +16,22 @@ cpu::cpu() {
 		{LDA_IND_X, instruction {"LDA_IND_X", &cpu::funcLoadAccumulator, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
 		{LDA_IND_Y, instruction {"LDA_IND_Y", &cpu::funcLoadAccumulator, Mode::PRE_INDIRECT_Y, 2, 5, true, true}},
 
-		{STA_ABS, instruction { "STA_ABS",&cpu::funcStoreAccumulator,Mode::ABSOLUTE,3,4,false,true} },
+		//{STA_ABS, instruction { "STA_ABS",&cpu::funcStoreAccumulator,Mode::ABSOLUTE,3,4,false,true}},
 
-		{ADC_ABS, instruction { "ADC_ABS",&cpu::funcAddWithCarry,Mode::ABSOLUTE,3,4,false,true}},
+		{STA_ZERO,	instruction{"STA_ZERO", &cpu::funcStoreAccumulator, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{STA_ZERO_X,instruction	{"STA_ZERO_X", &cpu::funcStoreAccumulator, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{STA_ABS,	instruction{"STA_ABS2", &cpu::funcStoreAccumulator, Mode::ABSOLUTE, 3, 4, false, true}},
+		{STA_ABS_X, instruction	{"STA_ABS_X", &cpu::funcStoreAccumulator, Mode::ABSOLUTE_X, 3, 5, false, true}},
+		{STA_ABS_Y, instruction	{"STA_ABS_Y", &cpu::funcStoreAccumulator, Mode::ABSOLUTE_Y, 3, 5, false, true}},
+		{STA_IND_X, instruction	{"STA_IND_X", &cpu::funcStoreAccumulator, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{STA_IND_Y, instruction	{"STA_IND_Y", &cpu::funcStoreAccumulator, Mode::PRE_INDIRECT_Y, 2, 6, false, true}},
 
-		{TAX, instruction {"TAX",&cpu::funcTransferAccumulatorToX,Mode::IMPLIED,1,2,false,true}},
 
-		{CMP_IMM, instruction {"CMP_IMM",&cpu::funcCompareMemory,Mode::IMMEDIATE,2,2,false,true}},
+		//{ADC_ABS, instruction { "ADC_ABS",&cpu::funcAddWithCarry,Mode::ABSOLUTE,3,4,false,true}},
+
+		//{TAX, instruction {"TAX",&cpu::funcTransferAccumulatorToX,Mode::IMPLIED,1,2,false,true}},
+
+		//{CMP_IMM, instruction {"CMP_IMM",&cpu::funcCompareMemory,Mode::IMMEDIATE,2,2,false,true}},
 
 		//Branching
 		{BPL, instruction {"BPL", &cpu::funcBranchOnResultPlus, Mode::RELATIVE, 2, 2, true, true}},
@@ -33,6 +42,59 @@ cpu::cpu() {
 		{BCS, instruction {"BCS", &cpu::funcBranchOnCarrySet, Mode::RELATIVE, 2, 2, true, true}},
 		{BNE, instruction {"BNE", &cpu::funcBranchOnResultNotZero, Mode::RELATIVE, 2, 2, true, true}},
 		{BEQ, instruction {"BEQ", &cpu::funcBranchOnResultZero, Mode::RELATIVE, 2, 2, true, true}},
+
+		{LDX_IMM,	instruction{"LDX_IMM", &cpu::funcLoadRegisterX, Mode::IMMEDIATE, 2, 2, false, true}},
+		{LDX_ZERO,	instruction{"LDX_ZERO", &cpu::funcLoadRegisterX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{LDX_ZERO_Y,instruction	{"LDX_ZERO_Y", &cpu::funcLoadRegisterX, Mode::ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
+		{LDX_ABS, 	instruction{"LDX_ABS", &cpu::funcLoadRegisterX, Mode::ABSOLUTE, 3, 4, false, true}},
+		{LDX_ABS_Y, instruction	{"LDX_ABS_Y", &cpu::funcLoadRegisterX, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+
+		{STX_ZERO,	instruction{"STX_ZERO", &cpu::funcStoreRegisterX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{STX_ZERO_Y,instruction	{"STX_ZERO_Y", &cpu::funcStoreRegisterX, Mode::ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
+		{STX_ABS, 	instruction{"STX_ABS", &cpu::funcStoreRegisterX, Mode::ABSOLUTE, 3, 4, false, true}},
+
+		{LDY_IMM,	instruction{"LDY_IMM", &cpu::funcLoadRegisterY, Mode::IMMEDIATE, 2, 2, false, true}},
+		{LDY_ZERO,	instruction{"LDY_ZERO", &cpu::funcLoadRegisterY, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{LDY_ZERO_X,instruction	{"LDY_ZERO_X", &cpu::funcLoadRegisterY, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{LDY_ABS, 	instruction{"LDY_ABS", &cpu::funcLoadRegisterY, Mode::ABSOLUTE, 3, 4, false, true}},
+		{LDY_ABS_X, instruction	{"LDY_ABS_Y", &cpu::funcLoadRegisterY, Mode::ABSOLUTE_X, 3, 4, true, true}},
+
+		{STY_ZERO,	instruction{"STY_ZERO", &cpu::funcStoreRegisterY, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{STY_ZERO_X,instruction	{"STY_ZERO_X", &cpu::funcStoreRegisterY, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{STY_ABS, 	instruction{"STY_ABS", &cpu::funcStoreRegisterY, Mode::ABSOLUTE, 3, 4, false, true}},
+
+		{INX,		instruction{"INX", &cpu::funcIncreaseRegisterX, Mode::IMPLIED, 1, 2, false, true}},
+		{DEX,		instruction{"DEX", &cpu::funcDecreaseRegisterX, Mode::IMPLIED, 1, 2, false, true}},
+		{INY,		instruction{"INY", &cpu::funcIncreaseRegisterY, Mode::IMPLIED, 1, 2, false, true}},
+		{DEY,		instruction{"DEY", &cpu::funcDecreaseRegisterY, Mode::IMPLIED, 1, 2, false, true}},
+
+		{INC_ZERO,	instruction{"INC_ZERO", &cpu::funcIncreaseMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{INC_ZERO_X,instruction	{"INC_ZERO_X", &cpu::funcIncreaseMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{INC_ABS, 	instruction{"INC_ABS", &cpu::funcIncreaseMemory, Mode::ABSOLUTE, 3, 6, false, true}},
+		{INC_ABS_X, instruction	{"INC_ABS_X", &cpu::funcIncreaseMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{DEC_ZERO,	instruction{"DEC_ZERO", &cpu::funcDecreaseMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{DEC_ZERO_X,instruction	{"DEC_ZERO_X", &cpu::funcDecreaseMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{DEC_ABS, 	instruction{"DEC_ABS", &cpu::funcDecreaseMemory, Mode::ABSOLUTE, 3, 6, false, true}},
+		{DEC_ABS_X, instruction	{"DEC_ABS_X", &cpu::funcDecreaseMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{CPX_IMM,	instruction{"CPX_IMM", &cpu::funcCompareRegisterX, Mode::IMMEDIATE, 2, 2, false, true}},
+		{CPX_ZERO,	instruction{"CPX_ZERO", &cpu::funcCompareRegisterX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{CPX_ABS,	instruction{"CPX_ABS", &cpu::funcCompareRegisterX, Mode::ABSOLUTE, 3, 4, false, true}},
+
+		{CPY_IMM,	instruction{"CPY_IMM", &cpu::funcCompareRegisterY, Mode::IMMEDIATE, 2, 2, false, true}},
+		{CPY_ZERO,	instruction{"CPY_ZERO", &cpu::funcCompareRegisterY, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{CPY_ABS,	instruction{"CPY_ABS", &cpu::funcCompareRegisterY, Mode::ABSOLUTE, 3, 4, false, true}},
+
+		{CMP_IMM,	instruction{"CMP_IMM", &cpu::funcCompareMemory, Mode::IMMEDIATE, 2, 2, false, true}},
+		{CMP_ZERO,	instruction{"CMP_ZERO", &cpu::funcCompareMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{CMP_ZERO_X,instruction	{"CMP_ZERO_X", &cpu::funcCompareMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{CMP_ABS, 	instruction{"CMP_ABS", &cpu::funcCompareMemory, Mode::ABSOLUTE, 3, 4, false, true}},
+		{CMP_ABS_X, instruction	{"CMP_ABS_X", &cpu::funcCompareMemory, Mode::ABSOLUTE_X, 3, 4, true, true}},
+		{CMP_ABS_Y, instruction	{"CMP_ABS_Y", &cpu::funcCompareMemory, Mode::ABSOLUTE_Y, 3, 4, true, true}},
+		{CMP_IND_X, instruction	{"CMP_IND_X", &cpu::funcCompareMemory, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{CMP_IND_Y, instruction	{"CMP_IND_Y", &cpu::funcCompareMemory, &cpu::modePostIndirectY, 2, 5, true, true}},
+
 
 
 		{AND_IMM, instruction { "AND_IMM", &cpu::funcAnd, Mode::IMMEDIATE, 2, 2, false, true} },
@@ -211,6 +273,7 @@ cpu::cpu() {
 		{SHY_ABS_X,	instruction {"SHY_ABS_X", &cpu::funcSHY, Mode::ABSOLUTE_X, 3, 5, false, true}},
 		{SHX_ABS_Y,	instruction {"SHX_ABS_Y", &cpu::funcSHX, Mode::ABSOLUTE_Y, 3, 5, false, true}},
 
+/*
 		{BNE, 		instruction {"BNE", &cpu::funcBranchResultNotZero, Mode::RELATIVE, 2, 2, true, true}},
 		{BEQ, 		instruction {"BEQ", &cpu::funcBranchResultZero, Mode::RELATIVE, 2, 2, true, true}},
 		{BCS, 		instruction {"BCS", &cpu::funcBranchCarrySet, Mode::RELATIVE, 2, 2, true, true}},
@@ -219,6 +282,7 @@ cpu::cpu() {
 		{BPL, 		instruction {"BPL", &cpu::funcBranchResultPlus, Mode::RELATIVE, 2, 2, true, true}},
 		{BVC, 		instruction {"BVC", &cpu::funcBranchOverflowClear, Mode::RELATIVE, 2, 2, true, true}},
 		{BVS, 		instruction {"BVS", &cpu::funcBranchOverflowSet, Mode::RELATIVE, 2, 2, true, true}},
+*/
 
 		{RTS, 		instruction {"RTS", &cpu::funcReturnFromSubroutine, Mode::IMPLIED, 1, 6, false, false}},
 		{RTI, 		instruction {"RTI", &cpu::funcReturnFromInterrupt, Mode::IMPLIED, 1, 6, false, false}},
@@ -585,6 +649,104 @@ int cpu::funcAddWithCarry(unsigned short src) {
 	return 0;
 }
 
+int cpu::funcLoadRegisterX(unsigned short src)
+{
+	value = src;
+	reg_index_x = value;
+	updateStatusSign(reg_index_x);
+	updateStatusZero(reg_index_x);
+	return 0;
+}
+
+int cpu::funcLoadRegisterY(unsigned short src)
+{
+	value = src;
+	reg_index_y = value;
+	updateStatusSign(reg_index_y);
+	updateStatusZero(reg_index_y);
+	return 0;
+}
+
+
+int cpu::funcStoreRegisterX(unsigned short src) {
+	_memory->write(src, reg_index_x);
+	return 0;
+}
+
+int cpu::funcStoreRegisterY(unsigned short src) {
+	_memory->write(src, reg_index_y);
+	return 0;
+}
+
+int cpu::funcIncreaseRegisterX(unsigned short src)
+{
+	reg_index_x++;
+	updateStatusSign(reg_index_x);
+	updateStatusZero(reg_index_x);
+	return 0;
+}
+
+int cpu::funcIncreaseRegisterY(unsigned short src)
+{
+	reg_index_y++;
+	updateStatusSign(reg_index_y);
+	updateStatusZero(reg_index_y);
+	return 0;
+}
+
+int cpu::funcDecreaseRegisterX(unsigned short src)
+{
+	reg_index_x--;
+	updateStatusZero(reg_index_x);
+	updateStatusSign(reg_index_x);
+	return 0;
+}
+
+int cpu::funcDecreaseRegisterY(unsigned short src)
+{
+	reg_index_y--;
+	updateStatusZero(reg_index_y);
+	updateStatusSign(reg_index_y);
+	return 0;
+}
+
+int cpu::funcIncreaseMemory(unsigned short src)
+{
+	_memory->write(src, src + 1);
+	updateStatusSign(read(src));
+	updateStatusZero(read(src));
+	return 0;
+}
+
+int cpu::funcDecreaseMemory(unsigned short src)
+{
+	write(src, src - 1);
+	updateStatusZero(src);
+	updateStatusSign(src);
+	return 0;
+}
+
+int cpu::funcCompareRegisterX(unsigned short src)
+{
+	unsigned short value = src;
+	unsigned short result = reg_index_x - value;
+	testAndSet(reg_index_x >= (value & 0xFF), STATUS_CARRY); //to be changed
+	testAndSet(reg_index_x == (value & 0xFF), STATUS_ZERO);
+	updateStatusSign(result);
+	return 0;
+}
+
+int cpu::funcCompareRegisterY(unsigned short src)
+{
+	unsigned short value = src;
+	unsigned short result = reg_index_y - value;
+	testAndSet(reg_index_y >= (value & 0xFF), STATUS_CARRY); //to be changed
+	testAndSet(reg_index_y == (value & 0xFF), STATUS_ZERO);
+	updateStatusSign(result);
+	return 0;
+}
+
+
 int cpu::funcBranchOnResultPlus(unsigned short src) {
 	if (!hasStatusFlag(STATUS_SIGN)) {
 		signed short branch_to = (signed char)src;
@@ -649,6 +811,7 @@ int cpu::funcBranchOnResultZero(unsigned short src) {
 	}
 	return 0;
 }
+
 
 //Check the current reg_acc value against src
 int cpu::funcCompareMemory(unsigned short src) {
@@ -1047,6 +1210,7 @@ unsigned short cpu::modeRelative(){
 	return result;
 }
 
+/*
 
 int cpu::funcBranchResultNotZero(unsigned short src) {
 	if (!hasStatusFlag(STATUS_ZERO))
@@ -1119,6 +1283,7 @@ int cpu::funcBranchOverflowSet(unsigned short src) {
 	}
 	return 0;
 }
+*/
 
 int cpu::funcReturnFromSubroutine(unsigned short src) {
 	unsigned char low = popStack();

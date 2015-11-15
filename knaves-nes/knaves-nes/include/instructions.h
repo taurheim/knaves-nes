@@ -11,13 +11,63 @@
 #define LDA_IND_X	0xA1
 #define LDA_IND_Y	0xB1
 
+#define LDX_IMM		0xA2
+#define LDX_ZERO	0xA6
+#define LDX_ZERO_Y	0xB6
+#define LDX_ABS		0xAE
+#define LDX_ABS_Y	0xBE
+
+#define STX_ZERO	0x86
+#define STX_ZERO_Y	0x96
+#define STX_ABS		0x8E
+
+#define LDY_IMM		0xA0
+#define LDY_ZERO	0xA4
+#define LDY_ZERO_X	0xB4
+#define LDY_ABS		0xAC
+#define LDY_ABS_X	0xBC
+
+#define STY_ZERO	0x84
+#define STY_ZERO_X	0x94
+#define STY_ABS		0x8C
+
+#define INX		0xE8
+#define INY		0xC8
+#define DEX		0xCA
+#define DEY		0x88
+
+#define INC_ZERO	0xE6
+#define INC_ZERO_X	0xF6
+#define INC_ABS		0xEE
+#define INC_ABS_X	0xFE
+
+#define DEC_ZERO	0xC6
+#define DEC_ZERO_X	0xD6
+#define DEC_ABS		0xCE
+#define DEC_ABS_X	0xDE
+
+#define CPX_IMM		0xE0
+#define CPX_ZERO	0xE4
+#define CPX_ABS		0xEC
+
+#define CPY_IMM		0xC0
+#define CPY_ZERO	0xC4
+#define CPY_ABS		0xCC
+
+#define CMP_IMM		0xC9
+#define CMP_ZERO	0xC5
+#define CMP_ZERO_X	0xD5
+#define CMP_ABS		0xCD
+#define CMP_ABS_X	0xDD
+#define CMP_ABS_Y	0xD9
+#define CMP_IND_X	0xC1
+#define CMP_IND_Y	0xD1
+
 #define STA_ABS		0x8D
 
 #define ADC_ABS		0x6D
 
 #define TAX			0xAA
-
-#define CMP_IMM		0xC9
 
 //Branching
 #define BPL			0x10
