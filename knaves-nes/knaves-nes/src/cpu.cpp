@@ -74,6 +74,13 @@ cpu::cpu() {
 		{ASL_ZERO_X, instruction	{"ASL_ZERO_X", &cpu::funcShiftLeftToMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{ASL_ABS, instruction	{"ASL_ABS", &cpu::funcShiftLeftToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
 		{ASL_ABS_X, instruction	{"ASL_ABS_X", &cpu::funcShiftLeftToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
+		{ROR_ACC, instruction	{"ROR_ACC", &cpu::funcRotateRightToAccumulator, Mode::IMMEDIATE, 1, 2, false, true}},
+		{ROR_ZERO, instruction	{"ROR_ZERO", &cpu::funcRotateRightToMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
+		{ROR_ZERO_X, instruction {"ROR_ZERO_X", &cpu::funcRotateRightToMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
+		{ROR_ABS, instruction	{"ROR_ABS", &cpu::funcRotateRightToMemory, Mode::ABSOLUTE, 3, 6, false, true}},
+		{ROR_ABS_X, instruction {"ROR_ABS_X", &cpu::funcRotateRightToMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
+
 	};
 }
 
@@ -540,8 +547,7 @@ int cpu::funcShiftRightToMemory(unsigned short src) {
 }
 
 int cpu::funcShiftLeftToAccumulator(unsigned short src) {
-	unsigned short value = reg_acc;
-	value <<= 1;
+	unsigned short value = reg_acc <<= 1;
 	updateStatusCarry(value);
 	updateStatusZero(value);
 	updateStatusSign(value);
@@ -550,11 +556,35 @@ int cpu::funcShiftLeftToAccumulator(unsigned short src) {
 }
 
 int cpu::funcShiftLeftToMemory(unsigned short src) {
-	unsigned short value = src;
-	value <<= 1;
+	unsigned short value = src <<= 1;
 	updateStatusCarry(value);
 	updateStatusZero(value);
 	updateStatusSign(value);
 	_memory -> write(src, value);
 	return 0;
 }
+
+int cpu::funcRotateRightToAccumulator(unsigned short src)
+{
+	unsigned short value = reg_acc;
+	unsigned short result = (value >> 1) | ((reg_status & STATUS_CARRY) << 7);
+
+	updateStatusCarry(value);
+	updateStatusZero(result);
+	updateStatusSign(result);
+	reg_acc = result;
+	return 0;
+}
+
+int cpu::funcRotateRightToMemory(unsigned short src)
+{
+	unsigned short value = src;
+	unsigned short result = (value >> 1) | ((reg_status & STATUS_CARRY) << 7);
+
+	updateStatusCarry(value);
+	updateStatusZero(result);
+	updateStatusSign(result);
+	_memory -> write(src, result);
+	return 0;
+}
+

@@ -68,4 +68,10 @@
 #define ASL_ABS		0x0E
 #define ASL_ABS_X	0x1E
 
+#define ROR_ACC		0x6A
+#define ROR_ZERO	0x66
+#define ROR_ZERO_X	0x76
+#define ROR_ABS		0x6E
+#define ROR_ABS_X	0x7E
+
 #endif
