@@ -143,13 +143,13 @@ cpu::cpu() {
 		{LAX_IMM,	instruction {"LAX_IMM", &cpu::funcLAX, Mode::IMMEDIATE, 2, 2, false, true}},
 		{LAX_ABS,	instruction {"LAX_ABS", &cpu::funcLAX, Mode::ABSOLUTE, 3, 4, false, true}},
 		{LAX_IND_Y,	instruction {"LAX_IND_Y", &cpu::funcLAX, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
-		{LAX_ZERO_Y,instruction {"LAX_ZERO_Y", &cpu::funcLAX, Mode::ABSOLUTEY_ZERO_PAGE, 2, 4, false, true}},
+		{LAX_ZERO_Y,instruction {"LAX_ZERO_Y", &cpu::funcLAX, Mode::ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
 		{LAX_ABS_Y,	instruction {"LAX_ABS_Y", &cpu::funcLAX, Mode::ABSOLUTE_Y, 3, 4, true, true}},
 
 		{SAX_IND_X,	instruction {"SAX_IND_X", &cpu::funcSAX, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
 		{SAX_ZERO,	instruction {"SAX_ZERO", &cpu::funcSAX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{SAX_ABS,	instruction {"SAX_ABS", &cpu::funcSAX, Mode::ABSOLUTE, 3, 4, false, true}},
-		{SAX_ZERO_Y,instruction {"SAX_ZERO_Y", &cpu::funcSAX, Mode::ABSOLUTEY_ZERO_PAGE, 2, 4, false, true}},
+		{SAX_ZERO_Y,instruction {"SAX_ZERO_Y", &cpu::funcSAX, Mode::ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
 
 		{DCP_IND_X,	instruction {"DCP_IND_X", &cpu::funcDCP, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
 		{DCP_ZERO,	instruction {"DCP_ZERO", &cpu::funcDCP, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
@@ -828,7 +828,7 @@ int cpu::funcTransferIndexYToAccumulator(unsigned short src) {
 }
 
 int cpu::funcLAX(unsigned short src) {
-	funcLoadAccumulator();
+	funcLoadAccumulator(src);
 	funcLoadRegisterX(); //function todo
 	return 0;
 }
@@ -840,7 +840,7 @@ int cpu::funcSAX(unsigned short src) {
 
 int cpu::funcDCP(unsigned short src) {
 	funcDecreaseMemory(); //functions todo
-	funcCompareMemory();
+	funcCompareMemory(src);
 	return 0;
 }
 
