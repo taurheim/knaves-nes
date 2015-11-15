@@ -711,7 +711,7 @@ int cpu::funcJump(unsigned short src) {
 }
 
 int cpu::funcBit(unsigned short src) {
-	value = src;
+	unsigned short value = src;
 	updateStatusOverflow(value >> 6);
 	updateStatusSign(value >> 7);
 	updateStatusZero(value & reg_acc);
