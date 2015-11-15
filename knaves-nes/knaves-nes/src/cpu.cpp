@@ -888,15 +888,13 @@ int cpu::funcSLO(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcRLA(unsigned short src)
-{
+int cpu::funcRLA(unsigned short src) {
 	funcRotateLeftToMemory(src);
 	funcAnd(src);
 	return 0;
 }
 
-int cpu::funcSRE(unsigned short src)
-{
+int cpu::funcSRE(unsigned short src) {
 	funcShiftRightToMemory(src);
 	funcXor(src);
 	return 0;
