@@ -93,7 +93,7 @@ cpu::cpu() {
 		{CMP_ABS_X, instruction	{"CMP_ABS_X", &cpu::funcCompareMemory, Mode::ABSOLUTE_X, 3, 4, true, true}},
 		{CMP_ABS_Y, instruction	{"CMP_ABS_Y", &cpu::funcCompareMemory, Mode::ABSOLUTE_Y, 3, 4, true, true}},
 		{CMP_IND_X, instruction	{"CMP_IND_X", &cpu::funcCompareMemory, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
-		{CMP_IND_Y, instruction	{"CMP_IND_Y", &cpu::funcCompareMemory, &cpu::modePostIndirectY, 2, 5, true, true}},
+		{CMP_IND_Y, instruction	{"CMP_IND_Y", &cpu::funcCompareMemory, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
 
 
 
@@ -651,7 +651,7 @@ int cpu::funcAddWithCarry(unsigned short src) {
 
 int cpu::funcLoadRegisterX(unsigned short src)
 {
-	value = src;
+	unsigned short value = src;
 	reg_index_x = value;
 	updateStatusSign(reg_index_x);
 	updateStatusZero(reg_index_x);
@@ -660,7 +660,7 @@ int cpu::funcLoadRegisterX(unsigned short src)
 
 int cpu::funcLoadRegisterY(unsigned short src)
 {
-	value = src;
+	unsigned short value = src;
 	reg_index_y = value;
 	updateStatusSign(reg_index_y);
 	updateStatusZero(reg_index_y);
@@ -713,14 +713,14 @@ int cpu::funcDecreaseRegisterY(unsigned short src)
 int cpu::funcIncreaseMemory(unsigned short src)
 {
 	_memory->write(src, src + 1);
-	updateStatusSign(read(src));
-	updateStatusZero(read(src));
+	updateStatusSign(src);
+	updateStatusZero(src);
 	return 0;
 }
 
 int cpu::funcDecreaseMemory(unsigned short src)
 {
-	write(src, src - 1);
+	_memory->write(src, src - 1);
 	updateStatusZero(src);
 	updateStatusSign(src);
 	return 0;
@@ -1086,7 +1086,7 @@ int cpu::funcTransferIndexYToAccumulator(unsigned short src) {
 
 int cpu::funcLAX(unsigned short src) {
 	funcLoadAccumulator(src);
-	funcLoadRegisterX(); //function todo
+	funcLoadRegisterX(src); 
 	return 0;
 }
 
@@ -1096,14 +1096,14 @@ int cpu::funcSAX(unsigned short src) {
 }
 
 int cpu::funcDCP(unsigned short src) {
-	funcDecreaseMemory(); //function todo
+	funcDecreaseMemory(src); 
 	funcCompareMemory(src);
 	return 0;
 }
 
 int cpu::funcISC(unsigned short src) {
-	funcIncreaseMemory(); //function todo
-	funcSBC();
+	funcIncreaseMemory(src);
+	funcSBC(src);
 	return 0;
 }
 
@@ -1202,6 +1202,7 @@ int cpu::funcSHX(unsigned short src) {
 	return 0;
 }
 
+/*
 unsigned short cpu::modeRelative(){
 	signed short offset = (signed char)read(reg_pc + 1);
 	address = reg_pc;
@@ -1209,8 +1210,6 @@ unsigned short cpu::modeRelative(){
 	setPageBoundaryCrossed(address, result);
 	return result;
 }
-
-/*
 
 int cpu::funcBranchResultNotZero(unsigned short src) {
 	if (!hasStatusFlag(STATUS_ZERO))

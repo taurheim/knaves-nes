@@ -63,7 +63,13 @@
 #define CMP_IND_X	0xC1
 #define CMP_IND_Y	0xD1
 
-#define STA_ABS		0x8D
+#define STA_ZERO	0x85
+#define STA_ZERO_X	0x95	
+#define STA_ABS		0x8D	
+#define STA_ABS_X	0x9D
+#define STA_ABS_Y	0x99
+#define STA_IND_X	0x81
+#define STA_IND_Y	0x91
 
 #define ADC_ABS		0x6D
 
