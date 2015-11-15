@@ -571,7 +571,7 @@ int cpu::funcXor(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcShiftRightToAccumulator(unsigned short src) {
+int cpu::funcShiftRightToAccumulator() {
 	unsigned short value = reg_acc;
 	unsigned short result = value >> 1;
 	updateStatusCarry(value);
@@ -590,8 +590,8 @@ int cpu::funcShiftRightToMemory(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcShiftLeftToAccumulator(unsigned short src) {
-	unsigned short value = reg_acc <<= 1;
+int cpu::funcShiftLeftToAccumulator() {
+	unsigned short value = (reg_acc <<= 1);
 	updateStatusCarry(value);
 	updateStatusZero(value);
 	updateStatusSign(value);
@@ -600,7 +600,7 @@ int cpu::funcShiftLeftToAccumulator(unsigned short src) {
 }
 
 int cpu::funcShiftLeftToMemory(unsigned short src) {
-	unsigned short value = src <<= 1;
+	unsigned short value = (src <<= 1);
 	updateStatusCarry(value);
 	updateStatusZero(value);
 	updateStatusSign(value);
@@ -608,8 +608,7 @@ int cpu::funcShiftLeftToMemory(unsigned short src) {
 	return 0;
 }
 
-int cpu::funcRotateRightToAccumulator(unsigned short src)
-{
+int cpu::funcRotateRightToAccumulator() {
 	unsigned short value = reg_acc;
 	unsigned short result = (value >> 1) | ((reg_status & STATUS_CARRY) << 7);
 
@@ -620,8 +619,7 @@ int cpu::funcRotateRightToAccumulator(unsigned short src)
 	return 0;
 }
 
-int cpu::funcRotateRightToMemory(unsigned short src)
-{
+int cpu::funcRotateRightToMemory(unsigned short src) {
 	unsigned short value = src;
 	unsigned short result = (value >> 1) | ((reg_status & STATUS_CARRY) << 7);
 
@@ -632,8 +630,7 @@ int cpu::funcRotateRightToMemory(unsigned short src)
 	return 0;
 }
 
-int cpu::funcRotateLeftToAccumulator(unsigned short src)
-{
+int cpu::funcRotateLeftToAccumulator() {
     unsigned short value = reg_acc;
 	unsigned short result = (value << 1) | (reg_status & STATUS_CARRY);
 
@@ -644,8 +641,7 @@ int cpu::funcRotateLeftToAccumulator(unsigned short src)
 	return 0;
 }
 
-int cpu::funcRotateLeftToMemory(unsigned short src)
-{
+int cpu::funcRotateLeftToMemory(unsigned short src) {
 	unsigned short value = src;
 	unsigned short result = (value << 1) | (reg_status & STATUS_CARRY);
 
@@ -656,9 +652,8 @@ int cpu::funcRotateLeftToMemory(unsigned short src)
 	return 0;
 }
 
-int cpu::funcADC(unsigned short src)
-{
-	unsigned short value = rsrc;
+int cpu::funcADC(unsigned short src) {
+	unsigned short value = src;
 	unsigned short result = reg_acc + value + (hasStatusFlag(STATUS_CARRY) ? 1 : 0);
 	updateStatusOverflow(~(reg_acc ^ value) & (reg_acc ^ result));
 	updateStatusCarry(result);
@@ -668,8 +663,7 @@ int cpu::funcADC(unsigned short src)
 	return 0;
 }
 
-int cpu::funcSBC(unsigned short src)
-{
+int cpu::funcSBC(unsigned short src) {
 	unsigned short value = src;
 	unsigned short result = reg_acc + ~value + (hasStatusFlag(STATUS_CARRY) ? 1 : 0);
 	updateStatusOverflow((reg_acc ^ value) & (reg_acc ^ result));
@@ -680,38 +674,62 @@ int cpu::funcSBC(unsigned short src)
 	return 0; 
 }
 
-int cpu::funcPushStatusToStack()
-{
+int cpu::funcPushStatusToStack() {
 	pushStack(reg_status | STATUS_BRK | STATUS_EMPTY);
 	return 0;
 }
 
-int cpu::funcPopStatusFromStack()
-{
+int cpu::funcPopStatusFromStack() {
 	reg_status = popStack();
 	clearStatusFlag(STATUS_BRK);
 	return 0;
 }
 
-int cpu::funcPushAccumulatorToStack()
-{
+int cpu::funcPushAccumulatorToStack() {
 	pushStack(reg_acc);
 	return 0;
 }
 
-int cpu::funcPopAccumulatorFromStack()
-{
+int cpu::funcPopAccumulatorFromStack() {
 	reg_acc = popStack();
 	updateStatusZero(reg_acc);
 	updateStatusSign(reg_acc);
 	return 0;
 }
 
-int cpu::funcJumpSaveReturnAddress()
-{
+int cpu::funcJumpSaveReturnAddress() {
 	unsigned short ret = reg_pc + 2;
 	pushStack((ret >> 8) & 0xFF);
 	pushStack(ret & 0xFF);
 	reg_pc = src;
 	return 0;
 }
+
+int cpu::funcJump(unsigned short src) {
+	reg_pc = src;
+	return 0;
+}
+
+int cpu::funcBit(unsigned short src) {
+	value = src;
+	updateStatusOverflow(value >> 6);
+	updateStatusSign(value >> 7);
+	updateStatusZero(value & reg_acc);
+	return 0;
+}
+
+int cpu::funcSetCarryFlag() {
+	setStatusFlag(STATUS_CARRY);
+	return 0;
+}
+
+int cpu::funcSetDecimalMode() {
+	setStatusFlag(STATUS_DECIMAL);
+	return 0;
+}
+
+int cpu::funcSetInterruptDisable() {
+	setStatusFlag(STATUS_INTERRUPT);
+	return 0;
+}
+

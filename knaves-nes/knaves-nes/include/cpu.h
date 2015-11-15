@@ -135,6 +135,12 @@ private:
 	inline int funcJumpSaveReturnAddress();
 	inline int funcJump(unsigned short src);
 
+	inline int funcBit(unsigned short src);
+
+	inline int funcSetCarryFlag();
+	inline int funcSetDecimalMode();
+	inline int funcSetInterruptDisable();
+
 	
 
 
