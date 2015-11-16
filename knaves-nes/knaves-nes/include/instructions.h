@@ -267,7 +267,7 @@
 #define RTS		0x60
 #define RTI		0x40
 
-#define BRK		0x00
+//#define BRK		0x00
 
 #define NOP		0xEA	
 #define NOP2		0x04

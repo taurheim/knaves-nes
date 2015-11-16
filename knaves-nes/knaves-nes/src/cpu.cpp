@@ -378,7 +378,7 @@ bool cpu::checkInterrupts() {
 */
 void cpu::executeInterrupt(const enum Interrupt &interrupt) {
 	//Push program counter & status register to stack
-	pushStack(reg_pc);
+	pushStackDouble(reg_pc);
 	pushStack(reg_status);
 
 	//Add the interrupt status flag (this prevents further interrupts)
@@ -526,7 +526,8 @@ void cpu::pushStack(unsigned char byte) {
 /*
  Push 16 bits to the stack (2 bytes)
 */
-void cpu::pushStack(unsigned short bytebyte) {
+
+void cpu::pushStackDouble(unsigned short bytebyte) {
 	unsigned char first = (bytebyte >> 8) & 0b11111111;
 	unsigned char second = bytebyte & 0b11111111;
 
@@ -535,6 +536,7 @@ void cpu::pushStack(unsigned short bytebyte) {
 
 	return;
 }
+
 
 /*
  Pop off the stack
@@ -621,6 +623,14 @@ void cpu::updateStatusCarry(unsigned short result) {
 	}
 }
 
+void cpu::updateStatusBasedOnExpression(bool result, unsigned char flag) {
+	if (result) {
+		setStatusFlag(flag);
+	}
+	else {
+		clearStatusFlag(flag);
+	}
+}
 
 /************
   OPERATIONS
@@ -730,8 +740,8 @@ int cpu::funcCompareRegisterX(unsigned short src)
 {
 	unsigned short value = src;
 	unsigned short result = reg_index_x - value;
-	testAndSet(reg_index_x >= (value & 0xFF), STATUS_CARRY); //to be changed
-	testAndSet(reg_index_x == (value & 0xFF), STATUS_ZERO);
+	updateStatusBasedOnExpression(reg_index_x >= (value & 0xFF), STATUS_CARRY); //to be changed
+	updateStatusBasedOnExpression(reg_index_x == (value & 0xFF), STATUS_ZERO);
 	updateStatusSign(result);
 	return 0;
 }
@@ -740,8 +750,8 @@ int cpu::funcCompareRegisterY(unsigned short src)
 {
 	unsigned short value = src;
 	unsigned short result = reg_index_y - value;
-	testAndSet(reg_index_y >= (value & 0xFF), STATUS_CARRY); //to be changed
-	testAndSet(reg_index_y == (value & 0xFF), STATUS_ZERO);
+	updateStatusBasedOnExpression(reg_index_y >= (value & 0xFF), STATUS_CARRY); //to be changed
+	updateStatusBasedOnExpression(reg_index_y == (value & 0xFF), STATUS_ZERO);
 	updateStatusSign(result);
 	return 0;
 }
@@ -946,7 +956,7 @@ int cpu::funcRotateLeftToMemory(unsigned short src) {
 int cpu::funcADC(unsigned short src) {
 	unsigned short value = src;
 	unsigned short result = reg_acc + value + (hasStatusFlag(STATUS_CARRY) ? 1 : 0);
-	updateStatusOverflow(~(reg_acc ^ value) & (reg_acc ^ result));
+	updateStatusBasedOnExpression(~(reg_acc ^ value) & (reg_acc ^ result) & 0x80, STATUS_OVERFLOW);
 	updateStatusCarry(result);
 	reg_acc = result & 0xFF;
 	updateStatusZero(reg_acc);
@@ -957,8 +967,8 @@ int cpu::funcADC(unsigned short src) {
 int cpu::funcSBC(unsigned short src) {
 	unsigned short value = src;
 	unsigned short result = reg_acc + ~value + (hasStatusFlag(STATUS_CARRY) ? 1 : 0);
-	updateStatusOverflow((reg_acc ^ value) & (reg_acc ^ result));
-	updateStatusCarry(!result);//to be checked by niko
+	updateStatusBasedOnExpression((reg_acc ^ value) & (reg_acc ^ result) & 0x80, STATUS_OVERFLOW); 
+	updateStatusBasedOnExpression(!(result & 0x100), STATUS_CARRY);
 	reg_acc = result & 0xFF;
 	updateStatusZero(reg_acc);
 	updateStatusSign(reg_acc >> 7);
@@ -1003,7 +1013,7 @@ int cpu::funcJump(unsigned short src) {
 
 int cpu::funcBit(unsigned short src) {
 	unsigned short value = src;
-	updateStatusOverflow(value >> 6);
+	updateStatusBasedOnExpression(value >> 6,STATUS_OVERFLOW);
 	updateStatusSign(value >> 7);
 	updateStatusZero(value & reg_acc);
 	return 0;
@@ -1157,7 +1167,7 @@ int cpu::funcARR(unsigned short src) {
 	updateStatusZero(reg_acc);
 	updateStatusSign(reg_acc >> 7);
 	updateStatusCarry(reg_acc >> 6);
-	testAndSet(hasStatusFlag(STATUS_CARRY) ^ ((reg_acc >> 5) & 1), STATUS_OVERFLOW);//not sure about this one
+	updateStatusBasedOnExpression(hasStatusFlag(STATUS_CARRY) ^ ((reg_acc >> 5) & 1), STATUS_OVERFLOW);
 	return 0;
 }
 
