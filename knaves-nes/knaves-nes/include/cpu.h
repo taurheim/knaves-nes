@@ -82,11 +82,12 @@ private:
 	void updateStatusSign(unsigned short val);
 	void updateStatusOverflow(unsigned short val, unsigned short mem);
 	void updateStatusCarry(unsigned short result);
+	void updateStatusBasedOnExpression(bool result, unsigned char flag);
 	
 	//Memory Management
 	unsigned char readAddress(unsigned short address);
 	void pushStack(unsigned char byte);
-	void pushStack(unsigned short bytebyte);
+	void pushStackDouble(unsigned short bytebyte);
 	unsigned char popStack();
 
 	//Modes
