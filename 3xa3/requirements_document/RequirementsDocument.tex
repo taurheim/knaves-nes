@@ -1,0 +1,198 @@
+\documentclass[12pt]{article}
+
+% For Different Coloured Comments
+\usepackage{xcolor}
+
+% For better title formatting
+\usepackage{titling}
+
+% For version history
+\usepackage{vhistory}
+
+% For references
+\usepackage{hyperref}
+
+% Indent first paragraph as well
+\usepackage{indentfirst}
+
+\setlength{\droptitle}{-10em}
+
+%% Comments
+\newif\ifcomments\commentstrue
+
+% Comment Formatting
+\ifcomments
+\newcommand{\authornote}[3]{\textcolor{#1}{[#3 ---#2]}}
+\newcommand{\todo}[1]{\textcolor{red}{[TODO: #1]}}
+\else
+\newcommand{\authornote}[3]{}
+\newcommand{\todo}[1]{}
+\fi
+
+% Comment Colours
+\newcommand{\wss}[1]{\authornote{magenta}{SS}{#1}}
+\newcommand{\hm}[1]{\authornote{blue}{HM}{#1}} %Hediyeh
+\newcommand{\tz}[1]{\authornote{blue}{TZ}{#1}} %Tahereh
+\newcommand{\pl}[1]{\authornote{blue}{PL}{#1}} %Peng
+
+% Spacing
+\setlength{\parindent}{4em}
+\setlength{\parskip}{1em}
+
+\begin{document}
+
+
+% Make the title
+\title{Requirements Document for Knaves NES}
+\date{\today\\
+	{\medskip\small Software Engineering 3XA3, Lab \#3}
+}
+\author{Niko Savas\\
+	\texttt{1300247}
+	\and
+	Joe Crozier\\
+	\texttt{1311502}
+	\and
+	Sam Nalwa\\
+	\texttt{1332792}
+}
+
+\maketitle
+\clearpage
+
+\tableofcontents
+\clearpage
+
+\section{General Introduction}
+	KnavesNES is a fully functioning MOS Technology 6502 CPU \hyperlink{refs}{[1]} emulator, the very same CPU included in the Nintendo Entertainment System \hyperlink{refs}{[2]}, first sold in 1983. An emulator is a piece of software which at its core, aims to imitate a functioning piece of hardware. An emulated CPU is capable of processing instructions in the form of OP codes which direct the CPU to perform operations on values in its memory. In the case of KnavesNES, the instructions will be processed through ROM files which can be created by the user using an external tool, or alternatively downloaded from the internet.  
+
+	The motivation behind developing a CPU emulator is that of academic pursuit. The architecture behind a modern CPU is incredibly complex and can be formidable for amateur software developers to consider developing for it on a system level. KnavesNES aims to provide a platform for software developers interested in learning about assembly to test and debug their 6502 code. In addition to this, educators will be able to use the software to aid in teaching their students about CPU architecture. Many have compared the pursuit of learning a language like 6502 to be akin to learning a written language like Latin. While both are antiquated and in general no longer used, both can foster a better understanding and mastery of modern languages like Java or English. For these reasons, educators and their self-teaching computer enthusiasts are the main stakeholders and by extension users of the project. 
+
+	The main scope of this project is to simulate the execution of compatible OP code instructions on an emulated CPU \hyperlink{refs}{[3]}. The emulated CPU should be able to process the same operation codes, represented as hexadecimal numbers, as the physical CPU. The CPU will manage its own RAM, in this case 2kB \hyperlink{refs}{[2]}. The CPU must be able to process instructions from a ROM file, as well as store the contents of this ROM file in memory. Tests are available as ROM files with sample instructions meant to test the fidelity of the CPU. 
+\section{Definitions}
+	\textbf{NES} - Nintendo Entertainment System. Game console released in 1983. The architecture of the system has been examined thoroughly and replicated in emulators such as this one.
+	\textbf{CPU} - Central Processing Unit: The part of a computer which executes instructions by performing basic arithmetic, logical, control, and input/output operations.
+	\textbf{Op Code} - Operation code. This is an instruction in machine language that is sent and executed by the CPU.
+	\textbf{ROM file} - A file that contains the read-only information that would be present in a game cartridge, in this case an NES cartridge. This file can be read and executed by an emulator as if it was a real cartridge.
+\section{General System Description}
+	\subsection{Module Description}
+		MainNES – Main executable which is launched through the command prompt. This module will handle the launching of the actual ROM file and the management of the CPU. It is also responsible for ending the process when necessary, and for instructing MemoryLogger when to log the CPU memory.
+
+		CPU – The CPU is passed the set of instructions from the ROM file from MainNES, stores them in its memory, and begins their execution immediately. It is responsible for informing ErrorHandler when an error occurs in execution, and also for informing MainNES when execution is complete.
+
+		ErrorHandler – The ErrorHandler is responsible for deciding the outcome of various errors which can occur while executing or preparing to execute. Examples include invalid ROM formats, unknown instructions, instructions with undefined results, and out of bounds memory accesses. Typically, these errors will result in ErrorHandler informing MainNES to halt execution and echo into the command prompt that said error has occurred.
+
+		MemoryLogger – The MemoryLogger is responsible for querying the CPU for the state of its memory, and logging said memory as ASCII formatted .log files which are placed in the user’s working directory.
+	\subsection{User Characteristics and Conditions}
+		Users of KnavesNES are expected to be comfortable using the command line to execute software. They are also expected to have a basic understanding of a CPU and the concept of memory in order to fully grasp the project. They are expected to be running on a Windows, Mac OS X, or Linux operating system on a 32 or 64-bit processor.
+	\subsection{Assumptions and Dependencies}
+		It is assumed that the ROM files to be executed are of a reasonable size and length (< 512kb). This is due to memory limitations of KnavesNES, as found in the NES console itself. It is also assumed that any ROM files ran by KnavesNES consist only of valid OP code instructions found in [3]. KnavesNES is exceptionally portable in the sense that once compiled, it does not rely on or reference any external libraries. 
+\section{Functional Requirements}
+	\begin{itemize}
+		\item Knaves NES must be able to run standard NES ROMs (.nes files)
+		\item Knaves NES CPU must be able to execute opcodes from the 6502 MOS CPU architecture
+		\item Knaves NES CPU must be able to manage 2kB of RAM
+		\item Knaves NES will log its memory state into a .log file in the user's working directory at a specified interval.
+	\end{itemize}
+\section{Non-Functional Requirements}
+	\subsection{Quality Requirements}
+		\begin{itemize}
+			\item Knaves NES should be built to exactly mimic the 6502 MOS CPU architecture, including any abnormalities with the running of opcodes
+		\end{itemize}
+	\subsection{Look and Feel Requirements}
+		\begin{itemize}
+			\item Knaves NES should be run as an .exe (one click to open)
+			\item Knaves NES must allow the user to select a .nes file from their computer to run
+		\end{itemize}
+	\subsection{Usability Requirements}
+		\begin{itemize}
+			\item Knaves NES must be able to be used by anyone over the age of 10
+			\item Knaves NES must be easy to learn for a 10 year old
+		\end{itemize}
+	\subsection{Performance Requirements}
+		\begin{itemize}
+			\item Knaves NES should mimic the performance of a 6502 MOS CPU
+			\item Knaves NES must not crash during any CPU tests
+			\item Knaves NES CPU cycles must be precise down to the nanosecond (based off computer system time)
+			\item Knaves NES must be able to run ROMs up to 1MB
+		\end{itemize}
+	\subsection{Operational Requirements}
+		\begin{itemize}
+			\item Knaves NES must be able to run on a Windows 10 Machine as an .exe
+			\item Knaves NES must be able to run any ROMs that would be runnable on a regular NES
+		\end{itemize}
+	\subsection{Maintainability and Portability Requirements}
+		\begin{itemize}
+			\item Knaves NES should be easy to maintain for anyone through the GitHub repo
+			\item Knaves NES should be written so that it is easy to jump into for a new collaborator
+			\item Knaves NES should be able to fit on a 1GB USB to ensure portability
+		\end{itemize}
+	\subsection{Security \& Safety Requirements}
+		\begin{itemize}
+			\item Knaves NES will not access any files other than the supplied ROM
+			\item Knaves NES will not have any internet connectivity
+			\item Knaves NES should be incapable of hurting a person or machine
+		\end{itemize}
+	\subsection{Cultural and Political Requirements}
+		\begin{itemize}
+			\item Knaves NES will not include any offensive code or words for any culture or political affiliation
+		\end{itemize}
+	\subsection{Legal Requirements}
+		\begin{itemize}
+			\item Knaves NES will be released under the GNU General Public License v2
+			\item The full source of Knaves NES will be hosted on GitHub
+		\end{itemize}
+\section{Use Cases (Scenarios)}
+	\begin{enumerate}
+		\item \large{\textbf{Product Use Case Name}: Execution of ROM}\normalsize\\
+			\textbf{Trigger}:User executes a local ROM file via a command through the user’s command prompt. The name of the file is included as an argument. KnavesNES begins executing the instructions found in the ROM file.\\
+			\textbf{Preconditions}:KnavesNES is not already running.\\
+			\textbf{Interested Stakeholders}:Users and educators.\\
+			\textbf{Actors}:MainNES, CPU, ErrorHandler\\
+			\textbf{Outcome}:KnavesNES will execute the ROM file to completion, or until the user stops the process. State of memory will be logged at regular intervals (as explained in the memory logging use case). Upon completion (program counter reaches the end of the instructions), KnavesNES will echo to the command prompt that execution was successful and will gracefully close its process. \\
+		\item \large{\textbf{Product Use Case Name}: Halting of Execution}\normalsize\\
+			\textbf{Trigger}:User presses the ESC key during execution of a ROM file.\\
+			\textbf{Preconditions}:KnavesNES is currently executing a ROM file.\\
+			\textbf{Interested Stakeholders}:Users and educators.\\
+			\textbf{Actors}:MainNES, CPU, ErrorHandler\\
+			\textbf{Outcome}:KnavesNES will halt executing the ROM file, log the final state of memory, and gracefully close its process.\\
+		\item \large{\textbf{Product Use Case Name}: Memory Logging}\normalsize\\
+			\textbf{Trigger}:A specified amount of instructions have been processed since the last successful memory log.\\
+			\textbf{Preconditions}: KnavesNES is currently executing a ROM file.\\
+			\textbf{Interested Stakeholders}: Users and educators\\
+			\textbf{Actors}: CPU, MainNES, ErrorHandler, MemoryLogger\\
+			\textbf{Outcome}: KnavesNES will log the full state of memory with a timestamp into a MEMORY-DD/MM/YY-HH:MM:SS.log file in the users working directory.\\
+		\item \large{\textbf{Product Use Case Name}: Error Handling}\normalsize\\
+			\textbf{Trigger}: KnavesNES encounters an unknown instruction, an instruction with an undefined outcome (division by 0, etc.), or any other type of catastrophic error.\\
+			\textbf{Preconditions}: KnavesNES is currently executing a ROM file.\\
+			\textbf{Interested Stakeholders}: Users and educators.\\
+			\textbf{Actors}: CPU, EventListener, ErrorHandler, MemoryLogger\\
+			\textbf{Outcome}: KnavesNES will halt executing the ROM file and will echo into the command prompt that an error has occurred, along with a trace for the associated error. Memory will be logged a final time before KnavesNES gracefully ends its process.\\
+	\end{enumerate}
+\section{Inputs}
+	There are two main input sets to KnavesNES. The first is the ROM file which is set to be executed. The ROM file is a compiled list of 6502 OP code instructions compliant to the specifications mentioned above. The second kind of input is commands dealt as arguments through the command prompt, of which include the name of the ROM file to be executed, and the ESC key to halt execution at any time.
+\section{Outputs}
+	The main output for KnavesNES comes in the form of ASCII formatted .log files which are placed in the user’s working directory. These .log files are timestamped and contain the memory state of the system, represented as an indexed list of hexadecimal values. The secondary output for KnavesNES is echoes to the command line stating that execution is beginning, ending, and any errors which may occur as well as their traces.
+\section{Specific Details}
+
+	KnavesNES requires that it is executed on a stable computer with no previous operation issues. In order to run at the desired clock rate, KnavesNES should be run on a modern computer with at least a 2.0GHz processor. KnavesNES is explicitly secure and accesses no user data apart from the passed ROM files. Little to no risk exists of data corruption, as KnavesNES writes only to its own directory in the form of memory log files. 
+
+	KnavesNES can be expected to be maintained and will receive periodic updates to fix bugs and potentially add new features. The life cycle of this product depends on its continued maintenance, however it can be safely assumed it will be maintained at least one year after its initial release.
+\section{Proof of Concept Demonstration}
+	During the proof of concept demonstration, KnavesNES will demonstrate the execution of a simple ROM file of which the source code will be explained to the audience before hand. Following its completion, the CPU’s memory will be investigated in the log file and it will be confirmed that execution was successful. Inherent technical risks during the demonstration include typos in the source code of the ROM file, unidentified bugs in the CPU which could cause an error during execution, and invalid rights on the enclosed folder which could prevent KnavesNES from writing memory log files.
+\clearpage
+
+\addcontentsline{toc}{section}{References}
+\hypertarget{refs}{}
+\begin{thebibliography}{99}
+\bibitem{ref1} \emph{MOS Technology 6502 CPU} - \url{https://en.wikipedia.org/wiki/MOS_Technology_6502}
+\bibitem{ref2} \emph{Nintendo Entertainment System} - \url{https://en.wikipedia.org/wiki/Nintendo_Entertainment_System}
+\bibitem{ref3} \emph{6502 CPU OP Codes} - \url{http://www.6502.org/tutorials/6502opcodes.html}
+\end{thebibliography}
+
+\addcontentsline{toc}{section}{Version History}
+% Start of the revision history table
+\begin{versionhistory}
+  \vhEntry{1.0}{Oct 9, 2015}{Niko Savas}{created}
+\end{versionhistory}
+\end{document}

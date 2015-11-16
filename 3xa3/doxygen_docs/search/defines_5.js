@@ -1,0 +1,25 @@
+var searchData=
+[
+  ['inc_5fabs',['INC_ABS',['../opcodes_8h.html#a8bf0039718a72584489fa9524fef4b60',1,'opcodes.h']]],
+  ['inc_5fabs_5fx',['INC_ABS_X',['../opcodes_8h.html#aa706a99670f9038a685648319ce4c157',1,'opcodes.h']]],
+  ['inc_5fzero',['INC_ZERO',['../opcodes_8h.html#a470eb119315a7c58e650b9cf02b4bde8',1,'opcodes.h']]],
+  ['inc_5fzero_5fx',['INC_ZERO_X',['../opcodes_8h.html#a106f1935bf15265d7a7cc0448c0eb92f',1,'opcodes.h']]],
+  ['ines_5fdelimiter',['INES_DELIMITER',['../ines_8h.html#a0ac77070783d400063c37edff054c599',1,'ines.h']]],
+  ['ines_5fpreamble',['INES_PREAMBLE',['../ines_8h.html#a127a6e89d8dfe1c3961b543acb8f7996',1,'ines.h']]],
+  ['interrupt_5fcycles',['INTERRUPT_CYCLES',['../cpu_8h.html#ae7d289b64868d54a2deafb5fdbb5e274',1,'cpu.h']]],
+  ['interrupt_5firq_5fhigh',['INTERRUPT_IRQ_HIGH',['../cpu_8h.html#a161f01825f57453f47a881ef1e05aa8f',1,'cpu.h']]],
+  ['interrupt_5firq_5flow',['INTERRUPT_IRQ_LOW',['../cpu_8h.html#aefe5045bc59e9ab29fa907ff84321350',1,'cpu.h']]],
+  ['interrupt_5fnmi_5fhigh',['INTERRUPT_NMI_HIGH',['../cpu_8h.html#a931842c7b6d81b1a316e0cc4f8afa7de',1,'cpu.h']]],
+  ['interrupt_5fnmi_5flow',['INTERRUPT_NMI_LOW',['../cpu_8h.html#a49c5733e9038352a3b37e63261b8eac5',1,'cpu.h']]],
+  ['interrupt_5freset_5fhigh',['INTERRUPT_RESET_HIGH',['../cpu_8h.html#aaa7548473e8970ea6c35dec943fd91dc',1,'cpu.h']]],
+  ['interrupt_5freset_5flow',['INTERRUPT_RESET_LOW',['../cpu_8h.html#a664386b10e515e7e8742c33e1e96e089',1,'cpu.h']]],
+  ['inx',['INX',['../opcodes_8h.html#addcb22086f123e99d176b2c31d8b1592',1,'opcodes.h']]],
+  ['iny',['INY',['../opcodes_8h.html#ac683055e870b8b1128085f6359c002d5',1,'opcodes.h']]],
+  ['isc_5fabs',['ISC_ABS',['../opcodes_8h.html#a1dccd731c45486ecd08038a0a1ac907c',1,'opcodes.h']]],
+  ['isc_5fabs_5fx',['ISC_ABS_X',['../opcodes_8h.html#a74ce4e5ffe971073eebb9816a844cbe8',1,'opcodes.h']]],
+  ['isc_5fabs_5fy',['ISC_ABS_Y',['../opcodes_8h.html#affcb0af383520885679b443ba2c922b8',1,'opcodes.h']]],
+  ['isc_5find_5fx',['ISC_IND_X',['../opcodes_8h.html#a129ef1457bdc5a8e11f8dd099bce8f12',1,'opcodes.h']]],
+  ['isc_5find_5fy',['ISC_IND_Y',['../opcodes_8h.html#ab3d58f9b4d6624c3830ad50c70779854',1,'opcodes.h']]],
+  ['isc_5fzero',['ISC_ZERO',['../opcodes_8h.html#aeba935c032f1857a41226dde105f7f61',1,'opcodes.h']]],
+  ['isc_5fzero_5fx',['ISC_ZERO_X',['../opcodes_8h.html#af368acb47886ac2253d6e643953b5f9c',1,'opcodes.h']]]
+];

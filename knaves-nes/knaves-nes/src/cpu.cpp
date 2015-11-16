@@ -328,14 +328,17 @@ void cpu::start() {
 	is_running = true;
 
 	//Set Registers on startup
-	reg_pc = STARTUP_PC;
+
+	//OVERRIDING, FIX THIS LATER
+	reg_pc = 0x8010;
 	reg_status = STARTUP_STATUS;
 	reg_acc = 0;
 	reg_index_x = 0;
 	reg_index_y = 0;
 
 	//Execute RESET Interrupt on startup
-	executeInterrupt(Interrupt::RESET);
+	//OVERRIDING, FIX THIS LATER
+	//executeInterrupt(Interrupt::RESET);
 }
 
 void cpu::reset() {
@@ -422,20 +425,27 @@ unsigned short cpu::executeInstruction() {
 	unsigned char opcode = readAddress(reg_pc);
 	reg_status = STATUS_EMPTY;
 
+	std::cout << std::hex << opcode;
+
 	//Get the instruction associated with the opcode
 	std::map<char, instruction>::const_iterator instruction_row = instructions.find(opcode);
 
 	//Invalid opcode
 	if (instruction_row == instructions.end()) {
 		std::cout << "Invalid Instruction";
+		_memory->logMemory();
 		//throw InvalidOpcodeException(current_opcode);
+		return 0;
 	}
+
+
 
 	//Actually execute the opcode instruction
 	instruction current_instruction = instruction_row->second;
+	std::cout << "\n Executing instruction " + current_instruction.name;
 
 	//Get the source 
-	unsigned short src = getSource(current_instruction.mode);
+	unsigned int src = getSource(current_instruction.mode);
 
 	//Run the function and determine how many cycles were needed
 	unsigned short cycles_used = current_instruction.cycles;
@@ -451,6 +461,8 @@ unsigned short cpu::executeInstruction() {
 	if (current_instruction.skip_bytes) {
 		reg_pc += current_instruction.bytes;
 	}
+
+
 	return cycles_used;
 }
 
@@ -520,10 +532,10 @@ MEMORY FUNCTIONS
 
 unsigned char cpu::readAddress(unsigned short address)
 {
-	return 0;
+	return _memory->read(address);
 }
 
-/*n
+/*
  Push a byte to the stack
 */
 void cpu::pushStack(unsigned char byte) {

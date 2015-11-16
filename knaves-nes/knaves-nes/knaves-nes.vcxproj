@@ -119,17 +119,24 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\cartridge.h" />
     <ClInclude Include="include\cpu.h" />
     <ClInclude Include="include\instructions.h" />
     <ClInclude Include="include\instruction.h" />
     <ClInclude Include="include\knaves.h" />
+    <ClInclude Include="include\main.h" />
     <ClInclude Include="include\memory.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\cartridge.cpp" />
     <ClCompile Include="src\cpu.cpp" />
     <ClCompile Include="src\knaves.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\memory.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mario.nes" />
+    <None Include="untitled.nes" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

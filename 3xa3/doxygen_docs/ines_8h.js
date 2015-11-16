@@ -1,0 +1,27 @@
+var ines_8h =
+[
+    [ "nesHeader", "structnes_header.html", "structnes_header" ],
+    [ "prgRomPage", "structprg_rom_page.html", "structprg_rom_page" ],
+    [ "chrRomPage", "structchr_rom_page.html", "structchr_rom_page" ],
+    [ "iNes", "classi_nes.html", "classi_nes" ],
+    [ "CHR_BANK_SIZE", "ines_8h.html#a5ceaec8c5f5ce86f5c09e0fa657b11ff", null ],
+    [ "CHR_BANKS", "ines_8h.html#a4cfc6fac5ad61ec5c26e5d3218a5d332", null ],
+    [ "CHR_BANKS_FOR_1KB", "ines_8h.html#af2924fa015d53f5a2e4a680ffba27d8e", null ],
+    [ "CHR_BANKS_FOR_2KB", "ines_8h.html#ab3f5503f433a2ede6d0a45f704658f87", null ],
+    [ "CHR_BANKS_FOR_4KB", "ines_8h.html#a4232f1ed5b71f75e639af9e690106ed2", null ],
+    [ "CHR_BANKS_FOR_8KB", "ines_8h.html#ad4be13aed8acfb8eeee9e7640887cad1", null ],
+    [ "CHR_FIRST_BANK_ADDR", "ines_8h.html#a762b15aa2727508a192f43afb9e4adbe", null ],
+    [ "CHR_ROM_SIZE", "ines_8h.html#aa60df7a7b3a8774fe463db5fa8a762dd", null ],
+    [ "CHR_SECOND_BANK_ADDR", "ines_8h.html#a58c6b4f1728bcbed8389250e3f136d77", null ],
+    [ "INES_DELIMITER", "ines_8h.html#a0ac77070783d400063c37edff054c599", null ],
+    [ "INES_PREAMBLE", "ines_8h.html#a127a6e89d8dfe1c3961b543acb8f7996", null ],
+    [ "PRG_BANK_SIZE", "ines_8h.html#a74be579665491b889edb8e296870082d", null ],
+    [ "PRG_BANKS", "ines_8h.html#ad81b8efa90542c3b691318b7498e7033", null ],
+    [ "PRG_BANKS_FOR_16KB", "ines_8h.html#af07582b39d9c7566b98627e7c191cc70", null ],
+    [ "PRG_BANKS_FOR_32KB", "ines_8h.html#a1d7f9b85259f1600a35ac2d7480cc6bb", null ],
+    [ "PRG_BANKS_FOR_8KB", "ines_8h.html#a9208c7a52c7b5e6370edb2b4db4cd390", null ],
+    [ "PRG_FIRST_BANK_ADDR", "ines_8h.html#af7827f2201851f0a3db5013bf6ed622c", null ],
+    [ "PRG_ROM_SIZE", "ines_8h.html#a816d6d8b8265e95840cc9cb6354f7d48", null ],
+    [ "PRG_SECOND_BANK_ADDR", "ines_8h.html#abfa575c9af30e8c8e071366440e180d9", null ],
+    [ "TRAINER_SIZE", "ines_8h.html#a3cb30d7ca35754b0be03d75d160c7588", null ]
+];

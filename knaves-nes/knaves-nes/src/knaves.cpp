@@ -10,6 +10,8 @@ Knaves::Knaves() {
 
 	_cpu = new cpu();
 	_memory = new Memory();
+	_memory->readFromRom();
+	_memory->logMemory();
 }
 
 Knaves::~Knaves() {
@@ -32,6 +34,10 @@ void Knaves::run() {
 
 	while (isRunning) {
 		unsigned short cycles = _cpu->executeInstruction();
+		
+		if (cycles == 0) {
+			isRunning = false;
+		}
 	}
 }
 

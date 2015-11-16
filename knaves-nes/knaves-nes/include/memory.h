@@ -19,7 +19,7 @@ class Memory {
 public: 
 
 	Memory();
-
+	void Memory::readFromRom();
 	void write(unsigned short address, unsigned char value);
 	unsigned char read(unsigned short address);
 	void logMemory();
