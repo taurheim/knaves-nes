@@ -1154,7 +1154,7 @@ int cpu::funcANC(unsigned short src) {
 	funcAnd(src);
 	reg_status &= ~STATUS_CARRY;
 
-	if (result & STATUS_SIGN)
+	if (reg_acc & STATUS_SIGN)
 	{
 		reg_status |= STATUS_CARRY;
 	}
