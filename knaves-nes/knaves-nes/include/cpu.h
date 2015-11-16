@@ -207,6 +207,7 @@ private:
 
 	inline int funcNop(unsigned short src);
 
+	inline int funcKill(unsigned short src);
 
 };
 

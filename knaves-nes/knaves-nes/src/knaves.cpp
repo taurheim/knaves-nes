@@ -36,12 +36,12 @@ void Knaves::run() {
 		unsigned short cycles = _cpu->executeInstruction();
 		
 		if (cycles == 0) {
-			isRunning = false;
+			stop();
 		}
 	}
 }
 
 void Knaves::stop() {
 	isRunning = false;
-	
+	getchar();
 }

@@ -317,6 +317,7 @@ cpu::cpu() {
 		{NOP27, instruction {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 2, 2, false, true}},
 		{NOP28, instruction {"NOP", &cpu::funcNop, Mode::ABSOLUTE_X, 2, 2, false, true}},
 
+		{KIL1, instruction {"KIL", &cpu::funcKill, Mode::IMMEDIATE,0,0,false,false}}
 	};
 }
 
@@ -415,7 +416,6 @@ Read the next op code from the program counter
 @return The # of cycles the opcode took to run
 */
 unsigned short cpu::executeInstruction() {
-	std::cout << "Executing instruction ";
 	if (cpu::checkInterrupts()) {
 		//If an interrupt ran, it took 7 cycles
 		return INTERRUPT_CYCLES;
@@ -425,14 +425,12 @@ unsigned short cpu::executeInstruction() {
 	unsigned char opcode = readAddress(reg_pc);
 	reg_status = STATUS_EMPTY;
 
-	std::cout << std::hex << opcode;
-
 	//Get the instruction associated with the opcode
 	std::map<char, instruction>::const_iterator instruction_row = instructions.find(opcode);
 
 	//Invalid opcode
 	if (instruction_row == instructions.end()) {
-		std::cout << "Invalid Instruction";
+		std::cout << "\nInvalid Instruction";
 		_memory->logMemory();
 		//throw InvalidOpcodeException(current_opcode);
 		return 0;
@@ -442,7 +440,7 @@ unsigned short cpu::executeInstruction() {
 
 	//Actually execute the opcode instruction
 	instruction current_instruction = instruction_row->second;
-	std::cout << "\n Executing instruction " + current_instruction.name;
+	std::cout << "\n Executing instruction " + current_instruction.name + " (0x" << std::hex << (int) opcode << ")";
 
 	//Get the source 
 	unsigned int src = getSource(current_instruction.mode);
@@ -1337,5 +1335,11 @@ int cpu::funcBreak(unsigned short src)
 
 int cpu::funcNop(unsigned short src)
 {
+	return 0;
+}
+
+int cpu::funcKill(unsigned short src)
+{
+	is_running = false;
 	return 0;
 }

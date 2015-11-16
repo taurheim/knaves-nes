@@ -298,4 +298,6 @@
 #define NOP27		0xC2
 #define NOP28		0xE2
 
+#define KIL1		0x02
+
 #endif
