@@ -75,9 +75,9 @@ private:
 	int branch(signed short offset);
 
 	//Status
-	bool hasStatusFlag(unsigned char flag);
-	void setStatusFlag(unsigned char flag);
-	void clearStatusFlag(unsigned char flag);
+	bool hasStatusFlag(unsigned int flag);
+	void setStatusFlag(unsigned int flag);
+	void clearStatusFlag(unsigned int flag);
 	void updateStatusZero(unsigned short val);
 	void updateStatusSign(unsigned short val);
 	void updateStatusOverflow(unsigned short val, unsigned short mem);

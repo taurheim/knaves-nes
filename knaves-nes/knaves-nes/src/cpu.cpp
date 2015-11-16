@@ -18,13 +18,13 @@ cpu::cpu() {
 
 		//{STA_ABS, instruction { "STA_ABS",&cpu::funcStoreAccumulator,Mode::ABSOLUTE,3,4,false,true}},
 
-		{STA_ZERO,	instruction{"STA_ZERO", &cpu::funcStoreAccumulator, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
-		{STA_ZERO_X,instruction	{"STA_ZERO_X", &cpu::funcStoreAccumulator, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
-		{STA_ABS,	instruction{"STA_ABS2", &cpu::funcStoreAccumulator, Mode::ABSOLUTE, 3, 4, false, true}},
-		{STA_ABS_X, instruction	{"STA_ABS_X", &cpu::funcStoreAccumulator, Mode::ABSOLUTE_X, 3, 5, false, true}},
-		{STA_ABS_Y, instruction	{"STA_ABS_Y", &cpu::funcStoreAccumulator, Mode::ABSOLUTE_Y, 3, 5, false, true}},
-		{STA_IND_X, instruction	{"STA_IND_X", &cpu::funcStoreAccumulator, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
-		{STA_IND_Y, instruction	{"STA_IND_Y", &cpu::funcStoreAccumulator, Mode::PRE_INDIRECT_Y, 2, 6, false, true}},
+		{STA_ZERO,	instruction{"STA_ZERO", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{STA_ZERO_X,instruction	{"STA_ZERO_X", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{STA_ABS,	instruction{"STA_ABS2", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE, 3, 4, false, true}},
+		{STA_ABS_X, instruction	{"STA_ABS_X", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_X, 3, 5, false, true}},
+		{STA_ABS_Y, instruction	{"STA_ABS_Y", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_Y, 3, 5, false, true}},
+		{STA_IND_X, instruction	{"STA_IND_X", &cpu::funcStoreAccumulator, Mode::S_PRE_INDIRECT_X, 2, 6, false, true}},
+		{STA_IND_Y, instruction	{"STA_IND_Y", &cpu::funcStoreAccumulator, Mode::S_PRE_INDIRECT_Y, 2, 6, false, true}},
 
 
 		//{ADC_ABS, instruction { "ADC_ABS",&cpu::funcAddWithCarry,Mode::ABSOLUTE,3,4,false,true}},
@@ -49,9 +49,9 @@ cpu::cpu() {
 		{LDX_ABS, 	instruction{"LDX_ABS", &cpu::funcLoadRegisterX, Mode::ABSOLUTE, 3, 4, false, true}},
 		{LDX_ABS_Y, instruction	{"LDX_ABS_Y", &cpu::funcLoadRegisterX, Mode::ABSOLUTE_Y, 3, 4, true, true}},
 
-		{STX_ZERO,	instruction{"STX_ZERO", &cpu::funcStoreRegisterX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
-		{STX_ZERO_Y,instruction	{"STX_ZERO_Y", &cpu::funcStoreRegisterX, Mode::ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
-		{STX_ABS, 	instruction{"STX_ABS", &cpu::funcStoreRegisterX, Mode::ABSOLUTE, 3, 4, false, true}},
+		{STX_ZERO,	instruction{"STX_ZERO", &cpu::funcStoreRegisterX, Mode::S_ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{STX_ZERO_Y,instruction	{"STX_ZERO_Y", &cpu::funcStoreRegisterX, Mode::S_ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
+		{STX_ABS, 	instruction{"STX_ABS", &cpu::funcStoreRegisterX, Mode::S_ABSOLUTE, 3, 4, false, true}},
 
 		{LDY_IMM,	instruction{"LDY_IMM", &cpu::funcLoadRegisterY, Mode::IMMEDIATE, 2, 2, false, true}},
 		{LDY_ZERO,	instruction{"LDY_ZERO", &cpu::funcLoadRegisterY, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
@@ -59,9 +59,9 @@ cpu::cpu() {
 		{LDY_ABS, 	instruction{"LDY_ABS", &cpu::funcLoadRegisterY, Mode::ABSOLUTE, 3, 4, false, true}},
 		{LDY_ABS_X, instruction	{"LDY_ABS_Y", &cpu::funcLoadRegisterY, Mode::ABSOLUTE_X, 3, 4, true, true}},
 
-		{STY_ZERO,	instruction{"STY_ZERO", &cpu::funcStoreRegisterY, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
-		{STY_ZERO_X,instruction	{"STY_ZERO_X", &cpu::funcStoreRegisterY, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
-		{STY_ABS, 	instruction{"STY_ABS", &cpu::funcStoreRegisterY, Mode::ABSOLUTE, 3, 4, false, true}},
+		{STY_ZERO,	instruction{"STY_ZERO", &cpu::funcStoreRegisterY, Mode::S_ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
+		{STY_ZERO_X,instruction	{"STY_ZERO_X", &cpu::funcStoreRegisterY, Mode::S_ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
+		{STY_ABS, 	instruction{"STY_ABS", &cpu::funcStoreRegisterY, Mode::S_ABSOLUTE, 3, 4, false, true}},
 
 		{INX,		instruction{"INX", &cpu::funcIncreaseRegisterX, Mode::IMPLIED, 1, 2, false, true}},
 		{DEX,		instruction{"DEX", &cpu::funcDecreaseRegisterX, Mode::IMPLIED, 1, 2, false, true}},
@@ -423,14 +423,13 @@ unsigned short cpu::executeInstruction() {
 
 	//Fetch the opcode
 	unsigned char opcode = readAddress(reg_pc);
-	reg_status = STATUS_EMPTY;
 
 	//Get the instruction associated with the opcode
 	std::map<char, instruction>::const_iterator instruction_row = instructions.find(opcode);
 
 	//Invalid opcode
 	if (instruction_row == instructions.end()) {
-		std::cout << "\nInvalid Instruction";
+		std::cout << "\nInvalid Instruction: " << std::hex << (int)opcode;
 		_memory->logMemory();
 		//throw InvalidOpcodeException(current_opcode);
 		return 0;
@@ -440,10 +439,11 @@ unsigned short cpu::executeInstruction() {
 
 	//Actually execute the opcode instruction
 	instruction current_instruction = instruction_row->second;
-	std::cout << "\n Executing instruction " + current_instruction.name + " (0x" << std::hex << (int) opcode << ")";
+	std::cout << "\n Executing instruction " + current_instruction.name + "\t\t(0x" << std::hex << (int) opcode << " ";
 
 	//Get the source 
 	unsigned int src = getSource(current_instruction.mode);
+	std::cout << "0x" << std::hex << (int) src << ")";
 
 	//Run the function and determine how many cycles were needed
 	unsigned short cycles_used = current_instruction.cycles;
@@ -474,14 +474,14 @@ unsigned short cpu::getSource(Mode mode) {
 	switch (mode) {
 	case Mode::ABSOLUTE: {
 		//Load from a 16bit memory address
-		unsigned char first = _memory->read(reg_pc + 1);
-		unsigned char second = _memory->read(reg_pc + 2);
-		return (first << 8 | second);
+		unsigned char first = _memory->read(reg_pc + 2);
+		unsigned char second = _memory->read(reg_pc + 1);
+		return _memory->read(first << 8 | second);
 		break;
 	}
 
 	case Mode::IMMEDIATE: {
-		return (reg_pc + 1);
+		return _memory->read(reg_pc + 1);
 		break;
 	}
 
@@ -499,6 +499,18 @@ unsigned short cpu::getSource(Mode mode) {
 		unsigned short absolute_address = getSource(Mode::ABSOLUTE);
 		return absolute_address + reg_index_x;
 		break;
+	}
+
+	case Mode::IMPLIED: {
+		return 0;
+		break;
+	}
+
+	case Mode::S_ABSOLUTE: {
+		//Load from a 16bit memory address
+		unsigned char first = _memory->read(reg_pc + 2);
+		unsigned char second = _memory->read(reg_pc + 1);
+		return (first << 8 | second);
 	}
 	}
 }
@@ -570,22 +582,22 @@ unsigned char cpu::popStack() {
 /*
  Check if the cpu status register includes a given status
 */
-bool cpu::hasStatusFlag(unsigned char flag) {
+bool cpu::hasStatusFlag(unsigned int flag) {
 	return (reg_status & flag);
 }
 
 /*
  Add a status flag to the cpu status register
 */
-void cpu::setStatusFlag(unsigned char flag) {
+void cpu::setStatusFlag(unsigned int flag) {
 	reg_status |= flag;
 }
 
 /*
  Remove a status flag from the cpu status register
 */
-void cpu::clearStatusFlag(unsigned char flag) {
-	reg_status &= !flag;
+void cpu::clearStatusFlag(unsigned int flag) {
+	reg_status &= ~flag;
 }
 
 /*
@@ -594,6 +606,7 @@ void cpu::clearStatusFlag(unsigned char flag) {
 */
 void cpu::updateStatusSign(unsigned short val) {
 	// & 128 to figure out if it's positive or negative
+	std::cout << (unsigned int) STATUS_SIGN;
 	if (val & 0x0080) {
 		setStatusFlag(STATUS_SIGN);
 	}
@@ -656,9 +669,7 @@ void cpu::updateStatusBasedOnExpression(bool result, unsigned char flag) {
 
 //Load a value from an address to the accumulator
 int cpu::funcLoadAccumulator(unsigned short src) {
-	unsigned short value = _memory->read(src);
-	reg_acc = value;
-	updateStatusZero(reg_acc);
+	reg_acc = src;
 	updateStatusZero(reg_acc);
 	return 0;
 }
@@ -758,9 +769,14 @@ int cpu::funcCompareRegisterX(unsigned short src)
 {
 	unsigned short value = src;
 	unsigned short result = reg_index_x - value;
+	std::cout << "Comparing " << (int)value << " and " << (int)reg_index_x;
+	std::cout << " : "<< (reg_index_x == value);
 	updateStatusBasedOnExpression(reg_index_x >= (value & 0xFF), STATUS_CARRY); //to be changed
 	updateStatusBasedOnExpression(reg_index_x == (value & 0xFF), STATUS_ZERO);
-	updateStatusSign(result);
+	//updateStatusSign(result);
+
+	std::cout << "/" << hasStatusFlag(STATUS_ZERO) << " - " << (int) STATUS_ZERO;
+	std::cout << ">" << (int) STATUS_CARRY;
 	return 0;
 }
 
@@ -826,6 +842,7 @@ int cpu::funcBranchOnOverflowClear(unsigned short src) {
 //If the result of the previous arithmetic operation is not zero, then branch
 int cpu::funcBranchOnResultNotZero(unsigned short src) {
 	if (!hasStatusFlag(STATUS_ZERO)) {
+		std::cout << " > " << std::hex << (int) reg_status;
 		signed short branch_to = (signed char)src;
 		return branch(branch_to);
 	}
@@ -855,6 +872,7 @@ int cpu::funcCompareMemory(unsigned short src) {
 //Store the value currently in the accumulator
 int cpu::funcStoreAccumulator(unsigned short src) {
 	_memory->write(src, reg_acc);
+
 	return 0;
 }
 
