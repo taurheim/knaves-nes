@@ -472,46 +472,89 @@ unsigned short cpu::executeInstruction() {
 */
 unsigned short cpu::getSource(Mode mode) {
 	switch (mode) {
-	case Mode::ABSOLUTE: {
-		//Load from a 16bit memory address
-		unsigned char first = _memory->read(reg_pc + 2);
-		unsigned char second = _memory->read(reg_pc + 1);
-		return _memory->read(first << 8 | second);
-		break;
-	}
+		case Mode::IMMEDIATE: {
+			//Return whatever is beside the instruction in memory
+			return _memory->read(reg_pc + 1);
+			break;
+		}
 
-	case Mode::IMMEDIATE: {
-		return _memory->read(reg_pc + 1);
-		break;
-	}
+		case Mode::IMPLIED: {
+			//This means that there isn't actually an argument (it's implied with the instruction)
+			//e.g. DEX (decrement X register)
+			return 0;
+			break;
+		}
 
+		case Mode::ABSOLUTE: {
+			//Load from a 16bit memory address
+			//The next 2 bytes of memory define a pointer. Our argument is the value being pointed to
+			unsigned char first = _memory->read(reg_pc + 2);
+			unsigned char second = _memory->read(reg_pc + 1);
+			return _memory->read(first << 8 | second);
+			break;
+		}
 
-	case Mode::RELATIVE: {
-		//Used for branching instructions. Essentially the byte
-		//after the instruction tells the CPU how many bytes to skip if
-		//the branch happens
-		return _memory->read(reg_pc + 1);
-		break;
-	}
+		case Mode::ABSOLUTE_X: {
+			//First get the pointer as if it was absolute, then add the x register's value to that pointer
+			//Find the value at our new pointer
+			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+			return _memory->read(absolute_address + reg_index_x);
+			break;
+		}
 
+		case Mode::ABSOLUTE_Y: {
+			//First get the pointer as if it was absolute, then add the y register's value to that pointer
+			//Find the value at our new pointer
+			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+			return _memory->read(absolute_address + reg_index_y);
+			break;
+		}
 
-	case Mode::ABSOLUTE_X: {
-		unsigned short absolute_address = getSource(Mode::ABSOLUTE);
-		return absolute_address + reg_index_x;
-		break;
-	}
+		case ABSOLUTE_ZERO_PAGE: {
+			//Same thing as absolute, except it's always going to be in the zero page (first 1 byte of memory values)
+			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+			return _memory->read(absolute_address & 0xff);
+			break;
+		}
 
-	case Mode::IMPLIED: {
-		return 0;
-		break;
-	}
+		case ABSOLUTE_X_ZERO_PAGE: {
+			//Same thing as ABSOLUTE_ZERO_PAGE, except before making it zero page, we also add the x register
+			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+			return _memory->read((absolute_address + reg_index_x) & 0xff);
+			break;
+		}
 
-	case Mode::S_ABSOLUTE: {
-		//Load from a 16bit memory address
-		unsigned char first = _memory->read(reg_pc + 2);
-		unsigned char second = _memory->read(reg_pc + 1);
-		return (first << 8 | second);
-	}
+		case ABSOLUTE_Y_ZERO_PAGE: {
+			//Same thing as ABSOLUTE_ZERO_PAGE, except before making it zero page, we also add the y register
+			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+			return _memory->read((absolute_address + reg_index_y) & 0xff);
+			break;
+		}
+
+		case INDIRECT: {
+			//Used for JMP.
+			//The memory value specified in the next 2 bytes points to the low byte of the value
+			//The byte after the low byte is the high byte
+			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+			unsigned short second = _memory->read(absolute_address);
+			unsigned short first = _memory->read(absolute_address + 1);
+			return (first << 8 | second);
+		}
+
+		case Mode::RELATIVE: {
+			//Used for branching instructions. Essentially the byte
+			//after the instruction tells the CPU how many bytes to skip if
+			//the branch happens
+			return _memory->read(reg_pc + 1);
+			break;
+		}
+
+		case Mode::S_ABSOLUTE: {
+			//Store into value
+			unsigned char first = _memory->read(reg_pc + 2);
+			unsigned char second = _memory->read(reg_pc + 1);
+			return (first << 8 | second);
+		}
 	}
 }
 
@@ -606,7 +649,6 @@ void cpu::clearStatusFlag(unsigned int flag) {
 */
 void cpu::updateStatusSign(unsigned short val) {
 	// & 128 to figure out if it's positive or negative
-	std::cout << (unsigned int) STATUS_SIGN;
 	if (val & 0x0080) {
 		setStatusFlag(STATUS_SIGN);
 	}
@@ -769,14 +811,9 @@ int cpu::funcCompareRegisterX(unsigned short src)
 {
 	unsigned short value = src;
 	unsigned short result = reg_index_x - value;
-	std::cout << "Comparing " << (int)value << " and " << (int)reg_index_x;
-	std::cout << " : "<< (reg_index_x == value);
 	updateStatusBasedOnExpression(reg_index_x >= (value & 0xFF), STATUS_CARRY); //to be changed
 	updateStatusBasedOnExpression(reg_index_x == (value & 0xFF), STATUS_ZERO);
-	//updateStatusSign(result);
-
-	std::cout << "/" << hasStatusFlag(STATUS_ZERO) << " - " << (int) STATUS_ZERO;
-	std::cout << ">" << (int) STATUS_CARRY;
+	updateStatusSign(result);
 	return 0;
 }
 
@@ -842,7 +879,6 @@ int cpu::funcBranchOnOverflowClear(unsigned short src) {
 //If the result of the previous arithmetic operation is not zero, then branch
 int cpu::funcBranchOnResultNotZero(unsigned short src) {
 	if (!hasStatusFlag(STATUS_ZERO)) {
-		std::cout << " > " << std::hex << (int) reg_status;
 		signed short branch_to = (signed char)src;
 		return branch(branch_to);
 	}
