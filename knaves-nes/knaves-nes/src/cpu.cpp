@@ -778,6 +778,7 @@ int cpu::funcIncreaseRegisterY(unsigned short src)
 int cpu::funcDecreaseRegisterX(unsigned short src)
 {
 	reg_index_x--;
+	std::cout << " x: " << std::hex << (int)reg_index_x;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
 	return 0;
@@ -786,6 +787,7 @@ int cpu::funcDecreaseRegisterX(unsigned short src)
 int cpu::funcDecreaseRegisterY(unsigned short src)
 {
 	reg_index_y--;
+	std::cout << " y: " << std::hex << (int)reg_index_y;
 	updateStatusZero(reg_index_y);
 	updateStatusSign(reg_index_y);
 	return 0;
@@ -1367,6 +1369,7 @@ int cpu::funcBranchOverflowSet(unsigned short src) {
 */
 
 int cpu::funcReturnFromSubroutine(unsigned short src) {
+	std::cout << "\nReturning From Subroutine";
 	unsigned char low = popStack();
 	unsigned char high = popStack();
 	reg_pc = ((high << 8) | low) + 1;
