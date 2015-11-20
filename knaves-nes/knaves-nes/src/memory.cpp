@@ -26,68 +26,6 @@ void Memory::write(unsigned short address, unsigned char value) {
 	return;
 }
 
-void Memory::readFromRom() {
-
-	std::ifstream input("appendix2.nes", std::ios::in | std::ios::binary);
-
-	unsigned short currentByteAddress = 0;
-	while (input.good()) {
-		unsigned char x;
-		input.read(reinterpret_cast<char *>(&x), sizeof(unsigned char));
-		//std::cout << std::hex << std::setw(2) << std::setfill('0')
-		//	<< (int)x;
-		//cout << "\n";
-		Memory::write(currentByteAddress + ROM_LOWER_ADDRESS, x);
-		currentByteAddress++;
-
-	}
-	cout << "All done reading ROM. \n";
-
-
-
-
-	//while (std::getline(file, str))
-	//{
-	//	file_contents += str;
-	//	file_contents.push_back('\n');
-	//}
-
-	//static const char* const lut = "0123456789ABCDEF"; //convert back to hex
-	//size_t len = file_contents.length();
-
-	//std::string output;
-	//output.reserve(2 * len);
-
-	//cout << len;
-	//for (size_t i = 0; i < len; i = i + 2)
-	//{
-	//	const unsigned char c = file_contents[i];
-	//	cout << std::hex << c;
-	//	output.push_back(lut[c >> 4]);
-	//	output.push_back(lut[c & 15]);
-
-	//	const unsigned char c1 = lut[c >> 4];
-	//	const unsigned char c2 = lut[c & 15];
-	//	//cout << c1;
-	//	//cout << c2;
-
-
-	//	Memory::write((unsigned short) i, c1);
-	//	Memory::write((unsigned short) i + 1, c2);
-	//}
-
-	//output.erase(0, 32);
-	////cout << output;
-	//for (int i = 0; i < 100; i++) {
-	//	//cout << file_contents[i];
-	//}
-
-//	if (address >= ROM_LOWER_ADDRESS && address <= ROM_UPPER_ADDRESS) {
-//		cout << output.substr(0, 4);
-//		output.erase(0, 4);
-		//Read from ROM
-}
-
 
 /*
  Read value from RAM
