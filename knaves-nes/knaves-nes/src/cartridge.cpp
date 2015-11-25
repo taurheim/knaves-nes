@@ -1,7 +1,7 @@
 #include <iostream>
-#include <sstream>
+#include <string>
+#include <fstream>
 #include "cartridge.h"
-
 
 
 Cartridge::Cartridge()
@@ -20,14 +20,9 @@ void Cartridge::loadFromFile(char * fileName) {
 	while (input.good()) {
 		unsigned char x;
 		input.read(reinterpret_cast<char *>(&x), sizeof(unsigned char));
-		Memory::write(currentByteAddress + ROM_LOWER_ADDRESS, x);
+		_memory->write(currentByteAddress + ROM_LOWER_ADDRESS, x);
 		currentByteAddress++;
-
 	}
-	cout << "All done reading ROM. \n";
-}
 
-
-Cartridge::~Cartridge()
-{
+	std::cout << "All done reading ROM. \n";
 }
