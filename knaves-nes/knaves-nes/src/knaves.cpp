@@ -3,6 +3,7 @@
 
 #include "knaves.h"
 #include "cpu.h"
+#include "cartridge.h"
 
 Knaves::Knaves() {
 
@@ -10,8 +11,7 @@ Knaves::Knaves() {
 
 	_cpu = new cpu();
 	_memory = new Memory();
-	_memory->readFromRom();
-	_memory->logMemory();
+	_cartridge = new Cartridge();
 }
 
 Knaves::~Knaves() {
@@ -19,11 +19,14 @@ Knaves::~Knaves() {
 	delete _memory;
 }
 
-void Knaves::init(std::string filename) {
+void Knaves::init(char * fileName) {
 	//Load the ROM
 	
 	//Try/catch eventually
 	_cpu->init(_memory);
+	_cartridge->init(_memory);
+
+	_cartridge->loadFromFile(fileName);
 }
 
 void Knaves::run() {

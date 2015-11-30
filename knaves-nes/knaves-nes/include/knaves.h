@@ -3,18 +3,20 @@
 
 class Memory;
 class cpu;
+class Cartridge;
 
 class Knaves {
 public:
 	Knaves();
 	~Knaves(); //Destructor
-	void init(std::string filename);
+	void init(char * filename);
 	void run();
 	void stop();
 	void reset();
 private:
 	cpu * _cpu;
 	Memory * _memory;
+	Cartridge * _cartridge;
 
 	bool isRunning;
 };

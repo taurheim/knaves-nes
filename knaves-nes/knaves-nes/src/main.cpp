@@ -3,10 +3,12 @@
 
 #include "knaves.h"
 
-int main(int argc, char **argv) {
+int main(int argc, char * argv[]) {
 	Knaves _knaves;
 
-	_knaves.init("untitled.nes");
+	std::cout << "Attempting to Open: " << argv[1] << std::endl << std::endl;
+
+	_knaves.init(argv[1]);
 
 	_knaves.run();
 
