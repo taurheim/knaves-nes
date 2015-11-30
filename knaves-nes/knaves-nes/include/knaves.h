@@ -1,9 +1,13 @@
 #ifndef _KNAVES_H_
 #define _KNAVES_H_
 
+#include <chrono>
+
 class Memory;
 class cpu;
 class Cartridge;
+
+typedef std::chrono::high_resolution_clock Clock;
 
 class Knaves {
 public:
@@ -19,6 +23,8 @@ private:
 	Cartridge * _cartridge;
 
 	bool isRunning;
+
+	int sleep_time;
 };
 
 #endif

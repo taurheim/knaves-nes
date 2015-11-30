@@ -323,6 +323,7 @@ cpu::cpu() {
 
 void cpu::init(Memory * memory) {
 	_memory = memory;
+	log_instructions = false;
 }
 
 void cpu::start() {
@@ -358,7 +359,6 @@ Check to see if we should execute an interrupt
 */
 bool cpu::checkInterrupts() {
 	if (interrupts.size() > 0) {
-
 		//Ignore the interrupt if cpu has STATUS_INTERRUPT
 		//If it's an NMI interrupt, always run it.
 		if (hasStatusFlag(STATUS_INTERRUPT) && interrupts.front() != Interrupt::NMI) {
@@ -373,6 +373,8 @@ bool cpu::checkInterrupts() {
 
 		return true;
 	}
+
+	return false;
 }
 
 /*
@@ -429,8 +431,8 @@ unsigned short cpu::executeInstruction() {
 
 	//Invalid opcode
 	if (instruction_row == instructions.end()) {
-		std::cout << "\nInvalid Instruction: " << std::hex << (int)opcode;
-		_memory->logMemory();
+		if(log_instructions) std::cout << "\nInvalid Instruction: " << std::hex << (int)opcode;
+		//_memory->logMemory();
 		//throw InvalidOpcodeException(current_opcode);
 		return 0;
 	}
@@ -439,11 +441,11 @@ unsigned short cpu::executeInstruction() {
 
 	//Actually execute the opcode instruction
 	instruction current_instruction = instruction_row->second;
-	std::cout << "\n Executing instruction " + current_instruction.name + "\t\t(0x" << std::hex << (int) opcode << " ";
+	if (log_instructions) std::cout << "\n Executing instruction " + current_instruction.name + "\t\t(0x" << std::hex << (int) opcode << " ";
 
 	//Get the source 
 	unsigned int src = getSource(current_instruction.mode);
-	std::cout << "0x" << std::hex << (int) src << ")";
+	if (log_instructions) std::cout << "0x" << std::hex << (int) src << ")";
 
 	//Run the function and determine how many cycles were needed
 	unsigned short cycles_used = current_instruction.cycles;
@@ -778,7 +780,6 @@ int cpu::funcIncreaseRegisterY(unsigned short src)
 int cpu::funcDecreaseRegisterX(unsigned short src)
 {
 	reg_index_x--;
-	std::cout << " x: " << std::hex << (int)reg_index_x;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
 	return 0;
@@ -787,7 +788,6 @@ int cpu::funcDecreaseRegisterX(unsigned short src)
 int cpu::funcDecreaseRegisterY(unsigned short src)
 {
 	reg_index_y--;
-	std::cout << " y: " << std::hex << (int)reg_index_y;
 	updateStatusZero(reg_index_y);
 	updateStatusSign(reg_index_y);
 	return 0;
@@ -1369,7 +1369,7 @@ int cpu::funcBranchOverflowSet(unsigned short src) {
 */
 
 int cpu::funcReturnFromSubroutine(unsigned short src) {
-	std::cout << "\nReturning From Subroutine";
+	if (log_instructions) std::cout << "\nReturning From Subroutine";
 	unsigned char low = popStack();
 	unsigned char high = popStack();
 	reg_pc = ((high << 8) | low) + 1;

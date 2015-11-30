@@ -51,6 +51,7 @@ public:
 	unsigned short executeInstruction();
 private:
 	bool is_running;
+	bool log_instructions;
 
 	Memory *_memory;
 
