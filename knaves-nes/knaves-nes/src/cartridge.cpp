@@ -8,7 +8,7 @@ Cartridge::Cartridge()
 {
 }
 
-void Cartridge::init(Memory * mem) {
+void Cartridge::init(Memory * mem, bool show_log) {
 	_memory = mem;
 }
 

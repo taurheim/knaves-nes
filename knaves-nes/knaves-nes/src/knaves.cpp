@@ -21,12 +21,12 @@ Knaves::~Knaves() {
 	delete _memory;
 }
 
-void Knaves::init(char * fileName) {
+void Knaves::init(char * fileName, bool show_log) {
 	//Load the ROM
 	
 	//Try/catch eventually
-	_cpu->init(_memory);
-	_cartridge->init(_memory);
+	_cpu->init(_memory, show_log);
+	_cartridge->init(_memory, show_log);
 
 	_cartridge->loadFromFile(fileName);
 

@@ -13,7 +13,7 @@ class Knaves {
 public:
 	Knaves();
 	~Knaves(); //Destructor
-	void init(char * filename);
+	void init(char * filename, bool show_log);
 	void run();
 	void stop();
 	void reset();

@@ -44,7 +44,7 @@ class cpu {
 public:
 	cpu();
 
-	void init(Memory * memory);
+	void init(Memory * memory, bool show_log);
 	void start();
 	void stop();
 	void reset();

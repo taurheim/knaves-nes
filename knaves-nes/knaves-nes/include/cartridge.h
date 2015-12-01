@@ -7,7 +7,7 @@ class Cartridge
 {
 public:
 	Cartridge();
-	void init(Memory * memory);
+	void init(Memory * memory, bool show_log);
 	void loadFromFile(char * fileName);
 private:
 	Memory * _memory;

@@ -321,9 +321,9 @@ cpu::cpu() {
 	};
 }
 
-void cpu::init(Memory * memory) {
+void cpu::init(Memory * memory, bool show_log) {
 	_memory = memory;
-	log_instructions = false;
+	log_instructions = show_log;
 }
 
 void cpu::start() {
