@@ -20,9 +20,67 @@ Memory::Memory(){
 
 /*
 Write a value to the RAM
+See http://wiki.nesdev.com/w/index.php/CPU_memory_map for a detailed memory map
 */
 void Memory::write(unsigned short address, unsigned char value) {
-	RAM[address] = value;
+	if (address >= 0x0000 && address <= 0x1FFF) {
+		//Writing to internal RAM
+		//Write to all mirrors
+		unsigned short real_address = address & 0x07FF;
+		RAM[real_address] = value;
+		/* Not sure if this is actually necessary for the emulator
+		RAM[real_address + 0x0800] = value;
+		RAM[real_address + 0x1000] = value;
+		RAM[real_address + 0x1800] = value;
+		*/
+	} else if (address >= 0x2000 && address <= 0x3FFF) {
+		//Writing to PPU Registers
+		unsigned short real_address = address & 0x2007;
+		switch (real_address) {
+		case PPU_CONTROL:
+			break;
+		case PPU_MASK:
+			break;
+		case PPU_STATUS:
+			break;
+		case PPU_OAM_ADDR:
+			break;
+		case PPU_OAM_DATA:
+			break;
+		case PPU_SCROLL:
+			break;
+		case PPU_ADDR:
+			break;
+		case PPU_DATA:
+			break;
+		}
+		/* Not sure if this is actually necessary for the emulator
+		real_address += 0x0008
+		while(real_address < 0x3FFF){
+			//Same case statement as above
+			real_address += 0x0008
+		}
+		*/
+
+	} else if (address >= 4000 && address <= 0x401F) {
+		//NES APU and I/O Registers
+		switch (address) {
+		case INPUT_PORT_1:
+			//CPU stuff
+			break;
+		case INPUT_PORT_2:
+			//CPU stuff
+			break;
+		case PPU_OAM_DMA:
+			//PPU stuff
+			break;
+		}
+	} else if (address >= 4020 && address <= 0xFFFF) {
+		//Cartridge Space: PRG ROM, PRG RAM, mapper
+		RAM[address] = value;
+	} else {
+		RAM[address] = value;
+	}
 	return;
 }
 
@@ -38,7 +96,7 @@ unsigned char Memory::read(unsigned short address) {
 		break;
 	case PPU_OAM_DATA:
 		break;
-	case PPU_VRAM_DATA:
+	case PPU_DATA:
 		break;
 	case CONTROLLER_1:
 		break;
