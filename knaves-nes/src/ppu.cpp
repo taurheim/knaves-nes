@@ -343,19 +343,22 @@ unsigned char ppu::readPPUMASK()
 /* Read the PPUSTATUS register */
 unsigned char ppu::readPPUSTATUS()
 {
+	unsigned char value = ppustatus;
+	ppuMemoryAccess = false;
+	ppustatus &= ~PPU_STATUS_VBLANK_STARTED;
 	return ppustatus;
 }
 
 /* Read the OAMADDR register */
 unsigned char ppu::readOAMADDR()
 {
-	return oamaddr;
+	return spriteAddress;
 }
 
 /* Read the OAMDATA register */
 unsigned char ppu::readOAMDATA()
 {
-	return oamdata;
+	return OAM[spriteAddress];
 }
 
 /* Read the PPUSCROLL register */
@@ -367,13 +370,25 @@ unsigned char ppu::readPPUSCROLL()
 /* Read the PPUADDR register */
 unsigned char ppu::readPPUADDR()
 {
-	return ppuaddr;
+	return ppuAddress;
 }
 
 /* Read the PPUDATA register */
 unsigned char ppu::readPPUDATA()
 {
-	return ppudata;
+	unsigned char value;
+
+	//Return the latch value if our data isn't a palette address
+	if (ppuAddress >= 0x0000 && ppuAddress <= 0x3EFF) {
+		value = ppuDataLatch;
+		ppuDataLatch = readDirect();
+	}
+	else {
+		ppuDataLatch = read(ppuAddress & ~(0x1000));
+		value = readDirect();
+	}
+	ppuAddress += (ppuctrl & PPU_CONTROL_VRAM_ADDR_INCR ? 32 : 1);
+	return value;
 }
 
 /* Read the OAMDMA register */
@@ -389,6 +404,7 @@ Writing PPU Registers
 /* Write the PPUCTRL register */
 void ppu::writePPUCTRL(unsigned char value)
 {
+	ppuLatch = (ppuLatch & ~(3 << 10)) | ((value & 3) << 10);
 	ppuctrl = value;
 }
 
@@ -407,13 +423,14 @@ void ppu::writePPUSTATUS(unsigned char value)
 /* Write the OAMADDR register */
 void ppu::writeOAMADDR(unsigned char value)
 {
-	oamaddr = value;
+	spriteAddress = value;
 }
 
 /* Write the OAMDATA register */
 void ppu::writeOAMDATA(unsigned char value)
 {
-	oamdata = value;
+	OAM[spriteAddress] = value;
+	spriteAddress++;
 }
 
 /* Write the PPUSCROLL register */
@@ -425,17 +442,33 @@ void ppu::writePPUSCROLL(unsigned char value)
 /* Write the PPUADDR register */
 void ppu::writePPUADDR(unsigned char value)
 {
-	ppuaddr = value;
+	if (!ppuMemoryAccess) {
+		ppuAddress = value << 8;
+		ppuLatch = (ppuLatch & 0xFF) | ((value & 0x3F) << 8);
+	}
+	else {
+		ppuLatch = (ppuLatch & ~0xFF) | value;
+		ppuAddress = ppuLatch;
+	}
+
+	ppuMemoryAccess = !ppuMemoryAccess;
 }
 
 /* Write the PPUDATA register */
 void ppu::writePPUDATA(unsigned char value)
 {
 	ppudata = value;
+	ppuAddress += (ppuctrl & PPU_CONTROL_VRAM_ADDR_INCR ? 32 : 1);
 }
 
 /* Write the OAMDMA register */
 void ppu::writeOAMDMA(unsigned char value)
 {
-	oamdata = value;
+	unsigned short baseAddress = value * 256;
+	int i = 0;
+
+	while (i < 256) {
+		OAM[(spriteAddress + i) % 256] = _memory->read(baseAddress + i);
+	}
+	ppuCycles += 512 * 3;
 }
