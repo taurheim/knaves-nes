@@ -264,8 +264,10 @@ char ppu::getPixelColourFromPatternTables(unsigned char patternPlane0, unsigned 
 	else pixelIndex = (0x1 << pixelIndex);
 
 	unsigned short pixelColourIndex = paletteUpperBits;
-	pixelColourIndex = patternPlane0 & pixelIndex ? 0x1 : 0x0;
+	pixelColourIndex |= patternPlane0 & pixelIndex ? 0x1 : 0x0;
 	pixelColourIndex |= patternPlane1 & pixelIndex ? 0x2 : 0x0;
+
+	return pixelColourIndex;
 
 }
 
