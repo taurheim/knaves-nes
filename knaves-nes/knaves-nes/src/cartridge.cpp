@@ -13,7 +13,7 @@ void Cartridge::init(Memory * mem, bool show_log) {
 }
 
 void Cartridge::loadFromFile(char * fileName) {
-
+	std::cout << "Opening file..." << std::endl;
 	std::ifstream input(fileName, std::ios::in | std::ios::binary);
 
 	unsigned short currentByteAddress = 0;

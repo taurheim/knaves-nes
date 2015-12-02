@@ -1,5 +1,6 @@
 #include "ppu.h"
 #include "memory.h"
+#include <iostream>
 
 
 ppu::ppu() {
@@ -12,17 +13,18 @@ void ppu::init(Memory * memory) {
 	OAM = new unsigned char[256];
 	ppuMemory = new unsigned char[16384];
 
+	_renderer = new renderer();
 
+	_renderer->init();
 }
 
 void ppu::runCycles(unsigned short cycles) {
-
 	ppuCycles += cycles * 3; 
 
 	//Do we have enough cycles to finish the scanline?
 	if (ppuCycles >= PPU_PER_SCANLINE) {
 		//Increment our scanline
-		scanline += ppuCycles / PPU_PER_SCANLINE;
+		scanline++;// = ppuCycles / PPU_PER_SCANLINE;
 		//Use the remaining cycles next time
 		ppuCycles = ppuCycles % PPU_PER_SCANLINE;
 	}
@@ -40,8 +42,9 @@ void ppu::runCycles(unsigned short cycles) {
 
 		//Have we already rendered this scanline?
 		if (scanline != lastScanline) {
-			
-			
+			std::cout << "Rendering scanline: " << scanline << std::endl;
+			renderScanline();
+
 			lastScanline = scanline;
 
 			if (drawSprites) {
@@ -66,6 +69,7 @@ void ppu::runCycles(unsigned short cycles) {
 		ppustatus &= ~PPU_STATUS_SPRITE_ZERO_HIT;
 
 		//TODO - Update screen, we're all done drawing the scanlines
+		_renderer->update();
 
 		transferLatch = false;
 		transferLatchScroll = false;
@@ -144,10 +148,20 @@ void ppu::renderBackground() {
 
 			//Transparent pixel
 			if (pixelColourIndex == 0) {
-				//TODO Render transparent pixel
+				int x = (tileNum << 3) + pixelNum;
+				int y = scanline;
+				palette_entry color = palette_entry();
+				color.r = 0;
+				color.g = 0;
+				color.b = 0;
+				color.a = 0;
+				_renderer->put_pixel(PixelType::BACKGROUND_TILE, x, scanline, color);
 			}
 			else {
-				//TODO Render pixel of colour pixelColourIndex
+				int x = (tileNum << 3) + pixelNum;
+				int y = scanline;
+				palette_entry color = palette_table.at(pixelColourIndex);
+				_renderer->put_pixel(PixelType::BACKGROUND_TILE, x, scanline, color);
 			}
 		}
 	}
@@ -161,7 +175,7 @@ void ppu::evaluateSprites() {
 	unsigned short activeSprites = 0;
 
 	//Which sprite we are currently evaluating
-	unsigned short currentSprite;
+	int currentSprite;
 
 	//Data store in OAM about each sprite
 	unsigned short spriteX, spriteY, tileIndex, spriteAttribute, pixelColourUpperBits;
@@ -238,13 +252,23 @@ void ppu::evaluateSprites() {
 
 				//If our colourIndex is 0, we have a transparent pixel
 				if (pixelColourIndex & 0x3 == 0) {
-					//TODO - Tell renderer to draw transparent pixel
+					int x = spriteX + pixel;
+					int y = scanline;
+					palette_entry color = palette_entry();
+					color.r = 0;
+					color.g = 0;
+					color.b = 0;
+					color.a = 0;
+					_renderer->put_pixel(PixelType::BACKGROUND_TILE, x, scanline, color);
+
 				}
 
 				else {
 					//TODO - Check for zero-hit sprite and update PPU status
-
-					//TODO - Tell renderer to draw the pixel
+					int x = spriteX + pixel;
+					int y = scanline;
+					palette_entry color = palette_table.at(pixelColourIndex);
+					_renderer->put_pixel(PixelType::BACKGROUND_TILE, x, scanline, color);
 				}
 
 			}
@@ -264,9 +288,9 @@ char ppu::getPixelColourFromPatternTables(unsigned char patternPlane0, unsigned 
 	else pixelIndex = (0x1 << pixelIndex);
 
 	unsigned short pixelColourIndex = paletteUpperBits;
-	pixelColourIndex = patternPlane0 & pixelIndex ? 0x1 : 0x0;
+	pixelColourIndex |= patternPlane0 & pixelIndex ? 0x1 : 0x0;
 	pixelColourIndex |= patternPlane1 & pixelIndex ? 0x2 : 0x0;
-
+	return pixelColourIndex;
 }
 
 char ppu::getSpritePatternPlaneRow(unsigned baseAddress, unsigned short tileIndex, unsigned short tileRow, unsigned short plane) {
@@ -296,6 +320,7 @@ void ppu::write(unsigned short address, unsigned char value) {
 
 unsigned short ppu::normalizeAddress(unsigned short address) {
 	//TODO - Normalize address based on mapper
+	return 0;
 }
 
 

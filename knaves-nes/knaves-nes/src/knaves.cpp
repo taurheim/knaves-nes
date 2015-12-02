@@ -6,6 +6,7 @@
 #include "knaves.h"
 #include "cpu.h"
 #include "cartridge.h"
+#include "ppu.h"
 
 Knaves::Knaves() {
 
@@ -14,6 +15,7 @@ Knaves::Knaves() {
 	_cpu = new cpu();
 	_memory = new Memory();
 	_cartridge = new Cartridge();
+	_ppu = new ppu();
 }
 
 Knaves::~Knaves() {
@@ -29,6 +31,8 @@ void Knaves::init(char * fileName, bool show_log) {
 	_cartridge->init(_memory, show_log);
 
 	_cartridge->loadFromFile(fileName);
+
+	_ppu->init(_memory);
 
 	//Calculate the user's computer speed
 	int total_slept = 0;
@@ -64,6 +68,8 @@ void Knaves::run() {
 		//Runs at 21.47MHz = 21,470,000 cycles/sec
 
 		unsigned short cycles = _cpu->executeInstruction();
+		_ppu->runCycles(cycles);
+
 		total_cycles += (int) cycles;
 
 		//How long should all of this have taken? (check every 1000 cycles or so)

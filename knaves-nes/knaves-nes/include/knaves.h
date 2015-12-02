@@ -6,6 +6,7 @@
 class Memory;
 class cpu;
 class Cartridge;
+class ppu;
 
 typedef std::chrono::high_resolution_clock Clock;
 
@@ -21,6 +22,7 @@ private:
 	cpu * _cpu;
 	Memory * _memory;
 	Cartridge * _cartridge;
+	ppu * _ppu;
 
 	bool isRunning;
 
