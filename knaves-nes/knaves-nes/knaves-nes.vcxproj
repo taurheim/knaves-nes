@@ -127,13 +127,17 @@
     <ClInclude Include="include\knaves.h" />
     <ClInclude Include="include\main.h" />
     <ClInclude Include="include\memory.h" />
+    <ClInclude Include="ppu.h" />
+    <ClInclude Include="src\ppu.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cartridge.cpp" />
+    <ClCompile Include="ppu.cpp" />
     <ClCompile Include="src\cpu.cpp" />
     <ClCompile Include="src\knaves.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\memory.cpp" />
+    <ClCompile Include="src\ppu.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mario.nes" />
