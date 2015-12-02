@@ -133,10 +133,13 @@ private:
 	unsigned char *OAM;
 	unsigned char *ppuMemory;
 	unsigned short ppuAddress;
+	unsigned short spriteAddress;
 	unsigned short ppuLatch;
+	unsigned short ppuDataLatch;
 	unsigned short ppuCycles;
 	bool transferLatch;
 	bool transferLatchScroll;
+	bool ppuMemoryAccess;
 
 	//VRAM Reading 
 	char getSpritePatternPlaneRow(unsigned baseAddress, unsigned short tileIndex, unsigned short tileRow, unsigned short plane);
@@ -151,10 +154,8 @@ private:
 	unsigned char ppuctrl;
 	unsigned char ppumask;
 	unsigned char ppustatus;
-	unsigned char oamaddr;
 	unsigned char oamdata;
 	unsigned char ppuscroll;
-	unsigned char ppuaddr;
 	unsigned char ppudata;
 	unsigned char oamdma;
 
