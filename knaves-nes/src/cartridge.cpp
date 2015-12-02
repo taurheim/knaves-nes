@@ -21,6 +21,12 @@ void Cartridge::loadFromFile(char * fileName) {
 		unsigned char x;
 		input.read(reinterpret_cast<char *>(&x), sizeof(unsigned char));
 		_memory->write(currentByteAddress + ROM_LOWER_ADDRESS, x);
+		if (currentByteAddress + ROM_LOWER_ADDRESS == 0xFFFC) {
+			std::cout << "Upper byte start: " << std::hex << (int)x << std::endl;
+		}
+		if (currentByteAddress + ROM_LOWER_ADDRESS == 0xFFFD) {
+			std::cout << "Lower byte start: " << std::hex << (int) x << std::endl;
+		}
 		currentByteAddress++;
 	}
 

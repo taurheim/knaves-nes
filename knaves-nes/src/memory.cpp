@@ -107,11 +107,10 @@ unsigned char Memory::read(unsigned short address) {
 	}
 }
 
-void Memory::logMemory() {
+void Memory::logMemory(std::string title) {
+	std::cout << "Saving Memory...";
 	std::ofstream logFile;
-	unsigned long int time = std::time(0);
-	std::string timeString = std::to_string(time) + ".log";
-	logFile.open("Memory - " + timeString);
+	logFile.open("Memory - " + title + ".log");
 
 	long memorySize = 0xFFFF;
 	std::string tab = std::string("\t");
@@ -153,6 +152,7 @@ void Memory::logMemory() {
 	}
 	logFile.close();
 
+	std::cout << "Finished." << std::endl;
 }
 
 

@@ -15,7 +15,7 @@ int main(int argc, char * argv[]) {
 		_knaves.init(argv[1], should_log);
 	}
 	else {
-		_knaves.init("mario.nes", false);
+		_knaves.init("knaves_tests.nes", true);
 	}
 
 	_knaves.run();

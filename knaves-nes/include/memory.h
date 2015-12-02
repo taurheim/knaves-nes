@@ -30,7 +30,7 @@ public:
 	Memory();
 	void write(unsigned short address, unsigned char value);
 	unsigned char read(unsigned short address);
-	void logMemory();
+	void logMemory(std::string title);
 
 private:
 	static std::string hexFromLong(long i);

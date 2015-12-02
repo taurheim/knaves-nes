@@ -25,6 +25,7 @@ private:
 	ppu * _ppu;
 
 	bool isRunning;
+	bool perfTest;
 
 	int sleep_time;
 };

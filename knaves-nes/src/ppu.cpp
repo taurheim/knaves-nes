@@ -42,7 +42,6 @@ void ppu::runCycles(unsigned short cycles) {
 
 		//Have we already rendered this scanline?
 		if (scanline != lastScanline) {
-			std::cout << "Rendering scanline: " << scanline << std::endl;
 			renderScanline();
 
 			lastScanline = scanline;

@@ -15,7 +15,7 @@ Knaves::Knaves() {
 	_cpu = new cpu();
 	_memory = new Memory();
 	_cartridge = new Cartridge();
-	_ppu = new ppu();
+	//_ppu = new ppu();
 }
 
 Knaves::~Knaves() {
@@ -24,6 +24,7 @@ Knaves::~Knaves() {
 }
 
 void Knaves::init(char * fileName, bool show_log) {
+	perfTest = !show_log;
 	//Load the ROM
 	
 	//Try/catch eventually
@@ -32,7 +33,9 @@ void Knaves::init(char * fileName, bool show_log) {
 
 	_cartridge->loadFromFile(fileName);
 
-	_ppu->init(_memory);
+	if(!perfTest) _memory->logMemory("pre");
+
+	//_ppu->init(_memory);
 
 	//Calculate the user's computer speed
 	int total_slept = 0;
@@ -68,7 +71,7 @@ void Knaves::run() {
 		//Runs at 21.47MHz = 21,470,000 cycles/sec
 
 		unsigned short cycles = _cpu->executeInstruction();
-		_ppu->runCycles(cycles);
+		//_ppu->runCycles(cycles);
 
 		total_cycles += (int) cycles;
 
@@ -103,6 +106,8 @@ void Knaves::run() {
 	std::cout << "Target Nanoseconds Per Cycle: " << ns_per_cycle << std::endl;
 	std::cout << "Actual Nanoseconds Per Cycle: " << time_elapsed / total_cycles << std::endl;
 	std::cout << "Cycles Per Second: " << (double) total_cycles / (time_elapsed / 1000000000) << " -- Should be 1.79e6" <<std::endl;
+
+	if(!perfTest) _memory->logMemory("post");
 
 	std::getchar();
 }

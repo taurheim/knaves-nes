@@ -13,8 +13,8 @@ cpu::cpu() {
 		{LDA_ABS, instruction {"LDA_ABS", &cpu::funcLoadAccumulator, Mode::ABSOLUTE, 3, 4, false, true}},
 		{LDA_ABS_X, instruction {"LDA_ABS_X", &cpu::funcLoadAccumulator, Mode::ABSOLUTE_X, 3, 4, true, true}},
 		{LDA_ABS_Y, instruction {"LDA_ABS_Y", &cpu::funcLoadAccumulator, Mode::ABSOLUTE_Y, 3, 4, true, true}},
-		{LDA_IND_X, instruction {"LDA_IND_X", &cpu::funcLoadAccumulator, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
-		{LDA_IND_Y, instruction {"LDA_IND_Y", &cpu::funcLoadAccumulator, Mode::PRE_INDIRECT_Y, 2, 5, true, true}},
+		{LDA_IND_X, instruction {"LDA_IND_X", &cpu::funcLoadAccumulator, Mode::INDIRECT_X, 2, 6, false, true}},
+		{LDA_IND_Y, instruction {"LDA_IND_Y", &cpu::funcLoadAccumulator, Mode::INDIRECT_Y, 2, 5, true, true}},
 
 		//{STA_ABS, instruction { "STA_ABS",&cpu::funcStoreAccumulator,Mode::ABSOLUTE,3,4,false,true}},
 
@@ -23,8 +23,8 @@ cpu::cpu() {
 		{STA_ABS,	instruction{"STA_ABS2", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE, 3, 4, false, true}},
 		{STA_ABS_X, instruction	{"STA_ABS_X", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_X, 3, 5, false, true}},
 		{STA_ABS_Y, instruction	{"STA_ABS_Y", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_Y, 3, 5, false, true}},
-		{STA_IND_X, instruction	{"STA_IND_X", &cpu::funcStoreAccumulator, Mode::S_PRE_INDIRECT_X, 2, 6, false, true}},
-		{STA_IND_Y, instruction	{"STA_IND_Y", &cpu::funcStoreAccumulator, Mode::S_PRE_INDIRECT_Y, 2, 6, false, true}},
+		{STA_IND_X, instruction	{"STA_IND_X", &cpu::funcStoreAccumulator, Mode::S_INDIRECT_X, 2, 6, false, true}},
+		{STA_IND_Y, instruction	{"STA_IND_Y", &cpu::funcStoreAccumulator, Mode::S_INDIRECT_Y, 2, 6, false, true}},
 
 
 		//{ADC_ABS, instruction { "ADC_ABS",&cpu::funcAddWithCarry,Mode::ABSOLUTE,3,4,false,true}},
@@ -92,8 +92,8 @@ cpu::cpu() {
 		{CMP_ABS, 	instruction{"CMP_ABS", &cpu::funcCompareMemory, Mode::ABSOLUTE, 3, 4, false, true}},
 		{CMP_ABS_X, instruction	{"CMP_ABS_X", &cpu::funcCompareMemory, Mode::ABSOLUTE_X, 3, 4, true, true}},
 		{CMP_ABS_Y, instruction	{"CMP_ABS_Y", &cpu::funcCompareMemory, Mode::ABSOLUTE_Y, 3, 4, true, true}},
-		{CMP_IND_X, instruction	{"CMP_IND_X", &cpu::funcCompareMemory, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
-		{CMP_IND_Y, instruction	{"CMP_IND_Y", &cpu::funcCompareMemory, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+		{CMP_IND_X, instruction	{"CMP_IND_X", &cpu::funcCompareMemory, Mode::INDIRECT_X, 2, 6, false, true}},
+		{CMP_IND_Y, instruction	{"CMP_IND_Y", &cpu::funcCompareMemory, Mode::INDIRECT_Y, 2, 5, true, true}},
 
 
 
@@ -103,8 +103,8 @@ cpu::cpu() {
 		{AND_ABS, instruction { "AND_ABS", &cpu::funcAnd, Mode::ABSOLUTE, 3, 4, false, true } },
 		{AND_ABS_X,  instruction { "AND_ABS_X", &cpu::funcAnd,Mode::ABSOLUTE_X, 3, 4, true, true } },
 		{AND_ABS_Y, instruction { "AND_ABS_Y", &cpu::funcAnd,Mode::ABSOLUTE_Y, 3, 4, true, true } },
-		{AND_IND_X, instruction { "AND_IND_X", &cpu::funcAnd, Mode::PRE_INDIRECT_X, 2, 6, false, true } },
-		{AND_IND_Y, instruction { "AND_IND_Y", &cpu::funcAnd, Mode::PRE_INDIRECT_Y, 2, 5, true, true } },
+		{AND_IND_X, instruction { "AND_IND_X", &cpu::funcAnd, Mode::INDIRECT_X, 2, 6, false, true } },
+		{AND_IND_Y, instruction { "AND_IND_Y", &cpu::funcAnd, Mode::INDIRECT_Y, 2, 5, true, true } },
 
 
 		{OR_IMM, instruction {"OR_IMM", &cpu::funcOr, Mode::IMMEDIATE, 2, 2, false, true}},
@@ -113,8 +113,8 @@ cpu::cpu() {
 		{OR_ABS,  instruction {"OR_ABS", &cpu::funcOr, Mode::ABSOLUTE, 3, 4, false, true}},
 		{OR_ABS_X,  instruction {"OR_ABS_X", &cpu::funcOr, Mode::ABSOLUTE_X, 3, 4, true, true}},
 		{OR_ABS_Y,  instruction {"OR_ABS_Y", &cpu::funcOr, Mode::ABSOLUTE_Y, 3, 4, true, true}},
-		{OR_IND_X,  instruction {"OR_IND_X", &cpu::funcOr, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
-		{OR_IND_Y,  instruction {"OR_IND_Y", &cpu::funcOr, Mode::PRE_INDIRECT_Y, 2, 5, true, true}},
+		{OR_IND_X,  instruction {"OR_IND_X", &cpu::funcOr, Mode::INDIRECT_X, 2, 6, false, true}},
+		{OR_IND_Y,  instruction {"OR_IND_Y", &cpu::funcOr, Mode::INDIRECT_Y, 2, 5, true, true}},
 
 		{XOR_IMM,	 instruction {"XOR_IMM", &cpu::funcXor, Mode::IMMEDIATE, 2, 2, false, true}},
 		{XOR_ZERO,	 instruction {"XOR_ZERO", &cpu::funcXor, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
@@ -122,8 +122,8 @@ cpu::cpu() {
 		{XOR_ABS, 	 instruction {"XOR_ABS", &cpu::funcXor, Mode::ABSOLUTE, 3, 4, false, true}},
 		{XOR_ABS_X,  instruction {"XOR_ABS_X", &cpu::funcXor, Mode::ABSOLUTE_X, 3, 4, true, true}},
 		{XOR_ABS_Y,  instruction {"XOR_ABS_Y", &cpu::funcXor, Mode::ABSOLUTE_Y, 3, 4, true, true}},
-		{XOR_IND_X,  instruction {"XOR_IND_X", &cpu::funcXor, Mode::POST_INDIRECT_X, 2, 6, false, true}},
-		{XOR_IND_Y,  instruction {"XOR_IND_Y", &cpu::funcXor, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+		{XOR_IND_X,  instruction {"XOR_IND_X", &cpu::funcXor, Mode::INDIRECT_X, 2, 6, false, true}},
+		{XOR_IND_Y,  instruction {"XOR_IND_Y", &cpu::funcXor, Mode::INDIRECT_Y, 2, 5, true, true}},
 
 		{LSR_ACC, instruction {"LSR_ACC", &cpu::funcShiftRightToAccumulator, Mode::IMMEDIATE, 1, 2, false, true}},
 		{LSR_ZERO, instruction {"LSR_ZERO", &cpu::funcShiftRightToMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
@@ -155,8 +155,8 @@ cpu::cpu() {
 		{ADC_ABS,  	instruction{"ADC_ABS", &cpu::funcADC, Mode::ABSOLUTE, 3, 4, false, true}},
 		{ADC_ABS_X, instruction	{"ADC_ABS_X", &cpu::funcADC, Mode::ABSOLUTE_X, 3, 4, true, true}},
 		{ADC_ABS_Y, instruction	{"ADC_ABS_Y", &cpu::funcADC, Mode::ABSOLUTE_Y, 3, 4, true, true}},
-		{ADC_IND_X, instruction	{"ADC_IND_X", &cpu::funcADC, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
-		{ADC_IND_Y, instruction	{"ADC_IND_Y", &cpu::funcADC, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+		{ADC_IND_X, instruction	{"ADC_IND_X", &cpu::funcADC, Mode::INDIRECT_X, 2, 6, false, true}},
+		{ADC_IND_Y, instruction	{"ADC_IND_Y", &cpu::funcADC, Mode::INDIRECT_Y, 2, 5, true, true}},
 
 		{SBC_IMM, 	instruction {"SBC_IMM", &cpu::funcSBC, Mode::IMMEDIATE, 2, 2, false, true}},
 		{SBC_IMM2,	instruction {"SBC_IMM2", &cpu::funcSBC, Mode::IMMEDIATE, 2, 2, false, true}},
@@ -165,8 +165,8 @@ cpu::cpu() {
 		{SBC_ABS, 	instruction {"SBC_ABS", &cpu::funcSBC, Mode::ABSOLUTE, 3, 4, false, true}},
 		{SBC_ABS_X, instruction	{"SBC_ABS_X", &cpu::funcSBC, Mode::ABSOLUTE_X, 3, 4, true, true}},
 		{SBC_ABS_Y, instruction	{"SBC_ABS_Y", &cpu::funcSBC, Mode::ABSOLUTE_Y, 3, 4, true, true}},
-		{SBC_IND_X, instruction	{"SBC_IND_X", &cpu::funcSBC, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
-		{SBC_IND_Y, instruction	{"SBC_IND_Y", &cpu::funcSBC, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+		{SBC_IND_X, instruction	{"SBC_IND_X", &cpu::funcSBC, Mode::INDIRECT_X, 2, 6, false, true}},
+		{SBC_IND_Y, instruction	{"SBC_IND_Y", &cpu::funcSBC, Mode::INDIRECT_Y, 2, 5, true, true}},
 
 		{PHP, 	instruction {"PHP", &cpu::funcPushStatusToStack, Mode::IMPLIED, 1, 3, false, true}},
 		{PLP, 	instruction {"PLP", &cpu::funcPopStatusFromStack, Mode::IMPLIED, 1, 4, false, true}},
@@ -200,63 +200,63 @@ cpu::cpu() {
 		{TAX, 	instruction {"TAX", &cpu::funcTransferAccumulatorToIndexX, Mode::IMPLIED, 1, 2, false, true}},
 		{TYA, 	instruction {"TYA", &cpu::funcTransferIndexYToAccumulator, Mode::IMPLIED, 1, 2, false, true}},
 
-		{LAX_IND_X,	instruction {"LAX_IND_X", &cpu::funcLAX, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{LAX_IND_X,	instruction {"LAX_IND_X", &cpu::funcLAX, Mode::INDIRECT_X, 2, 6, false, true}},
 		{LAX_ZERO,	instruction {"LAX_ZERO", &cpu::funcLAX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{LAX_IMM,	instruction {"LAX_IMM", &cpu::funcLAX, Mode::IMMEDIATE, 2, 2, false, true}},
 		{LAX_ABS,	instruction {"LAX_ABS", &cpu::funcLAX, Mode::ABSOLUTE, 3, 4, false, true}},
-		{LAX_IND_Y,	instruction {"LAX_IND_Y", &cpu::funcLAX, Mode::POST_INDIRECT_Y, 2, 5, true, true}},
+		{LAX_IND_Y,	instruction {"LAX_IND_Y", &cpu::funcLAX, Mode::INDIRECT_Y, 2, 5, true, true}},
 		{LAX_ZERO_Y,instruction {"LAX_ZERO_Y", &cpu::funcLAX, Mode::ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
 		{LAX_ABS_Y,	instruction {"LAX_ABS_Y", &cpu::funcLAX, Mode::ABSOLUTE_Y, 3, 4, true, true}},
 
-		{SAX_IND_X,	instruction {"SAX_IND_X", &cpu::funcSAX, Mode::PRE_INDIRECT_X, 2, 6, false, true}},
+		{SAX_IND_X,	instruction {"SAX_IND_X", &cpu::funcSAX, Mode::INDIRECT_X, 2, 6, false, true}},
 		{SAX_ZERO,	instruction {"SAX_ZERO", &cpu::funcSAX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{SAX_ABS,	instruction {"SAX_ABS", &cpu::funcSAX, Mode::ABSOLUTE, 3, 4, false, true}},
 		{SAX_ZERO_Y,instruction {"SAX_ZERO_Y", &cpu::funcSAX, Mode::ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
 
-		{DCP_IND_X,	instruction {"DCP_IND_X", &cpu::funcDCP, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{DCP_IND_X,	instruction {"DCP_IND_X", &cpu::funcDCP, Mode::INDIRECT_X, 2, 8, false, true}},
 		{DCP_ZERO,	instruction {"DCP_ZERO", &cpu::funcDCP, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
 		{DCP_ABS,	instruction {"DCP_ABS", &cpu::funcDCP, Mode::ABSOLUTE, 3, 6, false, true}},
-		{DCP_IND_Y,	instruction {"DCP_IND_Y", &cpu::funcDCP, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{DCP_IND_Y,	instruction {"DCP_IND_Y", &cpu::funcDCP, Mode::INDIRECT_Y, 2, 8, false, true}},
 		{DCP_ZERO_X,instruction {"DCP_ZERO_X", &cpu::funcDCP, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{DCP_ABS_Y,	instruction {"DCP_ABS_Y", &cpu::funcDCP, Mode::ABSOLUTE_Y, 3, 7, false, true}},
 		{DCP_ABS_X,	instruction {"DCP_ABS_X", &cpu::funcDCP, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
-		{ISC_IND_X,	instruction {"ISC_IND_X", &cpu::funcISC, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{ISC_IND_X,	instruction {"ISC_IND_X", &cpu::funcISC, Mode::INDIRECT_X, 2, 8, false, true}},
 		{ISC_ZERO,	instruction {"ISC_ZERO", &cpu::funcISC, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
 		{ISC_ABS,	instruction {"ISC_ABS", &cpu::funcISC, Mode::ABSOLUTE, 3, 6, false, true}},
-		{ISC_IND_Y,	instruction {"ISC_IND_Y", &cpu::funcISC, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{ISC_IND_Y,	instruction {"ISC_IND_Y", &cpu::funcISC, Mode::INDIRECT_Y, 2, 8, false, true}},
 		{ISC_ZERO_X,instruction {"ISC_ZERO_X", &cpu::funcISC, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{ISC_ABS_Y,	instruction {"ISC_ABS_Y", &cpu::funcISC, Mode::ABSOLUTE_Y, 3, 7, false, true}},
 		{ISC_ABS_X,	instruction {"ISC_ABS_X", &cpu::funcISC, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
-		{SLO_IND_X,	instruction {"SLO_IND_X", &cpu::funcSLO, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{SLO_IND_X,	instruction {"SLO_IND_X", &cpu::funcSLO, Mode::INDIRECT_X, 2, 8, false, true}},
 		{SLO_ZERO,	instruction {"SLO_ZERO", &cpu::funcSLO, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
 		{SLO_ABS,	instruction {"SLO_ABS", &cpu::funcSLO, Mode::ABSOLUTE, 3, 6, false, true}},
-		{SLO_IND_Y,	instruction {"SLO_IND_Y", &cpu::funcSLO, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{SLO_IND_Y,	instruction {"SLO_IND_Y", &cpu::funcSLO, Mode::INDIRECT_Y, 2, 8, false, true}},
 		{SLO_ZERO_X,instruction {"SLO_ZERO_X", &cpu::funcSLO, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{SLO_ABS_Y,	instruction {"SLO_ABS_Y", &cpu::funcSLO, Mode::ABSOLUTE_Y, 3, 7, false, true}},
 		{SLO_ABS_X,	instruction {"SLO_ABS_X", &cpu::funcSLO, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
-		{RLA_IND_X,	instruction {"RLA_IND_X", &cpu::funcRLA, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{RLA_IND_X,	instruction {"RLA_IND_X", &cpu::funcRLA, Mode::INDIRECT_X, 2, 8, false, true}},
 		{RLA_ZERO,	instruction {"RLA_ZERO", &cpu::funcRLA, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
 		{RLA_ABS,	instruction {"RLA_ABS", &cpu::funcRLA, Mode::ABSOLUTE, 3, 6, false, true}},
-		{RLA_IND_Y,	instruction {"RLA_IND_Y", &cpu::funcRLA, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{RLA_IND_Y,	instruction {"RLA_IND_Y", &cpu::funcRLA, Mode::INDIRECT_Y, 2, 8, false, true}},
 		{RLA_ZERO_X,instruction {"RLA_ZERO_X", &cpu::funcRLA, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{RLA_ABS_Y,	instruction {"RLA_ABS_Y", &cpu::funcRLA, Mode::ABSOLUTE_Y, 3, 7, false, true}},
 		{RLA_ABS_X,	instruction {"RLA_ABS_X", &cpu::funcRLA, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
-		{SRE_IND_X,	instruction {"SRE_IND_X", &cpu::funcSRE, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{SRE_IND_X,	instruction {"SRE_IND_X", &cpu::funcSRE, Mode::INDIRECT_X, 2, 8, false, true}},
 		{SRE_ZERO,	instruction {"SRE_ZERO", &cpu::funcSRE, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
 		{SRE_ABS,	instruction {"SRE_ABS", &cpu::funcSRE, Mode::ABSOLUTE, 3, 6, false, true}},
-		{SRE_IND_Y,	instruction {"SRE_IND_Y", &cpu::funcSRE, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{SRE_IND_Y,	instruction {"SRE_IND_Y", &cpu::funcSRE, Mode::INDIRECT_Y, 2, 8, false, true}},
 		{SRE_ZERO_X,instruction {"SRE_ZERO_X", &cpu::funcSRE, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{SRE_ABS_Y,	instruction {"SRE_ABS_Y", &cpu::funcSRE, Mode::ABSOLUTE_Y, 3, 7, false, true}},
 		{SRE_ABS_X,	instruction {"SRE_ABS_X", &cpu::funcSRE, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
-		{RRA_IND_X,	instruction {"RRA_IND_X", &cpu::funcRRA, Mode::PRE_INDIRECT_X, 2, 8, false, true}},
+		{RRA_IND_X,	instruction {"RRA_IND_X", &cpu::funcRRA, Mode::INDIRECT_X, 2, 8, false, true}},
 		{RRA_ZERO,	instruction {"RRA_ZERO", &cpu::funcRRA, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
 		{RRA_ABS,	instruction {"RRA_ABS", &cpu::funcRRA, Mode::ABSOLUTE, 3, 6, false, true}},
-		{RRA_IND_Y,	instruction {"RRA_IND_Y", &cpu::funcRRA, Mode::POST_INDIRECT_Y, 2, 8, false, true}},
+		{RRA_IND_Y,	instruction {"RRA_IND_Y", &cpu::funcRRA, Mode::INDIRECT_Y, 2, 8, false, true}},
 		{RRA_ZERO_X,instruction {"RRA_ZERO_X", &cpu::funcRRA, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{RRA_ABS_Y,	instruction {"RRA_ABS_Y", &cpu::funcRRA, Mode::ABSOLUTE_Y, 3, 7, false, true}},
 		{RRA_ABS_X,	instruction {"RRA_ABS_X", &cpu::funcRRA, Mode::ABSOLUTE_X, 3, 7, false, true}},
@@ -286,7 +286,7 @@ cpu::cpu() {
 
 		{RTS, 		instruction {"RTS", &cpu::funcReturnFromSubroutine, Mode::IMPLIED, 1, 6, false, false}},
 		{RTI, 		instruction {"RTI", &cpu::funcReturnFromInterrupt, Mode::IMPLIED, 1, 6, false, false}},
-		{BRK, 		instruction {"BRK", &cpu::funcBreak, Mode::IMPLIED, 1, 7, false, false}},
+		//{BRK, 		instruction {"BRK", &cpu::funcBreak, Mode::IMPLIED, 1, 7, false, false}},
 
 		{NOP, 	instruction {"NOP", &cpu::funcNop, Mode::IMPLIED, 1, 2, false, true}},
 		{NOP2, 	instruction {"NOP", &cpu::funcNop, Mode::IMPLIED, 2, 3, false, true}},
@@ -334,6 +334,7 @@ void cpu::start() {
 	//OVERRIDING, FIX THIS LATER
 	reg_pc = 0x8010;
 	reg_status = STARTUP_STATUS;
+	reg_sp = STARTUP_STACK;
 	reg_acc = 0;
 	reg_index_x = 0;
 	reg_index_y = 0;
@@ -398,11 +399,11 @@ void cpu::executeInterrupt(const enum Interrupt &interrupt) {
 	case Interrupt::IRQ:
 		reg_pc = IRQ_BRK_VECTOR;
 		break;
-	case Interrupt::BRK:
+	case Interrupt::BREAK:
 		reg_pc = IRQ_BRK_VECTOR;
 		break;
 	case Interrupt::RESET:
-		reg_pc = RESET_VECTOR;
+		reg_pc = (_memory->read(INTERRUPT_RESET_VECTOR_HIGH) << 8) | _memory->read(INTERRUPT_RESET_VECTOR_LOW);
 		break;
 	default:
 		break;
@@ -438,14 +439,13 @@ unsigned short cpu::executeInstruction() {
 	}
 
 
-
 	//Actually execute the opcode instruction
 	instruction current_instruction = instruction_row->second;
-	if (log_instructions) std::cout << "\n Executing instruction " + current_instruction.name + "\t\t(0x" << std::hex << (int) opcode << " ";
+	if (log_instructions) std::cout << "\n[" << std::hex << reg_pc << "] Executing instruction " + current_instruction.name + "\t\t(0x" << std::hex << (int) opcode << " ";
 
 	//Get the source 
 	unsigned int src = getSource(current_instruction.mode);
-	if (log_instructions) std::cout << "0x" << std::hex << (int) src << ")";
+	if (log_instructions) std::cout << "0x" << std::hex << (int)src;
 
 	//Run the function and determine how many cycles were needed
 	unsigned short cycles_used = current_instruction.cycles;
@@ -514,7 +514,7 @@ unsigned short cpu::getSource(Mode mode) {
 
 		case ABSOLUTE_ZERO_PAGE: {
 			//Same thing as absolute, except it's always going to be in the zero page (first 1 byte of memory values)
-			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+			unsigned short absolute_address = _memory->read(reg_pc + 1);
 			return _memory->read(absolute_address & 0xff);
 			break;
 		}
@@ -543,6 +543,22 @@ unsigned short cpu::getSource(Mode mode) {
 			return (first << 8 | second);
 		}
 
+		case INDIRECT_X: {
+			//val = PEEK(PEEK((arg + X) % 256) + PEEK((arg + X + 1) % 256) * 256)
+			unsigned short reference_1 = (_memory->read(reg_pc + 1) + reg_index_x) & 0xff;
+			unsigned short reference_2 = (reference_1 + 1) & 0xff;
+			unsigned short second = _memory->read(reference_1);
+			unsigned short first = _memory->read(reference_2);
+			return (first << 8 | second);
+		}
+
+		case INDIRECT_Y: {
+			//val = PEEK(PEEK(arg) + PEEK((arg + 1) % 256) + y)
+			unsigned short reference_1 = _memory->read(reg_pc + 1) & 0xff;
+			unsigned short reference_2 = _memory->read(reference_1);
+			return _memory->read(reference_2 + reg_index_y);
+		}
+
 		case Mode::RELATIVE: {
 			//Used for branching instructions. Essentially the byte
 			//after the instruction tells the CPU how many bytes to skip if
@@ -556,6 +572,17 @@ unsigned short cpu::getSource(Mode mode) {
 			unsigned char first = _memory->read(reg_pc + 2);
 			unsigned char second = _memory->read(reg_pc + 1);
 			return (first << 8 | second);
+		}
+
+		case Mode::S_ABSOLUTE_ZERO_PAGE: {
+			unsigned short absolute_address = getSource(Mode::S_ABSOLUTE);
+			return absolute_address & 0xff;
+		}
+
+		case Mode::S_INDIRECT_Y: {
+			unsigned short reference_1 = _memory->read(reg_pc + 1) & 0xff;
+			unsigned short reference_2 = _memory->read(reference_1);
+			return reference_2 + reg_index_y;
 		}
 	}
 }
@@ -595,7 +622,8 @@ unsigned char cpu::readAddress(unsigned short address)
 */
 void cpu::pushStack(unsigned char byte) {
 	//Decrement stack pointer because stack is stored top-down
-	_memory->write(STACK_START + reg_sp--, byte);
+	reg_sp--;
+	_memory->write(STACK_START + reg_sp, byte);
 }
 
 /*
@@ -617,7 +645,9 @@ void cpu::pushStackDouble(unsigned short bytebyte) {
  Pop off the stack
 */
 unsigned char cpu::popStack() {
-	return _memory->read(STACK_START + reg_sp++);
+	unsigned char item = _memory->read(STACK_START + reg_sp);
+	reg_sp++;
+	return item;
 }
 
 /************
@@ -627,7 +657,7 @@ unsigned char cpu::popStack() {
 /*
  Check if the cpu status register includes a given status
 */
-bool cpu::hasStatusFlag(unsigned int flag) {
+bool cpu::hasStatusFlag(unsigned char flag) {
 	return (reg_status & flag);
 }
 
@@ -650,7 +680,7 @@ void cpu::clearStatusFlag(unsigned int flag) {
  @param val		8 bit value
 */
 void cpu::updateStatusSign(unsigned short val) {
-	// & 128 to figure out if it's positive or negative
+	// & 128 to figure out if it's positive or negative (check the first bit)
 	if (val & 0x0080) {
 		setStatusFlag(STATUS_SIGN);
 	}
@@ -713,6 +743,7 @@ void cpu::updateStatusBasedOnExpression(bool result, unsigned char flag) {
 
 //Load a value from an address to the accumulator
 int cpu::funcLoadAccumulator(unsigned short src) {
+	if (log_instructions) std::cout << " Loaded " << std::hex << src;
 	reg_acc = src;
 	updateStatusZero(reg_acc);
 	return 0;
@@ -752,6 +783,7 @@ int cpu::funcLoadRegisterY(unsigned short src)
 
 
 int cpu::funcStoreRegisterX(unsigned short src) {
+	if (log_instructions) std::cout << "Storing " << std::hex << (int) reg_index_x;
 	_memory->write(src, reg_index_x);
 	return 0;
 }
@@ -898,8 +930,8 @@ int cpu::funcBranchOnResultZero(unsigned short src) {
 
 //Check the current reg_acc value against src
 int cpu::funcCompareMemory(unsigned short src) {
-	unsigned short value = _memory->read(src);
-	unsigned short result = reg_acc - value;
+	unsigned short result = reg_acc - src;
+	if (log_instructions) std::cout << " Comparing " << std::hex << (int) reg_acc << " and " << src;
 
 	updateStatusCarry(result);
 	updateStatusSign(result);
@@ -1034,7 +1066,7 @@ int cpu::funcADC(unsigned short src) {
 	updateStatusCarry(result);
 	reg_acc = result & 0xFF;
 	updateStatusZero(reg_acc);
-	updateStatusSign(reg_acc >> 7);
+	updateStatusSign(reg_acc);
 	return 0;
 }
 
@@ -1045,7 +1077,7 @@ int cpu::funcSBC(unsigned short src) {
 	updateStatusBasedOnExpression(!(result & 0x100), STATUS_CARRY);
 	reg_acc = result & 0xFF;
 	updateStatusZero(reg_acc);
-	updateStatusSign(reg_acc >> 7);
+	updateStatusSign(reg_acc);
 	return 0; 
 }
 
@@ -1061,18 +1093,21 @@ int cpu::funcPopStatusFromStack(unsigned short src) {
 }
 
 int cpu::funcPushAccumulatorToStack(unsigned short src) {
+	if (log_instructions) std::cout << " Pushing to stack: " << std::hex << (int) reg_acc;
 	pushStack(reg_acc);
 	return 0;
 }
 
 int cpu::funcPopAccumulatorFromStack(unsigned short src) {
 	reg_acc = popStack();
+	if (log_instructions) std::cout << " Popped " << std::hex << (int) reg_acc;
 	updateStatusZero(reg_acc);
 	updateStatusSign(reg_acc);
 	return 0;
 }
 
 int cpu::funcJumpSaveReturnAddress(unsigned short src) {
+	if (log_instructions) std::cout << " Jumping to " << src;
 	unsigned short ret = reg_pc + 2;
 	pushStack((ret >> 8) & 0xFF);
 	pushStack(ret & 0xFF);
@@ -1088,8 +1123,8 @@ int cpu::funcJump(unsigned short src) {
 int cpu::funcBit(unsigned short src) {
 	unsigned short value = src;
 	updateStatusBasedOnExpression(value >> 6,STATUS_OVERFLOW);
-	updateStatusSign(value >> 7);
-	updateStatusZero(value & reg_acc);
+	updateStatusSign(value);
+	updateStatusZero(value);
 	return 0;
 }
 
@@ -1155,6 +1190,7 @@ int cpu::funcTransferAccumulatorToIndexY(unsigned short src) {
 }
 
 int cpu::funcTransferAccumulatorToIndexX(unsigned short src) {
+	if (log_instructions) std::cout << " Transferring " << (int) reg_acc << " to reg_x";
 	reg_index_x = reg_acc;
 	updateStatusZero(reg_index_x);
 	updateStatusSign(reg_index_x);
@@ -1239,7 +1275,7 @@ int cpu::funcALR(unsigned short src) {
 int cpu::funcARR(unsigned short src) {
 	reg_acc = ((reg_acc & src) >> 1) | (hasStatusFlag(STATUS_CARRY) << 7);
 	updateStatusZero(reg_acc);
-	updateStatusSign(reg_acc >> 7);
+	updateStatusSign(reg_acc);
 	updateStatusCarry(reg_acc >> 6);
 	updateStatusBasedOnExpression(hasStatusFlag(STATUS_CARRY) ^ ((reg_acc >> 5) & 1), STATUS_OVERFLOW);
 	return 0;
@@ -1250,7 +1286,7 @@ int cpu::funcAXS(unsigned short src) {
 	updateStatusCarry(result);
 	updateStatusZero(result);
 	reg_index_x = result & 0xFF;
-	updateStatusSign(result >> 7);
+	updateStatusSign(result);
 
 	return 0;
 }
@@ -1369,10 +1405,10 @@ int cpu::funcBranchOverflowSet(unsigned short src) {
 */
 
 int cpu::funcReturnFromSubroutine(unsigned short src) {
-	if (log_instructions) std::cout << "\nReturning From Subroutine";
 	unsigned char low = popStack();
 	unsigned char high = popStack();
 	reg_pc = ((high << 8) | low) + 1;
+	if (log_instructions) std::cout << "\nReturning From Subroutine to: " << reg_pc;
 	return 0;
 }
 
@@ -1386,12 +1422,13 @@ int cpu::funcReturnFromInterrupt(unsigned short src) {
 
 int cpu::funcBreak(unsigned short src)
 {
-    executeInterrupt(Interrupt::BRK); 
+    executeInterrupt(Interrupt::BREAK); 
 	return 0;
 }
 
 int cpu::funcNop(unsigned short src)
 {
+	_memory->logMemory("mid");
 	return 0;
 }
 

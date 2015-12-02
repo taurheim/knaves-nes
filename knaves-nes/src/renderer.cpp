@@ -1,5 +1,8 @@
 #include "renderer.h"
 #include <iostream>
+#include <array>
+
+palette_entry current_screen[240][256];
 
 void renderer::init() {
 	SDL_Init(SDL_INIT_VIDEO);
@@ -15,14 +18,10 @@ void renderer::init() {
 	sprBg = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 	sprFg = SDL_CreateRGBSurface(0, width, height, 32, 0, 0, 0, 0);
 
-	SDL_LockSurface(bg);
-
 }
 
 void renderer::put_pixel(const enum PixelType &type, int x, int y, const palette_entry &color) {
-	if (y > 2) {
-		return;
-	}
+	if (y < 3) return;
 	SDL_Surface * dest;
 
 	//Figure out where we're blitting
@@ -42,22 +41,19 @@ void renderer::put_pixel(const enum PixelType &type, int x, int y, const palette
 	}
 
 	Uint32 col = SDL_MapRGBA(dest->format, color.r, color.g, color.b, color.a);
-	x = 50;
-	y = 50;
-	Uint32 *pixel_location = (Uint32*) dest->pixels + y * dest->pitch + x*dest->format->BytesPerPixel;
+	Uint32 *pixel_location = (Uint32*) dest->pixels + y*256 + x;
 
+	SDL_LockSurface(bg);
 	*(Uint32*)pixel_location = col;
-	x++;
-	pixel_location = (Uint32*)dest->pixels + y * dest->pitch + x*dest->format->BytesPerPixel;
-
-	*(Uint32*)pixel_location = col;
+	current_screen[y][x] = color;
+	SDL_UnlockSurface(bg);
 }
 
 void renderer::update() {
-	SDL_UnlockSurface(bg);
 	SDL_BlitSurface(bg, NULL, screen, NULL);
 	//SDL_BlitSurface(sprBg, NULL, screen, NULL);
 	//SDL_BlitSurface(sprFg, NULL, screen, NULL);
 
+	std::cout << "Updating" << std::endl;
 	SDL_UpdateWindowSurface(window);
 }

@@ -13,6 +13,7 @@ class Memory;
 //CPU Initialization: http://wiki.nesdev.com/w/index.php/CPU_power_up_state
 #define STARTUP_PC			0b1100000000000000
 #define STARTUP_STATUS		0b110100 //STATUS_SIGN, STATUS_OVERFLOW, STATUS_BRK
+#define STARTUP_STACK		0xFD
 
 //Memory Map http://nesdev.com/NESDoc.pdf
 #define STACK_START			0x0100
@@ -22,23 +23,25 @@ class Memory;
 #define REGISTER_START		0x2000
 
 //CPU Status
-#define STATUS_CARRY		0x00000001
-#define STATUS_ZERO		    0x00000010
-#define STATUS_INTERRUPT	0x00000100
-#define STATUS_DECIMAL		0x00001000
-#define STATUS_BRK		    0x00010000
-#define STATUS_EMPTY		0x00100000
-#define STATUS_OVERFLOW		0x01000000
-#define STATUS_SIGN		    0x10000000
+#define STATUS_CARRY		0b00000001
+#define STATUS_ZERO		    0b00000010
+#define STATUS_INTERRUPT	0b00000100
+#define STATUS_DECIMAL		0b00001000
+#define STATUS_BRK		    0b00010000
+#define STATUS_EMPTY		0b00100000
+#define STATUS_OVERFLOW		0b01000000
+#define STATUS_SIGN		    0b10000000
 
 //Interrupts
 #define INTERRUPT_CYCLES		7
 #define RESET_VECTOR			0xFFFC
 #define IRQ_BRK_VECTOR			0xFFFE
 #define NMI_VECTOR				0xFFFA
+#define INTERRUPT_RESET_VECTOR_LOW	0xFFFC
+#define INTERRUPT_RESET_VECTOR_HIGH 0xFFFD
 
 //Enums
-enum Interrupt {NMI, BRK, IRQ, RESET};
+enum Interrupt {NMI, BREAK, IRQ, RESET};
 
 class cpu {
 public:
@@ -76,7 +79,7 @@ private:
 	int branch(signed short offset);
 
 	//Status
-	bool hasStatusFlag(unsigned int flag);
+	bool hasStatusFlag(unsigned char flag);
 	void setStatusFlag(unsigned int flag);
 	void clearStatusFlag(unsigned int flag);
 	void updateStatusZero(unsigned short val);
