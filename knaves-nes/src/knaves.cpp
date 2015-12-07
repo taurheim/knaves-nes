@@ -27,7 +27,7 @@ void Knaves::init(char * fileName, bool show_log) {
 	perfTest = !show_log;
 	//Load the ROM
 	
-	//Try/catch eventually
+	//TODO Add try/catch and error handling system
 	_cpu->init(_memory, show_log);
 	_cartridge->init(_memory, show_log);
 
@@ -37,7 +37,7 @@ void Knaves::init(char * fileName, bool show_log) {
 
 	//_ppu->init(_memory);
 
-	//Calculate the user's computer speed
+	//Calculate the user's computer speed. The sleep() function incurs its own lag, and if used in increments too small, it will significantly throw off the timing of the CPU
 	int total_slept = 0;
 	for (int i = 0; i < 10; i++) {
 		Clock::time_point start = Clock::now();
@@ -100,6 +100,7 @@ void Knaves::run() {
 	auto main_clock_end = Clock::now();
 	double time_elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(main_clock_end - main_clock_start).count();
 
+	//Status Report
 	std::cout << "Done" << std::endl;
 	std::cout << "Time Passed: " << time_elapsed << " nanoseconds (" << (time_elapsed / 1000000000) << " seconds)" << std::endl;
 	std::cout << "Total Cycles: " << std::dec << total_cycles << std::endl;
@@ -109,6 +110,7 @@ void Knaves::run() {
 
 	if(!perfTest) _memory->logMemory("post");
 
+	//Press enter to close
 	std::getchar();
 }
 

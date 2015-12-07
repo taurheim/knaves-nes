@@ -37,6 +37,7 @@ void Memory::write(unsigned short address, unsigned char value) {
 		//Writing to PPU Registers
 		unsigned short real_address = address & 0x2007;
 		switch (real_address) {
+			//TODO Add mirroring/mapping
 		case PPU_CONTROL:
 			break;
 		case PPU_MASK:

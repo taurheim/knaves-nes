@@ -6,7 +6,7 @@
 cpu::cpu() {
 	//Set up opcodes
 	instructions = {
-		//Load into Accumulator
+		//Load into Accumulator Register
 		{LDA_IMM, instruction { "LDA_IMM",&cpu::funcLoadAccumulator,Mode::IMMEDIATE,2,2,false,true } },
 		{LDA_ZERO, instruction {"LDA_ZERO", &cpu::funcLoadAccumulator,Mode::ABSOLUTE_ZERO_PAGE,2,3,false,true}},
 		{LDA_ZERO_X, instruction {"LDA_ZERO_X", &cpu::funcLoadAccumulator,Mode::ABSOLUTE_X_ZERO_PAGE,2,4,false,true}},
@@ -16,8 +16,7 @@ cpu::cpu() {
 		{LDA_IND_X, instruction {"LDA_IND_X", &cpu::funcLoadAccumulator, Mode::INDIRECT_X, 2, 6, false, true}},
 		{LDA_IND_Y, instruction {"LDA_IND_Y", &cpu::funcLoadAccumulator, Mode::INDIRECT_Y, 2, 5, true, true}},
 
-		//{STA_ABS, instruction { "STA_ABS",&cpu::funcStoreAccumulator,Mode::ABSOLUTE,3,4,false,true}},
-
+		//Store value from Accumulator Register
 		{STA_ZERO,	instruction{"STA_ZERO", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{STA_ZERO_X,instruction	{"STA_ZERO_X", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
 		{STA_ABS,	instruction{"STA_ABS2", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE, 3, 4, false, true}},
@@ -25,13 +24,6 @@ cpu::cpu() {
 		{STA_ABS_Y, instruction	{"STA_ABS_Y", &cpu::funcStoreAccumulator, Mode::S_ABSOLUTE_Y, 3, 5, false, true}},
 		{STA_IND_X, instruction	{"STA_IND_X", &cpu::funcStoreAccumulator, Mode::S_INDIRECT_X, 2, 6, false, true}},
 		{STA_IND_Y, instruction	{"STA_IND_Y", &cpu::funcStoreAccumulator, Mode::S_INDIRECT_Y, 2, 6, false, true}},
-
-
-		//{ADC_ABS, instruction { "ADC_ABS",&cpu::funcAddWithCarry,Mode::ABSOLUTE,3,4,false,true}},
-
-		//{TAX, instruction {"TAX",&cpu::funcTransferAccumulatorToX,Mode::IMPLIED,1,2,false,true}},
-
-		//{CMP_IMM, instruction {"CMP_IMM",&cpu::funcCompareMemory,Mode::IMMEDIATE,2,2,false,true}},
 
 		//Branching
 		{BPL, instruction {"BPL", &cpu::funcBranchOnResultPlus, Mode::RELATIVE, 2, 2, true, true}},
@@ -43,36 +35,43 @@ cpu::cpu() {
 		{BNE, instruction {"BNE", &cpu::funcBranchOnResultNotZero, Mode::RELATIVE, 2, 2, true, true}},
 		{BEQ, instruction {"BEQ", &cpu::funcBranchOnResultZero, Mode::RELATIVE, 2, 2, true, true}},
 
+		//Load into X Register
 		{LDX_IMM,	instruction{"LDX_IMM", &cpu::funcLoadRegisterX, Mode::IMMEDIATE, 2, 2, false, true}},
 		{LDX_ZERO,	instruction{"LDX_ZERO", &cpu::funcLoadRegisterX, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{LDX_ZERO_Y,instruction	{"LDX_ZERO_Y", &cpu::funcLoadRegisterX, Mode::ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
 		{LDX_ABS, 	instruction{"LDX_ABS", &cpu::funcLoadRegisterX, Mode::ABSOLUTE, 3, 4, false, true}},
 		{LDX_ABS_Y, instruction	{"LDX_ABS_Y", &cpu::funcLoadRegisterX, Mode::ABSOLUTE_Y, 3, 4, true, true}},
 
+		//Store value from X Register
 		{STX_ZERO,	instruction{"STX_ZERO", &cpu::funcStoreRegisterX, Mode::S_ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{STX_ZERO_Y,instruction	{"STX_ZERO_Y", &cpu::funcStoreRegisterX, Mode::S_ABSOLUTE_Y_ZERO_PAGE, 2, 4, false, true}},
 		{STX_ABS, 	instruction{"STX_ABS", &cpu::funcStoreRegisterX, Mode::S_ABSOLUTE, 3, 4, false, true}},
 
+		//Load into Y Register
 		{LDY_IMM,	instruction{"LDY_IMM", &cpu::funcLoadRegisterY, Mode::IMMEDIATE, 2, 2, false, true}},
 		{LDY_ZERO,	instruction{"LDY_ZERO", &cpu::funcLoadRegisterY, Mode::ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{LDY_ZERO_X,instruction	{"LDY_ZERO_X", &cpu::funcLoadRegisterY, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
 		{LDY_ABS, 	instruction{"LDY_ABS", &cpu::funcLoadRegisterY, Mode::ABSOLUTE, 3, 4, false, true}},
 		{LDY_ABS_X, instruction	{"LDY_ABS_Y", &cpu::funcLoadRegisterY, Mode::ABSOLUTE_X, 3, 4, true, true}},
 
+		//Store value from Y Register
 		{STY_ZERO,	instruction{"STY_ZERO", &cpu::funcStoreRegisterY, Mode::S_ABSOLUTE_ZERO_PAGE, 2, 3, false, true}},
 		{STY_ZERO_X,instruction	{"STY_ZERO_X", &cpu::funcStoreRegisterY, Mode::S_ABSOLUTE_X_ZERO_PAGE, 2, 4, false, true}},
 		{STY_ABS, 	instruction{"STY_ABS", &cpu::funcStoreRegisterY, Mode::S_ABSOLUTE, 3, 4, false, true}},
 
+		//Increment/Decrement X&Y
 		{INX,		instruction{"INX", &cpu::funcIncreaseRegisterX, Mode::IMPLIED, 1, 2, false, true}},
 		{DEX,		instruction{"DEX", &cpu::funcDecreaseRegisterX, Mode::IMPLIED, 1, 2, false, true}},
 		{INY,		instruction{"INY", &cpu::funcIncreaseRegisterY, Mode::IMPLIED, 1, 2, false, true}},
 		{DEY,		instruction{"DEY", &cpu::funcDecreaseRegisterY, Mode::IMPLIED, 1, 2, false, true}},
 
+		//Increment value at memory location
 		{INC_ZERO,	instruction{"INC_ZERO", &cpu::funcIncreaseMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
 		{INC_ZERO_X,instruction	{"INC_ZERO_X", &cpu::funcIncreaseMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{INC_ABS, 	instruction{"INC_ABS", &cpu::funcIncreaseMemory, Mode::ABSOLUTE, 3, 6, false, true}},
 		{INC_ABS_X, instruction	{"INC_ABS_X", &cpu::funcIncreaseMemory, Mode::ABSOLUTE_X, 3, 7, false, true}},
 
+		//
 		{DEC_ZERO,	instruction{"DEC_ZERO", &cpu::funcDecreaseMemory, Mode::ABSOLUTE_ZERO_PAGE, 2, 5, false, true}},
 		{DEC_ZERO_X,instruction	{"DEC_ZERO_X", &cpu::funcDecreaseMemory, Mode::ABSOLUTE_X_ZERO_PAGE, 2, 6, false, true}},
 		{DEC_ABS, 	instruction{"DEC_ABS", &cpu::funcDecreaseMemory, Mode::ABSOLUTE, 3, 6, false, true}},
@@ -272,17 +271,6 @@ cpu::cpu() {
 
 		{SHY_ABS_X,	instruction {"SHY_ABS_X", &cpu::funcSHY, Mode::ABSOLUTE_X, 3, 5, false, true}},
 		{SHX_ABS_Y,	instruction {"SHX_ABS_Y", &cpu::funcSHX, Mode::ABSOLUTE_Y, 3, 5, false, true}},
-
-/*
-		{BNE, 		instruction {"BNE", &cpu::funcBranchResultNotZero, Mode::RELATIVE, 2, 2, true, true}},
-		{BEQ, 		instruction {"BEQ", &cpu::funcBranchResultZero, Mode::RELATIVE, 2, 2, true, true}},
-		{BCS, 		instruction {"BCS", &cpu::funcBranchCarrySet, Mode::RELATIVE, 2, 2, true, true}},
-		{BCC, 		instruction {"BCC", &cpu::funcBranchCarryClear, Mode::RELATIVE, 2, 2, true, true}},
-		{BMI, 		instruction {"BMI", &cpu::funcBranchResultMinus, Mode::RELATIVE, 2, 2, true, true}},
-		{BPL, 		instruction {"BPL", &cpu::funcBranchResultPlus, Mode::RELATIVE, 2, 2, true, true}},
-		{BVC, 		instruction {"BVC", &cpu::funcBranchOverflowClear, Mode::RELATIVE, 2, 2, true, true}},
-		{BVS, 		instruction {"BVS", &cpu::funcBranchOverflowSet, Mode::RELATIVE, 2, 2, true, true}},
-*/
 
 		{RTS, 		instruction {"RTS", &cpu::funcReturnFromSubroutine, Mode::IMPLIED, 1, 6, false, false}},
 		{RTI, 		instruction {"RTI", &cpu::funcReturnFromInterrupt, Mode::IMPLIED, 1, 6, false, false}},
@@ -1321,88 +1309,6 @@ int cpu::funcSHX(unsigned short src) {
 
 	return 0;
 }
-
-/*
-unsigned short cpu::modeRelative(){
-	signed short offset = (signed char)read(reg_pc + 1);
-	address = reg_pc;
-	result = address + offset;
-	setPageBoundaryCrossed(address, result);
-	return result;
-}
-
-int cpu::funcBranchResultNotZero(unsigned short src) {
-	if (!hasStatusFlag(STATUS_ZERO))
-	{
-		branchTaken = true;
-		reg_pc = modeRelative();
-	}
-	return 0;
-}
-
-int cpu::funcBranchResultZero(unsigned short src) {
-	if (hasStatusFlag(STATUS_ZERO))
-	{
-		branchTaken = true;
-		reg_pc = modeRelative();
-	}
-	return 0;
-}
-
-int cpu::funcBranchCarrySet(unsigned short src) {
-	if (hasStatusFlag(STATUS_CARRY))
-	{
-		branchTaken = true;
-		reg_pc = modeRelative();
-	}
-	return 0;
-}
-
-int cpu::funcBranchCarryClear(unsigned short src) {
-	if (!hasStatusFlag(STATUS_CARRY))
-	{
-		branchTaken = true;
-		reg_pc = modeRelative();
-	}
-	return 0;
-}
-
-int cpu::funcBranchResultMinus(unsigned short src) {
-	if (hasStatusFlag(STATUS_SIGN))
-	{
-		branchTaken = true;
-		reg_pc = modeRelative();
-	}
-	return 0;
-}
-
-int cpu::funcBranchResultPlus(unsigned short src) {
-	if (!hasStatusFlag(STATUS_SIGN))
-	{
-		branchTaken = true;
-		reg_pc = modeRelative();
-	}
-	return 0;
-}
-
-int cpu::funcBranchOverflowClear(unsigned short src) {
-	if (!hasStatusFlag(STATUS_OVERFLOW))
-	{
-		branchTaken = true;
-		reg_pc = modeRelative();
-	}
-	return 0;
-}
-
-int cpu::funcBranchOverflowSet(unsigned short src) {
-	if (hasStatusFlag(STATUS_OVERFLOW))
-	{
-		branchTaken = true;
-		reg_pc = modeRelative();
-	}
-	return 0;
-}
-*/
 
 int cpu::funcReturnFromSubroutine(unsigned short src) {
 	unsigned char low = popStack();
