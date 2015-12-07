@@ -1,5 +1,5 @@
 #Knaves NES Emulator
-The Knaves NES Emulator is an emulator for the Nintendo Entertainment System written in C++. It was created by [Nikolai Savas](http://savas.ca), [Joe Crozier](http://joecrozier.ca), and [Sam Nalwa](http://nalwa.ca/).
+The Knaves NES Emulator is an emulator for the Nintendo Entertainment System written in C++. It was created by [Nikolai Savas](http://savas.ca), [Joe Crozier](http://joecrozier.ca), and [Sam Nalwa](http://nalwa.ca/). It was inspired by [YANE: Yet Another NES Emulator](http://yanese.com/).
 
 ##Development
 Knaves NES was developed using Visual Studio Community 2015 as well as SDL 2.0.3 (x64). Pre-compiled libraries and DLLs for SDL 2.0.3 that are compatible with Visual Studio Community 2015 are included in the /lib folder, but of course it's always possible to compile it yourself. It should be noted that most pre-compiled versions do not work with Visual Studio 2015 because of changes in the printf() function. 
