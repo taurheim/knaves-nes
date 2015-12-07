@@ -5,7 +5,7 @@ The Knaves NES Emulator is an emulator for the Nintendo Entertainment System wri
 Knaves NES was developed using Visual Studio Community 2015 as well as SDL 2.0.3 (x64). Pre-compiled libraries and DLLs for SDL 2.0.3 that are compatible with Visual Studio Community 2015 are included in the /lib folder, but of course it's always possible to compile it yourself. It should be noted that most pre-compiled versions do not work with Visual Studio 2015 because of changes in the printf() function. 
 
 ##How to Run
-Using command prompt, navigate to `knaves-nes/x64/Release`. To run the CPU emulator, use:
+Using command prompt, navigate to `/emulator`. To run the CPU emulator, use:
 
     ./knaves-nes.exe bubble_sort.nes
  
