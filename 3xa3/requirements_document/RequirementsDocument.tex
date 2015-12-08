@@ -43,7 +43,7 @@
 
 
 % Make the title
-\title{Requirements Document for Knaves NES}
+\title{Requirements Document for KnavesNES}
 \date{\today\\
 	{\medskip\small Software Engineering 3XA3, Lab \#3}
 }
@@ -76,97 +76,98 @@
 	\textbf{ROM file} - A file that contains the read-only information that would be present in a game cartridge, in this case an NES cartridge. This file can be read and executed by an emulator as if it was a real cartridge.
 \section{General System Description}
 	\subsection{Module Description}
-		MainNES – Main executable which is launched through the command prompt. This module will handle the launching of the actual ROM file and the management of the CPU. It is also responsible for ending the process when necessary, and for instructing MemoryLogger when to log the CPU memory.
+		Knaves – Main executable which is launched through the command prompt. This module will handle the launching of the actual ROM file and the management of the CPU. It is also responsible for ending the process when necessary.
 
-		CPU – The CPU is passed the set of instructions from the ROM file from MainNES, stores them in its memory, and begins their execution immediately. It is responsible for informing ErrorHandler when an error occurs in execution, and also for informing MainNES when execution is complete.
+		CPU – The CPU is passed the set of instructions from the ROM file from MainNES, stores them in its memory, and begins their execution immediately. It is responsible for handling cases when an error occurs in execution, and also for informing MainNES when execution is complete.
 
-		ErrorHandler – The ErrorHandler is responsible for deciding the outcome of various errors which can occur while executing or preparing to execute. Examples include invalid ROM formats, unknown instructions, instructions with undefined results, and out of bounds memory accesses. Typically, these errors will result in ErrorHandler informing MainNES to halt execution and echo into the command prompt that said error has occurred.
+		Cartridge – The Cartridge is responsible for loading data from the ROM file into memory. 
 
-		MemoryLogger – The MemoryLogger is responsible for querying the CPU for the state of its memory, and logging said memory as ASCII formatted .log files which are placed in the user’s working directory.
+		Memory -�� The Memory module is responsible for managing the state of its memory, and logging said memory as ASCII formatted .log files which are placed in the user's working directory.
 	\subsection{User Characteristics and Conditions}
 		Users of KnavesNES are expected to be comfortable using the command line to execute software. They are also expected to have a basic understanding of a CPU and the concept of memory in order to fully grasp the project. They are expected to be running on a Windows, Mac OS X, or Linux operating system on a 32 or 64-bit processor.
 	\subsection{Assumptions and Dependencies}
 		It is assumed that the ROM files to be executed are of a reasonable size and length (< 512kb). This is due to memory limitations of KnavesNES, as found in the NES console itself. It is also assumed that any ROM files ran by KnavesNES consist only of valid OP code instructions found in [3]. KnavesNES is exceptionally portable in the sense that once compiled, it does not rely on or reference any external libraries. 
 \section{Functional Requirements}
 	\begin{itemize}
-		\item Knaves NES must be able to run standard NES ROMs (.nes files)
-		\item Knaves NES CPU must be able to execute opcodes from the 6502 MOS CPU architecture
-		\item Knaves NES CPU must be able to manage 2kB of RAM
-		\item Knaves NES will log its memory state into a .log file in the user's working directory at a specified interval.
+		\item KnavesNES must be able to run standard NES ROMs (.nes files)
+		\item KnavesNES CPU must be able to execute opcodes from the 6502 MOS CPU architecture
+		\item KnavesNES CPU must be able to manage 2kB of RAM
+		\item KnavesNES will log its memory state into a .log file in the user's working directory at a specified interval if requested.
 	\end{itemize}
 \section{Non-Functional Requirements}
 	\subsection{Quality Requirements}
 		\begin{itemize}
-			\item Knaves NES should be built to exactly mimic the 6502 MOS CPU architecture, including any abnormalities with the running of opcodes
+			\item KnavesNES should be built to exactly mimic the 6502 MOS CPU architecture, including any abnormalities with the running of opcodes
 		\end{itemize}
 	\subsection{Look and Feel Requirements}
 		\begin{itemize}
-			\item Knaves NES should be run as an .exe (one click to open)
-			\item Knaves NES must allow the user to select a .nes file from their computer to run
+			\item KnavesNES should be run as an .exe through the command line
+			\item KnavesNES must allow for two run modes, logging mode and performance mode
+			\item KnavesNES must allow the user to select a .nes file from their computer to run via an argument on the command line
 		\end{itemize}
 	\subsection{Usability Requirements}
 		\begin{itemize}
-			\item Knaves NES must be able to be used by anyone over the age of 10
-			\item Knaves NES must be easy to learn for a 10 year old
+			\item KnavesNES must be able to be used by anyone over the age of 10
+			\item KnavesNES must be easy to learn for a 10 year old
 		\end{itemize}
 	\subsection{Performance Requirements}
 		\begin{itemize}
-			\item Knaves NES should mimic the performance of a 6502 MOS CPU
-			\item Knaves NES must not crash during any CPU tests
-			\item Knaves NES CPU cycles must be precise down to the nanosecond (based off computer system time)
-			\item Knaves NES must be able to run ROMs up to 1MB
+			\item KnavesNES should mimic the performance of a 6502 MOS
+			\item KnavesNES should execute instructions at 1.79 MHz while being run in performance mode. 
+			\item KnavesNES must not crash during any CPU tests
+			\item KnavesNES CPU cycles must be precise down to the nanosecond (based off computer system time)
+			\item KnavesNES must be able to run ROMs up to 1MB
 		\end{itemize}
 	\subsection{Operational Requirements}
 		\begin{itemize}
-			\item Knaves NES must be able to run on a Windows 10 Machine as an .exe
-			\item Knaves NES must be able to run any ROMs that would be runnable on a regular NES
+			\item KnavesNES must be able to run on a Windows 10 Machine as an .exe
 		\end{itemize}
 	\subsection{Maintainability and Portability Requirements}
 		\begin{itemize}
-			\item Knaves NES should be easy to maintain for anyone through the GitHub repo
-			\item Knaves NES should be written so that it is easy to jump into for a new collaborator
-			\item Knaves NES should be able to fit on a 1GB USB to ensure portability
+			\item KnavesNES should be easy to maintain for anyone through the GitHub repo
+			\item KnavesNES should be written so that it is easy to jump into for a new collaborator
+			\item KnavesNES should be able to fit on a 1GB USB to ensure portability
 		\end{itemize}
 	\subsection{Security \& Safety Requirements}
 		\begin{itemize}
-			\item Knaves NES will not access any files other than the supplied ROM
-			\item Knaves NES will not have any internet connectivity
-			\item Knaves NES should be incapable of hurting a person or machine
+			\item KnavesNES will not access any files other than the supplied ROM
+			\item KnavesNES will not have any internet connectivity
+			\item KnavesNES should be incapable of hurting a person or machine
 		\end{itemize}
 	\subsection{Cultural and Political Requirements}
 		\begin{itemize}
-			\item Knaves NES will not include any offensive code or words for any culture or political affiliation
+			\item KnavesNES will not include any offensive code or words for any culture or political affiliation
 		\end{itemize}
 	\subsection{Legal Requirements}
 		\begin{itemize}
-			\item Knaves NES will be released under the GNU General Public License v2
-			\item The full source of Knaves NES will be hosted on GitHub
+			\item KnavesNES will be released under the GNU General Public License v2
+			\item The full source of KnavesNES will be hosted on GitHub
 		\end{itemize}
 \section{Use Cases (Scenarios)}
 	\begin{enumerate}
-		\item \large{\textbf{Product Use Case Name}: Execution of ROM}\normalsize\\
-			\textbf{Trigger}:User executes a local ROM file via a command through the user’s command prompt. The name of the file is included as an argument. KnavesNES begins executing the instructions found in the ROM file.\\
+		\item \large{\textbf{Product Use Case Name}: Execution of ROM in Performance Mode}\normalsize\\
+			\textbf{Trigger}:User executes a local ROM file via a command through the user’s command prompt. The name of the file is included as an argument, as well as '-perf'. KnavesNES begins executing the instructions found in the ROM file.\\
 			\textbf{Preconditions}:KnavesNES is not already running.\\
 			\textbf{Interested Stakeholders}:Users and educators.\\
-			\textbf{Actors}:MainNES, CPU, ErrorHandler\\
-			\textbf{Outcome}:KnavesNES will execute the ROM file to completion, or until the user stops the process. State of memory will be logged at regular intervals (as explained in the memory logging use case). Upon completion (program counter reaches the end of the instructions), KnavesNES will echo to the command prompt that execution was successful and will gracefully close its process. \\
-		\item \large{\textbf{Product Use Case Name}: Halting of Execution}\normalsize\\
+			\textbf{Actors}:Knaves, CPU, Cartridge, Memory\\
+			\textbf{Outcome}:KnavesNES will execute the ROM file to completion, or until the user stops the process. State of memory will not be logged. Upon completion (program counter reaches the end of the instructions), KnavesNES will echo to the command prompt that execution was successful as well as information on the speed in which the instructions were performed and will gracefully close its process. \\
+		\item \large{\textbf{Product Use Case Name}: Execution of ROM in Logging Mode}\normalsize\\
 			\textbf{Trigger}:User presses the ESC key during execution of a ROM file.\\
-			\textbf{Preconditions}:KnavesNES is currently executing a ROM file.\\
+			\textbf{Preconditions}::KnavesNES is not already running.\\
 			\textbf{Interested Stakeholders}:Users and educators.\\
-			\textbf{Actors}:MainNES, CPU, ErrorHandler\\
-			\textbf{Outcome}:KnavesNES will halt executing the ROM file, log the final state of memory, and gracefully close its process.\\
+			\textbf{Actors}:Knaves, CPU, Cartridge, Memory\\
+			\textbf{Outcome}:KnavesNES will execute the ROM file to completion, or until the user stops the process. State of memory will not logged. Upon completion (program counter reaches the end of the instructions), KnavesNES will echo to the command prompt that execution was successful as well as information on the speed in which the instructions were performed and will gracefully close its process. \\
 		\item \large{\textbf{Product Use Case Name}: Memory Logging}\normalsize\\
-			\textbf{Trigger}:A specified amount of instructions have been processed since the last successful memory log.\\
+			\textbf{Trigger}:While in logging mode, triggered at the beginning of execution, the end of execution, or if the CPU reads a NOP instruction\\
 			\textbf{Preconditions}: KnavesNES is currently executing a ROM file.\\
 			\textbf{Interested Stakeholders}: Users and educators\\
-			\textbf{Actors}: CPU, MainNES, ErrorHandler, MemoryLogger\\
-			\textbf{Outcome}: KnavesNES will log the full state of memory with a timestamp into a MEMORY-DD/MM/YY-HH:MM:SS.log file in the users working directory.\\
+			\textbf{Actors}: CPU, Knaves, Memory\\
+			\textbf{Outcome}: KnavesNES will log the full state of memory with a Epoch timestamp into a Memory-_______.log file in the users working directory.\\
 		\item \large{\textbf{Product Use Case Name}: Error Handling}\normalsize\\
 			\textbf{Trigger}: KnavesNES encounters an unknown instruction, an instruction with an undefined outcome (division by 0, etc.), or any other type of catastrophic error.\\
 			\textbf{Preconditions}: KnavesNES is currently executing a ROM file.\\
 			\textbf{Interested Stakeholders}: Users and educators.\\
-			\textbf{Actors}: CPU, EventListener, ErrorHandler, MemoryLogger\\
+			\textbf{Actors}:Knaves, CPU, Cartridge, Memory\\
 			\textbf{Outcome}: KnavesNES will halt executing the ROM file and will echo into the command prompt that an error has occurred, along with a trace for the associated error. Memory will be logged a final time before KnavesNES gracefully ends its process.\\
 	\end{enumerate}
 \section{Inputs}
@@ -194,5 +195,8 @@
 % Start of the revision history table
 \begin{versionhistory}
   \vhEntry{1.0}{Oct 9, 2015}{Niko Savas}{created}
+  \vhEntry{1.1}{Dec 1, 2015}{Joe Crozier}{modified}
+  \vhEntry{2.0}{Dec 7, 2015}{Joe Crozier}{modified}
+
 \end{versionhistory}
 \end{document}

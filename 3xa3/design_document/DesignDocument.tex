@@ -142,22 +142,29 @@ Included in this document is a module hierarchy of the behavior hiding process, 
 		\textbf{Implemented By: } Knaves NES
 
 	\subsection{CPU Module}
-		\textbf{Secrets: } CPU Registers getters/setters/values, Instruction Functions
+		\textbf{Secrets: } CPU Registers getters/setters, Instruction Functions, means in which to execute instructions
+		
+		\textbf{Hidden information: } CPU status flags, CPU registers, program counter, 
+		
 		\textbf{Services: } Controls the execution of instructions. Reads an instruction from memory using the program counter register
 
 		\textbf{Implemented By: } Knaves NES
 
 	\subsection{Cartridge Module}
-		\textbf{Secrets: } -
+		\textbf{Secrets: } Means of reading instructions from cartridge and the position in which to store them in memory.
+
+		\textbf{Hidden information: } Hexadecimal values of opcodes in ROM file.
 
 		\textbf{Services: } Reads instructions from a ROM file, converts them to chars, then writes them to the necessary locations in memory.
 
 		\textbf{Implemented By: } Knaves NES
 
 	\subsection{Memory Module}
-		\textbf{Secrets: } Memory values
+		\textbf{Secrets: } Reading and writing memory, outputting memory to log files
 
-		\textbf{Services: } Reads and writes values to and from memory.
+		\textbf{Hidden Information: } Current values stored in memory
+
+		\textbf{Services: } Reads and writes values to and from memory, logs current state of memory
 
 		\textbf{Implemented By: } Knaves NES
 
@@ -192,7 +199,7 @@ Included in this document is a module hierarchy of the behavior hiding process, 
 
 
 
-\section{Use Heirarchy Between Modules}
+\section{Use Hierarchy Between Modules}
 	\begin{figure}[H]
 		\centering
 		\includegraphics[width=90mm]{trace.jpg}
@@ -222,6 +229,8 @@ Included in this document is a module hierarchy of the behavior hiding process, 
 % Start of the revision history table
 \begin{versionhistory}
   \vhEntry{1.0}{Nov 5, 2015}{Niko Savas}{created}
+  \vhEntry{2.0}{Nov 5, 2015}{Joe Crozier}{modified}
+
 \end{versionhistory}
 
 \end{document}
