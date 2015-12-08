@@ -10,7 +10,7 @@
 \contentsline {subsection}{\numberline {5.3}Cartridge Module}{7}{subsection.5.3}
 \contentsline {subsection}{\numberline {5.4}Memory Module}{7}{subsection.5.4}
 \contentsline {section}{\numberline {6}Traceability Matrix}{8}{section.6}
-\contentsline {section}{\numberline {7}Use Heirarchy Between Modules}{9}{section.7}
+\contentsline {section}{\numberline {7}Use Hierarchy Between Modules}{9}{section.7}
 \contentsline {section}{\numberline {8}Project Timeline}{10}{section.8}
 \contentsline {section}{\numberline {9}Pert Chart}{11}{section.9}
 \contentsline {section}{\numberline {10}Gantt Chart}{12}{section.10}
