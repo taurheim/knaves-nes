@@ -109,7 +109,7 @@ unsigned char Memory::read(unsigned short address) {
 }
 
 void Memory::logMemory(std::string title) {
-	std::cout << "Saving Memory...";
+	std::cout << "Saving Memory \"" << title << "\" ...";
 	std::ofstream logFile;
 	logFile.open("Memory - " + title + ".log");
 

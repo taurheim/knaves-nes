@@ -1334,7 +1334,7 @@ int cpu::funcBreak(unsigned short src)
 
 int cpu::funcNop(unsigned short src)
 {
-	_memory->logMemory("mid");
+	if(log_instructions) _memory->logMemory("mid");
 	return 0;
 }
 
