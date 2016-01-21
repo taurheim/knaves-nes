@@ -15,7 +15,7 @@ Knaves::Knaves() {
 	_cpu = new cpu();
 	_memory = new Memory();
 	_cartridge = new Cartridge();
-	//_ppu = new ppu();
+	_ppu = new ppu();
 }
 
 Knaves::~Knaves() {
@@ -35,7 +35,7 @@ void Knaves::init(char * fileName, bool show_log) {
 
 	if(!perfTest) _memory->logMemory("pre");
 
-	//_ppu->init(_memory);
+	_ppu->init(_memory);
 
 	//Calculate the user's computer speed. The sleep() function incurs its own lag, and if used in increments too small, it will significantly throw off the timing of the CPU
 	int total_slept = 0;
@@ -71,10 +71,10 @@ void Knaves::run() {
 		//Runs at 21.47MHz = 21,470,000 cycles/sec
 
 		unsigned short cycles = _cpu->executeInstruction();
-		//_ppu->runCycles(cycles);
+		_ppu->runCycles(cycles);
 
 		total_cycles += (int) cycles;
-
+		
 		//How long should all of this have taken? (check every 1000 cycles or so)
 		if (total_cycles - last_cycles > 2500) {
 			last_cycles = total_cycles;

@@ -320,7 +320,7 @@ void cpu::start() {
 	//Set Registers on startup
 
 	//OVERRIDING, FIX THIS LATER
-	reg_pc = 0x8010;
+	reg_pc = 0x8000;
 	reg_status = STARTUP_STATUS;
 	reg_sp = STARTUP_STACK;
 	reg_acc = 0;
