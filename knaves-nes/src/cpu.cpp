@@ -173,8 +173,8 @@ cpu::cpu() {
 		{PLA, 	instruction {"PLA", &cpu::funcPopAccumulatorFromStack, Mode::IMPLIED, 1, 4, false, true}},
 
 
-		{JSR, 	instruction {"JSR", &cpu::funcJumpSaveReturnAddress, Mode::ABSOLUTE, 3, 6, false, false}},
-		{JMP_ABS,instruction {"JMP_ABS", &cpu::funcJump, Mode::ABSOLUTE, 3, 3, false, false}},
+		{JSR, 	instruction {"JSR", &cpu::funcJumpSaveReturnAddress, Mode::S_ABSOLUTE, 3, 6, false, false}},
+		{JMP_ABS,instruction {"JMP_ABS", &cpu::funcJump, Mode::S_ABSOLUTE, 3, 3, false, false}},
 		{JMP_IND,instruction {"JMP_IND", &cpu::funcJump, Mode::INDIRECT, 3, 5, false, false}},
 
 
@@ -429,7 +429,7 @@ unsigned short cpu::executeInstruction() {
 
 	//Actually execute the opcode instruction
 	instruction current_instruction = instruction_row->second;
-	if (log_instructions) std::cout << "\n[" << std::hex << reg_pc << "] Executing instruction " + current_instruction.name + "\t\t(0x" << std::hex << (int) opcode << " ";
+	if (log_instructions) std::cout << "\nA: " << (int)reg_acc << "\tX: " << (int)reg_index_x << "\tY: " << (int)reg_index_y << "\tS: " << (int)reg_status << "\t[" << std::hex << reg_pc << "] Executing instruction " + current_instruction.name + "\t\t(0x" << std::hex << (int) opcode << " ";
 
 	//Get the source 
 	unsigned int src = getSource(current_instruction.mode);
@@ -487,8 +487,12 @@ unsigned short cpu::getSource(Mode mode) {
 		case Mode::ABSOLUTE_X: {
 			//First get the pointer as if it was absolute, then add the x register's value to that pointer
 			//Find the value at our new pointer
-			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
-			return _memory->read(absolute_address + reg_index_x);
+			unsigned char first = _memory->read(reg_pc + 2);
+			unsigned char second = _memory->read(reg_pc + 1);
+			return _memory->read((first << 8 | second) + reg_index_x);
+			/*unsigned short absolute_address = getSource(Mode::ABSOLUTE);
+			return absolute_address;
+			return _memory->read(absolute_address + reg_index_x);*/
 			break;
 		}
 

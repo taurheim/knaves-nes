@@ -160,7 +160,7 @@ void Memory::logMemory(std::string title) {
 std::string Memory::hexFromLong(long i) {
 	std::stringstream stream;
 	stream << "0x"
-		<< std::setfill('0') << std::setw(sizeof(i) * 2)
+		<< std::setfill('0') << std::setw(2)
 		<< std::hex << i;
 	return stream.str();
 }
