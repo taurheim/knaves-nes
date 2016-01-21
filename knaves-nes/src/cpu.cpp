@@ -1104,6 +1104,7 @@ int cpu::funcJumpSaveReturnAddress(unsigned short src) {
 }
 
 int cpu::funcJump(unsigned short src) {
+	if (log_instructions) std::cout << " Jumping to " << src;
 	reg_pc = src;
 	return 0;
 }
