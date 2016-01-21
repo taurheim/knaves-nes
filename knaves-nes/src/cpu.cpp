@@ -309,8 +309,9 @@ cpu::cpu() {
 	};
 }
 
-void cpu::init(Memory * memory, bool show_log) {
+void cpu::init(Memory * memory, ppu * ppu, bool show_log) {
 	_memory = memory;
+	_ppu = ppu;
 	log_instructions = show_log;
 }
 
@@ -391,7 +392,7 @@ void cpu::executeInterrupt(const enum Interrupt &interrupt) {
 		reg_pc = IRQ_BRK_VECTOR;
 		break;
 	case Interrupt::RESET:
-		reg_pc = (_memory->read(INTERRUPT_RESET_VECTOR_HIGH) << 8) | _memory->read(INTERRUPT_RESET_VECTOR_LOW);
+		reg_pc = (readMemory(INTERRUPT_RESET_VECTOR_HIGH) << 8) | readMemory(INTERRUPT_RESET_VECTOR_LOW);
 		break;
 	default:
 		break;
@@ -464,7 +465,7 @@ unsigned short cpu::getSource(Mode mode) {
 	switch (mode) {
 		case Mode::IMMEDIATE: {
 			//Return whatever is beside the instruction in memory
-			return _memory->read(reg_pc + 1);
+			return readMemory(reg_pc + 1);
 			break;
 		}
 
@@ -478,21 +479,21 @@ unsigned short cpu::getSource(Mode mode) {
 		case Mode::ABSOLUTE: {
 			//Load from a 16bit memory address
 			//The next 2 bytes of memory define a pointer. Our argument is the value being pointed to
-			unsigned char first = _memory->read(reg_pc + 2);
-			unsigned char second = _memory->read(reg_pc + 1);
-			return _memory->read(first << 8 | second);
+			unsigned char first = readMemory(reg_pc + 2);
+			unsigned char second = readMemory(reg_pc + 1);
+			return readMemory(first << 8 | second);
 			break;
 		}
 
 		case Mode::ABSOLUTE_X: {
 			//First get the pointer as if it was absolute, then add the x register's value to that pointer
 			//Find the value at our new pointer
-			unsigned char first = _memory->read(reg_pc + 2);
-			unsigned char second = _memory->read(reg_pc + 1);
-			return _memory->read((first << 8 | second) + reg_index_x);
+			unsigned char first = readMemory(reg_pc + 2);
+			unsigned char second = readMemory(reg_pc + 1);
+			return readMemory((first << 8 | second) + reg_index_x);
 			/*unsigned short absolute_address = getSource(Mode::ABSOLUTE);
 			return absolute_address;
-			return _memory->read(absolute_address + reg_index_x);*/
+			return readMemory(absolute_address + reg_index_x);*/
 			break;
 		}
 
@@ -500,28 +501,28 @@ unsigned short cpu::getSource(Mode mode) {
 			//First get the pointer as if it was absolute, then add the y register's value to that pointer
 			//Find the value at our new pointer
 			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
-			return _memory->read(absolute_address + reg_index_y);
+			return readMemory(absolute_address + reg_index_y);
 			break;
 		}
 
 		case ABSOLUTE_ZERO_PAGE: {
 			//Same thing as absolute, except it's always going to be in the zero page (first 1 byte of memory values)
-			unsigned short absolute_address = _memory->read(reg_pc + 1);
-			return _memory->read(absolute_address & 0xff);
+			unsigned short absolute_address = readMemory(reg_pc + 1);
+			return readMemory(absolute_address & 0xff);
 			break;
 		}
 
 		case ABSOLUTE_X_ZERO_PAGE: {
 			//Same thing as ABSOLUTE_ZERO_PAGE, except before making it zero page, we also add the x register
 			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
-			return _memory->read((absolute_address + reg_index_x) & 0xff);
+			return readMemory((absolute_address + reg_index_x) & 0xff);
 			break;
 		}
 
 		case ABSOLUTE_Y_ZERO_PAGE: {
 			//Same thing as ABSOLUTE_ZERO_PAGE, except before making it zero page, we also add the y register
 			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
-			return _memory->read((absolute_address + reg_index_y) & 0xff);
+			return readMemory((absolute_address + reg_index_y) & 0xff);
 			break;
 		}
 
@@ -530,39 +531,39 @@ unsigned short cpu::getSource(Mode mode) {
 			//The memory value specified in the next 2 bytes points to the low byte of the value
 			//The byte after the low byte is the high byte
 			unsigned short absolute_address = getSource(Mode::ABSOLUTE);
-			unsigned short second = _memory->read(absolute_address);
-			unsigned short first = _memory->read(absolute_address + 1);
+			unsigned short second = readMemory(absolute_address);
+			unsigned short first = readMemory(absolute_address + 1);
 			return (first << 8 | second);
 		}
 
 		case INDIRECT_X: {
 			//val = PEEK(PEEK((arg + X) % 256) + PEEK((arg + X + 1) % 256) * 256)
-			unsigned short reference_1 = (_memory->read(reg_pc + 1) + reg_index_x) & 0xff;
+			unsigned short reference_1 = (readMemory(reg_pc + 1) + reg_index_x) & 0xff;
 			unsigned short reference_2 = (reference_1 + 1) & 0xff;
-			unsigned short second = _memory->read(reference_1);
-			unsigned short first = _memory->read(reference_2);
+			unsigned short second = readMemory(reference_1);
+			unsigned short first = readMemory(reference_2);
 			return (first << 8 | second);
 		}
 
 		case INDIRECT_Y: {
 			//val = PEEK(PEEK(arg) + PEEK((arg + 1) % 256) + y)
-			unsigned short reference_1 = _memory->read(reg_pc + 1) & 0xff;
-			unsigned short reference_2 = _memory->read(reference_1);
-			return _memory->read(reference_2 + reg_index_y);
+			unsigned short reference_1 = readMemory(reg_pc + 1) & 0xff;
+			unsigned short reference_2 = readMemory(reference_1);
+			return readMemory(reference_2 + reg_index_y);
 		}
 
 		case Mode::RELATIVE: {
 			//Used for branching instructions. Essentially the byte
 			//after the instruction tells the CPU how many bytes to skip if
 			//the branch happens
-			return _memory->read(reg_pc + 1);
+			return readMemory(reg_pc + 1);
 			break;
 		}
 
 		case Mode::S_ABSOLUTE: {
 			//Store into value
-			unsigned char first = _memory->read(reg_pc + 2);
-			unsigned char second = _memory->read(reg_pc + 1);
+			unsigned char first = readMemory(reg_pc + 2);
+			unsigned char second = readMemory(reg_pc + 1);
 			return (first << 8 | second);
 		}
 
@@ -572,8 +573,8 @@ unsigned short cpu::getSource(Mode mode) {
 		}
 
 		case Mode::S_INDIRECT_Y: {
-			unsigned short reference_1 = _memory->read(reg_pc + 1) & 0xff;
-			unsigned short reference_2 = _memory->read(reference_1);
+			unsigned short reference_1 = readMemory(reg_pc + 1) & 0xff;
+			unsigned short reference_2 = readMemory(reference_1);
 			return reference_2 + reg_index_y;
 		}
 	}
@@ -606,7 +607,7 @@ MEMORY FUNCTIONS
 
 unsigned char cpu::readAddress(unsigned short address)
 {
-	return _memory->read(address);
+	return readMemory(address);
 }
 
 /*
@@ -615,7 +616,7 @@ unsigned char cpu::readAddress(unsigned short address)
 void cpu::pushStack(unsigned char byte) {
 	//Decrement stack pointer because stack is stored top-down
 	reg_sp--;
-	_memory->write(STACK_START + reg_sp, byte);
+	writeMemory(STACK_START + reg_sp, byte);
 }
 
 /*
@@ -637,7 +638,7 @@ void cpu::pushStackDouble(unsigned short bytebyte) {
  Pop off the stack
 */
 unsigned char cpu::popStack() {
-	unsigned char item = _memory->read(STACK_START + reg_sp);
+	unsigned char item = readMemory(STACK_START + reg_sp);
 	reg_sp++;
 	return item;
 }
@@ -776,12 +777,12 @@ int cpu::funcLoadRegisterY(unsigned short src)
 
 int cpu::funcStoreRegisterX(unsigned short src) {
 	if (log_instructions) std::cout << "Storing " << std::hex << (int) reg_index_x;
-	_memory->write(src, reg_index_x);
+	writeMemory(src, reg_index_x);
 	return 0;
 }
 
 int cpu::funcStoreRegisterY(unsigned short src) {
-	_memory->write(src, reg_index_y);
+	writeMemory(src, reg_index_y);
 	return 0;
 }
 
@@ -819,7 +820,7 @@ int cpu::funcDecreaseRegisterY(unsigned short src)
 
 int cpu::funcIncreaseMemory(unsigned short src)
 {
-	_memory->write(src, src + 1);
+	writeMemory(src, src + 1);
 	updateStatusSign(src);
 	updateStatusZero(src);
 	return 0;
@@ -827,7 +828,7 @@ int cpu::funcIncreaseMemory(unsigned short src)
 
 int cpu::funcDecreaseMemory(unsigned short src)
 {
-	_memory->write(src, src - 1);
+	writeMemory(src, src - 1);
 	updateStatusZero(src);
 	updateStatusSign(src);
 	return 0;
@@ -933,7 +934,7 @@ int cpu::funcCompareMemory(unsigned short src) {
 
 //Store the value currently in the accumulator
 int cpu::funcStoreAccumulator(unsigned short src) {
-	_memory->write(src, reg_acc);
+	writeMemory(src, reg_acc);
 
 	return 0;
 }
@@ -1289,11 +1290,11 @@ int cpu::funcSHY(unsigned short src) {
 	unsigned short value = (src - reg_index_x) & 0xFF;
 
 	if ((reg_index_x + value) <= 0xFF) {
-		_memory->write(src, result);
+		writeMemory(src, result);
 	}
 	else
 	{
-		_memory->write(src, src);
+		writeMemory(src, src);
 	}
 
 	return 0;
@@ -1305,11 +1306,11 @@ int cpu::funcSHX(unsigned short src) {
 	unsigned short value = (src - reg_index_y) & 0xFF;
 
 	if ((reg_index_y + value) <= 0xFF) {
-		_memory->write(src, result);
+		writeMemory(src, result);
 	}
 	else
 	{
-		_memory->write(src, src);
+		writeMemory(src, src);
 	}
 
 	return 0;
@@ -1347,4 +1348,64 @@ int cpu::funcKill(unsigned short src)
 {
 	is_running = false;
 	return 0;
+}
+
+void cpu::writeMemory(unsigned short address, unsigned short value) {
+	switch (address) {
+	case PPU_CONTROL:
+		_ppu->writePPUCTRL(value);
+		break;
+	case PPU_MASK:
+		_ppu->writePPUMASK(value);
+		break;
+	case PPU_STATUS:
+		_ppu->writePPUSTATUS(value);
+		break;
+	case PPU_OAM_ADDR:
+		_ppu->writeOAMADDR(value);
+		break;
+	case PPU_OAM_DATA:
+		_ppu->writeOAMDATA(value);
+		break;
+	case PPU_SCROLL:
+		_ppu->writePPUSCROLL(value);
+		break;
+	case PPU_ADDR:
+		_ppu->writePPUADDR(value);
+	case PPU_DATA:
+		_ppu->writePPUDATA(value);
+		break;
+	default:
+		return _memory->write(address, value);
+	}
+}
+
+unsigned char cpu::readMemory(unsigned short address) {
+	switch (address) {
+	case PPU_CONTROL:
+		return _ppu->readPPUCTRL();
+		break;
+	case PPU_MASK:
+		return _ppu->readPPUMASK();
+		break;
+	case PPU_STATUS:
+		return _ppu->readPPUSTATUS();
+		break;
+	case PPU_OAM_ADDR:
+		return _ppu->readOAMADDR();
+		break;
+	case PPU_OAM_DATA:
+		return _ppu->readOAMDATA();
+		break;
+	case PPU_SCROLL:
+		return _ppu->readPPUSCROLL();
+		break;
+	case PPU_ADDR:
+		return _ppu->readPPUADDR();
+	case PPU_DATA:
+		return _ppu->readPPUDATA();
+		break;
+	default:
+		return _memory->read(address);
+	}
 }

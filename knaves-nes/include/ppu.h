@@ -1,8 +1,10 @@
+#ifndef _PPU_H_
+#define _PPU_H_
+
 #include <map>;
 #include <vector>;
 
 #include "memory.h";
-#include "cpu.h";
 #include "renderer.h"
 
 //PPU Registers 
@@ -175,3 +177,5 @@ private:
 
 
 };
+
+#endif

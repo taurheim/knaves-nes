@@ -36,25 +36,6 @@ void Memory::write(unsigned short address, unsigned char value) {
 	} else if (address >= 0x2000 && address <= 0x3FFF) {
 		//Writing to PPU Registers
 		unsigned short real_address = address & 0x2007;
-		switch (real_address) {
-			//TODO Add mirroring/mapping
-		case PPU_CONTROL:
-			break;
-		case PPU_MASK:
-			break;
-		case PPU_STATUS:
-			break;
-		case PPU_OAM_ADDR:
-			break;
-		case PPU_OAM_DATA:
-			break;
-		case PPU_SCROLL:
-			break;
-		case PPU_ADDR:
-			break;
-		case PPU_DATA:
-			break;
-		}
 		/* Not sure if this is actually necessary for the emulator
 		real_address += 0x0008
 		while(real_address < 0x3FFF){
@@ -91,21 +72,7 @@ void Memory::write(unsigned short address, unsigned char value) {
 */
 unsigned char Memory::read(unsigned short address) {
 
-	//Check for special cases (registers)
-	switch (address) {
-	case PPU_STATUS:
-		break;
-	case PPU_OAM_DATA:
-		break;
-	case PPU_DATA:
-		break;
-	case CONTROLLER_1:
-		break;
-	case CONTROLLER_2:
-		break;
-	default:
-		return RAM[address];
-	}
+	return RAM[address];
 }
 
 void Memory::logMemory(std::string title) {
@@ -124,7 +91,7 @@ void Memory::logMemory(std::string title) {
 	int column = 0;
 	logFile << tab;
 	for (long i = 0; i < 0x10; i++) {
-		std::string columnNumber = Memory::hexFromLong(i);
+		std::string columnNumber = hexFromLong(i);
 		logFile << tab + columnNumber;
 	}
 	logFile << newLine + tab + tab;
@@ -135,7 +102,7 @@ void Memory::logMemory(std::string title) {
 	logFile << newLine;
 
 	for (long i = 0; i < memorySize; i++) {
-		std::string memAddress = Memory::hexFromLong(i);
+		std::string memAddress = hexFromLong(i);
 		//Left hand side will have the row's address
 		column++;
 
@@ -143,7 +110,7 @@ void Memory::logMemory(std::string title) {
 			logFile << memAddress;
 		}
 
-		std::string memValue = Memory::hexFromLong(Memory::RAM[i]);
+		std::string memValue = hexFromLong(RAM[i]);
 
 		logFile << tab + memValue;
 		if (column == 16) {

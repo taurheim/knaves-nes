@@ -6,6 +6,7 @@
 
 #include "instruction.h";
 #include "memory.h"
+#include "ppu.h"
 
 class cpu;
 class Memory;
@@ -32,6 +33,16 @@ class Memory;
 #define STATUS_OVERFLOW		0b01000000
 #define STATUS_SIGN		    0b10000000
 
+//PPU Registers
+#define PPU_CONTROL			0x2000
+#define PPU_MASK			0x2001
+#define PPU_STATUS			0x2002
+#define PPU_OAM_ADDR		0x2003
+#define PPU_OAM_DATA		0x2004
+#define PPU_SCROLL			0x2005
+#define PPU_ADDR			0x2006
+#define PPU_DATA			0x2007
+
 //Interrupts
 #define INTERRUPT_CYCLES		7
 #define RESET_VECTOR			0xFFFC
@@ -47,7 +58,7 @@ class cpu {
 public:
 	cpu();
 
-	void init(Memory * memory, bool show_log);
+	void init(Memory * memory, ppu * ppu, bool show_log);
 	void start();
 	void stop();
 	void reset();
@@ -57,6 +68,8 @@ private:
 	bool log_instructions;
 
 	Memory *_memory;
+	ppu * _ppu;
+
 
 	//Registers
 	//http://codebase64.org/doku.php?id=base:6502_registers
@@ -69,6 +82,9 @@ private:
 
 	std::list<Interrupt> interrupts;
 	std::map<char, instruction> instructions;
+
+	unsigned char readMemory(unsigned short address);
+	void writeMemory(unsigned short address, unsigned short value);
 
 	//Interrupts
 	void executeInterrupt(const enum Interrupt &interrupt);
